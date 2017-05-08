@@ -1,0 +1,45 @@
+<div class="mobile-visible">
+  {% include "breadcrumbs" %}
+</div>
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+
+<div id="content">
+  
+  <div id="intro" class="intro">
+    <div class="text-content">
+      {{ page.basic.content }}
+    </div>
+  </div>
+  
+  <h3 class="scrollspy padtopmore" id="newsletters2012">2012 - Present</h3>
+  <hr>
+  <script language="javascript" src="http://us4.campaign-archive2.com/generate-js/?u=6542714c69023bc7f6fa51510&fid=4677&show=50000000" type="text/javascript"></script>
+  
+  <h3 class="scrollspy padtopmore" id="newsletters2010">2010 - 2011</h3>
+  <hr>
+  <a href="https://www.scribd.com/user/44744248/RPCVW-additional-account">View on Scribd.com</a>
+  
+  <h3 class="scrollspy padtopmore" id="newsletters2005">2005 - 2010</h3>
+  <hr>
+  <a href="https://www.scribd.com/collections/3904028/Past-Newsletters">View on Scribd.com</a>  
+  
+  <div class="padtopmore padbottommore"></div>
+  
+  {% if page.tags_count > 0 %}
+  <div class="page-tags">
+    {% include "page_tags" with page %}
+  </div>
+  {% endif %}
+  
+  <div class="like-page">
+    <strong>Share this page!</strong>
+      {% include "like_page" %}
+  </div>
+  
+  {% if page.show_stream? %}
+  {% include "page_stream" %}
+  {% endif %}
+  
+</div>

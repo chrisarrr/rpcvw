@@ -1,0 +1,102 @@
+<div class="mobile-visible">
+  {% include "breadcrumbs" %}
+</div>
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+
+<div id="content">
+  
+  <div id="intro" class="intro">
+    <div class="text-content">
+      {{ page.basic.content }}
+    </div>
+  </div>
+  
+  <div class="desktop-visible">
+    <div class="row-fluid">
+      <div class="span6"><!--How did you find us-->
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/static/modules/gviz/1.0/chart.js">
+          {"dataSourceUrl":"//docs.google.com/spreadsheet/tq?key=0AvA8vdv781pndE5RN2ZPLTN4bFZaQjVjX25WY3k4NGc&transpose=0&headers=1&range=C1%3AD7&gid=6&pub=1","options":{"vAxes":[{"title":"Left vertical axis title","useFormatFromData":true,"minValue":null,"viewWindow":{"min":null,"max":null},"maxValue":null},{"useFormatFromData":true,"minValue":null,"viewWindow":{"min":null,"max":null},"maxValue":null}],"titleTextStyle":{"bold":true,"color":"#000","fontSize":16},"pieHole":0,"title":"How did you hear about us?","booleanRole":"certainty","colors":["#3366CC","#DC3912","#FF9900","#109618","#990099","#0099C6","#DD4477","#66AA00","#B82E2E","#316395","#994499","#22AA99","#AAAA11","#6633CC","#E67300","#8B0707","#651067","#329262","#5574A6","#3B3EAC","#B77322","#16D620","#B91383","#F4359E","#9C5935","#A9C413","#2A778D","#668D1C","#BEA413","#0C5922","#743411"],"is3D":false,"hAxis":{"title":"Horizontal axis title","useFormatFromData":true,"minValue":null,"viewWindow":{"min":null,"max":null},"maxValue":null},"width":350,"height":300,"animation":{"duration":0}},"state":{},"view":{},"isDefaultVisualization":false,"chartType":"PieChart","chartName":"Chart 1"}
+        </script>
+      </div>
+      <div class="span6"><!--What's the main reason you joined-->
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/static/modules/gviz/1.0/chart.js">
+          {"dataSourceUrl":"//docs.google.com/spreadsheet/tq?key=0AvA8vdv781pndE5RN2ZPLTN4bFZaQjVjX25WY3k4NGc&transpose=0&headers=1&range=F1%3AG7&gid=6&pub=1","options":{"titleTextStyle":{"bold":true,"color":"#000","fontSize":16},"vAxes":[{"useFormatFromData":true,"title":"Left vertical axis title","minValue":null,"viewWindow":{"min":null,"max":null},"maxValue":null},{"useFormatFromData":true,"minValue":null,"viewWindow":{"min":null,"max":null},"maxValue":null}],"pieHole":0,"booleanRole":"certainty","title":"What's the main reason you joined RPCV/W?","colors":["#3366CC","#DC3912","#FF9900","#109618","#990099","#0099C6","#DD4477","#66AA00","#B82E2E","#316395","#994499","#22AA99","#AAAA11","#6633CC","#E67300","#8B0707","#651067","#329262","#5574A6","#3B3EAC","#B77322","#16D620","#B91383","#F4359E","#9C5935","#A9C413","#2A778D","#668D1C","#BEA413","#0C5922","#743411"],"is3D":false,"hAxis":{"useFormatFromData":true,"title":"Horizontal axis title","minValue":null,"viewWindow":{"min":null,"max":null},"maxValue":null},"width":350,"height":300,"animation":{"duration":0}},"state":{},"view":{},"isDefaultVisualization":true,"chartType":"PieChart","chartName":"Chart 2"}
+        </script> 
+      </div>
+    </div>
+    <!--How long?-->
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/static/modules/gviz/1.0/chart.js">
+      {"dataSourceUrl":"//docs.google.com/spreadsheet/tq?key=0AvA8vdv781pndE5RN2ZPLTN4bFZaQjVjX25WY3k4NGc&transpose=0&headers=1&range=I1%3AJ5&gid=6&pub=1","options":{"vAxes":[{"title":"","useFormatFromData":true,"minValue":null,"viewWindowMode":null,"viewWindow":null,"maxValue":null},{"useFormatFromData":true}],"titleTextStyle":{"bold":true,"color":"#000","fontSize":16},"title":"How long have you been a member?","booleanRole":"certainty","height":544,"animation":{"duration":500},"legend":"right","width":600,"hAxis":{"title":"","useFormatFromData":true,"minValue":null,"viewWindow":{"max":null,"min":null},"maxValue":null},"isStacked":false,"tooltip":{"trigger":"none"},"focusTarget":"series"},"state":{},"view":{},"isDefaultVisualization":true,"chartType":"BarChart","chartName":"Chart 3"}
+    </script>       
+    <!--How has RPCV/W helped?-->
+    <img class= "padtopmore" src="https://d3n8a8pro7vhmx.cloudfront.net/rpcvw/pages/342/attachments/original/1408639884/how_has_rpcvw_helped_you_2012.png?1408639884">
+    <br><br>
+    <!--Info source?-->
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/static/modules/gviz/1.0/chart.js">
+      {"dataSourceUrl":"//docs.google.com/spreadsheet/tq?key=0AvA8vdv781pndE5RN2ZPLTN4bFZaQjVjX25WY3k4NGc&transpose=0&headers=1&range=L1%3AM6&gid=6&pub=1","options":{"titleTextStyle":{"bold":true,"color":"#000","fontSize":16},"vAxes":[{"useFormatFromData":true,"minValue":null,"viewWindowMode":null,"viewWindow":null,"maxValue":null},{"useFormatFromData":true}],"title":"What's your primary source of information for RPCV/W news and events?","booleanRole":"certainty","height":544,"animation":{"duration":500},"legend":"right","width":600,"focusTarget":"series","hAxis":{"useFormatFromData":true,"minValue":null,"viewWindow":{"max":null,"min":null},"logScale":false,"maxValue":null},"tooltip":{"trigger":"none"},"isStacked":true},"state":{},"view":{},"isDefaultVisualization":false,"chartType":"BarChart","chartName":"Chart 4"}
+    </script>
+    <!--Events attended?-->
+    <img class= "padtopmore" src="https://d3n8a8pro7vhmx.cloudfront.net/rpcvw/pages/342/attachments/original/1408639878/what_events_have_you_attended_2012.png?1408639878">
+    <br><br>
+    <!--Program focus?-->
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/static/modules/gviz/1.0/chart.js">
+      {"dataSourceUrl":"//docs.google.com/spreadsheet/tq?key=0AvA8vdv781pndE5RN2ZPLTN4bFZaQjVjX25WY3k4NGc&transpose=0&headers=1&range=C8%3AD13&gid=6&pub=1","options":{"vAxes":[{"title":"","useFormatFromData":true,"minValue":null,"logScale":false,"viewWindow":{"max":null,"min":null},"maxValue":null},{"useFormatFromData":true,"minValue":null,"logScale":false,"viewWindow":{"max":null,"min":null},"maxValue":null}],"titleTextStyle":{"bold":true,"color":"#000","fontSize":16},"booleanRole":"certainty","title":"Where would you like to see us focus our programming?","animation":{"duration":500},"legend":"right","hAxis":{"title":"","useFormatFromData":true,"minValue":null,"viewWindowMode":null,"viewWindow":null,"maxValue":null},"isStacked":false,"width":600,"height":544,"focusTarget":"series","tooltip":{"trigger":"none"}},"state":{},"view":{},"isDefaultVisualization":false,"chartType":"ColumnChart","chartName":"Chart 5"}
+    </script> 
+    
+    <div class="row-fluid"><!--Average Age-->
+      <div class="span6">
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/static/modules/gviz/1.0/chart.js">
+          {"dataSourceUrl":"//docs.google.com/spreadsheet/tq?key=0AvA8vdv781pndE5RN2ZPLTN4bFZaQjVjX25WY3k4NGc&transpose=0&headers=0&range=F1%3AG1&gid=5&pub=1","options":{"titleTextStyle":{"fontSize":16},"vAxes":[{"useFormatFromData":true,"title":"Left vertical axis title","minValue":null,"viewWindow":{"min":null,"max":null},"maxValue":null},{"useFormatFromData":true,"minValue":null,"viewWindow":{"min":null,"max":null},"maxValue":null}],"booleanRole":"certainty","title":"Chart title","height":200,"animation":{"duration":0},"width":200,"hAxis":{"useFormatFromData":true,"title":"Horizontal axis title","minValue":null,"viewWindow":{"min":null,"max":null},"maxValue":null}},"state":{},"view":{},"isDefaultVisualization":true,"chartType":"Gauge","chartName":"Chart 10"}
+        </script>
+      </div>
+      
+      <div class="span6"> <!--Relationship Status-->
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/static/modules/gviz/1.0/chart.js">
+          {"dataSourceUrl":"//docs.google.com/spreadsheet/tq?key=0AvA8vdv781pndE5RN2ZPLTN4bFZaQjVjX25WY3k4NGc&transpose=0&headers=1&range=C14%3AD20&gid=6&pub=1","options":{"titleTextStyle":{"bold":true,"color":"#000","fontSize":16},"vAxes":[{"useFormatFromData":true,"title":"Left vertical axis title","minValue":null,"logScale":false,"viewWindow":{"min":null,"max":null},"maxValue":null},{"useFormatFromData":true,"minValue":null,"logScale":false,"viewWindow":{"min":null,"max":null},"maxValue":null}],"pieHole":0,"booleanRole":"certainty","title":"Relationship Status","width":350,"height":300,"animation":{"duration":500},"colors":["#3366CC","#6d9eeb","#ff0000","#e06666","#ff9900","#ffd966","#DD4477","#66AA00","#B82E2E","#316395","#994499","#22AA99","#AAAA11","#6633CC","#E67300","#8B0707","#651067","#329262","#5574A6","#3B3EAC","#B77322","#16D620","#B91383","#F4359E","#9C5935","#A9C413","#2A778D","#668D1C","#BEA413","#0C5922","#743411"],"focusTarget":"series","is3D":false,"hAxis":{"useFormatFromData":true,"title":"Horizontal axis title","minValue":null,"viewWindow":{"min":null,"max":null},"maxValue":null},"tooltip":{"trigger":"none"}},"state":{},"view":{},"isDefaultVisualization":false,"chartType":"PieChart","chartName":"Chart 6"}
+        </script>
+      </div>
+    </div>
+    
+    <div class="row-fluid">
+      <div class="span6"> <!--work experience-->
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/static/modules/gviz/1.0/chart.js">
+          {"dataSourceUrl":"//docs.google.com/spreadsheet/tq?key=0AvA8vdv781pndE5RN2ZPLTN4bFZaQjVjX25WY3k4NGc&transpose=0&headers=1&range=G13%3AH20&gid=6&pub=1","options":{"titleTextStyle":{"bold":true,"color":"#000","fontSize":16},"vAxes":[{"useFormatFromData":true,"title":"Left vertical axis title","minValue":null,"viewWindow":{"min":null,"max":null},"maxValue":null},{"useFormatFromData":true,"minValue":null,"viewWindow":{"min":null,"max":null},"maxValue":null}],"pieHole":0,"booleanRole":"certainty","title":"How many years of work experience do you have?","colors":["#efefef","#cfe2f3","#9fc5e8","#6fa8dc","#3d85c6","#0b5394","#073763","#66AA00","#B82E2E","#316395","#994499","#22AA99","#AAAA11","#6633CC","#E67300","#8B0707","#651067","#329262","#5574A6","#3B3EAC","#B77322","#16D620","#B91383","#F4359E","#9C5935","#A9C413","#2A778D","#668D1C","#BEA413","#0C5922","#743411"],"is3D":false,"hAxis":{"useFormatFromData":true,"title":"Horizontal axis title","minValue":null,"viewWindow":{"min":null,"max":null},"maxValue":null},"width":350,"height":300,"animation":{"duration":0}},"state":{},"view":{},"isDefaultVisualization":true,"chartType":"PieChart","chartName":"Chart 9"}
+        </script>
+      </div>
+      
+      <div class="span6">  <!--employment--> 
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/static/modules/gviz/1.0/chart.js">
+          {"dataSourceUrl":"//docs.google.com/spreadsheet/tq?key=0AvA8vdv781pndE5RN2ZPLTN4bFZaQjVjX25WY3k4NGc&transpose=0&headers=1&range=G8%3AH12&gid=6&pub=1","options":{"titleTextStyle":{"bold":true,"color":"#000","fontSize":16},"vAxes":[{"useFormatFromData":true,"title":"Left vertical axis title","minValue":null,"viewWindow":{"min":null,"max":null},"maxValue":null},{"useFormatFromData":true,"minValue":null,"viewWindow":{"min":null,"max":null},"maxValue":null}],"pieHole":0,"booleanRole":"certainty","title":"Employment Status","colors":["#cc0000","#f4cccc","#ffd966","#6aa84f","#990099","#0099C6","#DD4477","#66AA00","#B82E2E","#316395","#994499","#22AA99","#AAAA11","#6633CC","#E67300","#8B0707","#651067","#329262","#5574A6","#3B3EAC","#B77322","#16D620","#B91383","#F4359E","#9C5935","#A9C413","#2A778D","#668D1C","#BEA413","#0C5922","#743411"],"is3D":false,"hAxis":{"useFormatFromData":true,"title":"Horizontal axis title","minValue":null,"viewWindow":{"min":null,"max":null},"maxValue":null},"width":350,"height":300,"animation":{"duration":0}},"state":{},"view":{},"isDefaultVisualization":true,"chartType":"PieChart","chartName":"Chart 8"}
+        </script>
+      </div>
+    </div> 
+    <!--education--> 
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/static/modules/gviz/1.0/chart.js">
+{"dataSourceUrl":"//docs.google.com/spreadsheet/tq?key=0AvA8vdv781pndE5RN2ZPLTN4bFZaQjVjX25WY3k4NGc&transpose=0&headers=1&range=C22%3AD31&gid=6&pub=1","options":{"vAxes":[{"title":"","useFormatFromData":true,"minValue":null,"viewWindowMode":null,"viewWindow":null,"maxValue":null},{"useFormatFromData":true}],"titleTextStyle":{"bold":true,"color":"#000","fontSize":16},"title":"Education Levels","booleanRole":"certainty","height":544,"animation":{"duration":600},"legend":"right","width":600,"focusTarget":"series","hAxis":{"title":"","useFormatFromData":true,"minValue":null,"viewWindow":{"max":null,"min":null},"maxValue":null},"tooltip":{"trigger":"none"},"isStacked":false},"state":{},"view":{},"isDefaultVisualization":false,"chartType":"BarChart","chartName":"Chart 7"}
+</script>
+    
+    <h4>Job Sector Interest</h4>
+    
+        <img class= "padtopmore" src="https://d3n8a8pro7vhmx.cloudfront.net/rpcvw/pages/342/attachments/original/1408639140/what_industries_interest_you_2012.png?1408639140">
+
+  </div>
+  
+  
+  {% if page.tags_count > 0 %}
+  <div class="page-tags">
+    {% include "page_tags" with page %}
+  </div>
+  {% endif %}
+  
+  <div class="like-page">
+    <strong>Share this page!</strong>
+    {% include "like_page" %}
+  </div>
+  
+  {% if page.show_stream? %}
+  {% include "page_stream" %}
+  {% endif %}
+  
+</div>

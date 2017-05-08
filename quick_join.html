@@ -1,0 +1,59 @@
+{% if request.logged_in? or request.sorta_logged_in? %}
+<script>
+  $(document).ready(function () { 
+    window.setTimeout(function () { 
+      location.href = "{{ request.current_signup.logout_url }}?page_id={{ page.id }}";
+    }, 3000);
+  });
+</script>
+{% else %}
+
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+
+<div id="content">
+  
+  {% if page.signup.content.size > 0 %}
+  <div id="intro" class="intro">
+    {{ page.signup.content }}
+  </div>
+  {% endif %}
+  
+  <div class="form">
+    
+    {% if request.logged_in? == false and request.current_signup.tags contains "member" %}
+    
+    <a class="button supporter-nav-button" href="{{ request.current_signup.logout_url }}">Click here to sign up someone else</a>
+    
+    <p>You may need to backtrack to this page.</p>
+    
+    {% else %}
+    
+    {% form_for signup %}
+    
+    <div class="form-errors">{% error_messages_for signup %}</div>
+    
+    <div class="row-fluid">
+      <div class="span6"><label for="signup_email">Email</label>{% email_field "email", class:"text" %}</div>
+    </div>        
+    
+    {% submit_tag "Sign Me Up!", class:"submit-button" %}
+    
+    <div class="form-submit"></div>
+    
+    {% endform_for %}
+    
+    {% endif %}  
+    
+    <div class="row-fluid padbottom padtop">
+      <div class="span12">
+        You will receive a welcome email which will contain a link to activate your account and complete your member profile. Dues are $15 per year and all are welcome to join.
+      </div>
+    </div>  
+    
+  </div>
+</div>
+
+
+{% endif %}

@@ -1,0 +1,80 @@
+
+<div class="mobile-visible">
+  {% include "breadcrumbs" %}
+</div>
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+
+<div id="content">
+  
+  <div id="intro" class="intro">
+    <div class="text-content">
+      {{ page.basic.content }}
+    </div>
+  </div>
+  
+  <div class="row-fluid">
+    <div class="span12"><!--Approval Rating-->
+      <iframe height=350 width=500 src="https://docs.google.com/spreadsheets/d/1tagKQjWHGmLBQruKn2Ng-rBOBvcUOWyglMqFf3gOZ_w/pubchart?oid=713250897&amp;format=interactive" seamless frameborder=0 scrolling=no></iframe>
+    </div>
+    <div class="span12"><!-- Why did you join?-->
+      <iframe height=350 width=500 src="https://docs.google.com/spreadsheets/d/1tagKQjWHGmLBQruKn2Ng-rBOBvcUOWyglMqFf3gOZ_w/pubchart?oid=583387449&amp;format=interactive" seamless frameborder=0 scrolling=no></iframe>
+    </div>
+  </div>
+  
+  <!-- How long?-->
+  <iframe height=350 width=600 src="https://docs.google.com/spreadsheets/d/1tagKQjWHGmLBQruKn2Ng-rBOBvcUOWyglMqFf3gOZ_w/pubchart?oid=2078854472&amp;format=interactive" seamless frameborder=0 scrolling=no></iframe>
+  
+  <div class="row-fluid">
+    <div class="span12"><!--Membership Status-->
+      <iframe height=350 width=500 src="https://docs.google.com/spreadsheets/d/1tagKQjWHGmLBQruKn2Ng-rBOBvcUOWyglMqFf3gOZ_w/pubchart?oid=146478660&amp;format=interactive" seamless frameborder=0 scrolling=no></iframe>
+    </div>
+    <div class="span12"><!-- Other groups?-->
+      <iframe height=350 width=500 src="https://docs.google.com/spreadsheets/d/1tagKQjWHGmLBQruKn2Ng-rBOBvcUOWyglMqFf3gOZ_w/pubchart?oid=1657390533&amp;format=interactive" seamless frameborder=0 scrolling=no></iframe>
+    </div>
+  </div>
+  <!-- How has RPCVW helped you?-->
+  <iframe height=400 width=600 src="https://docs.google.com/spreadsheets/d/1tagKQjWHGmLBQruKn2Ng-rBOBvcUOWyglMqFf3gOZ_w/pubchart?oid=542532463&amp;format=interactive" seamless frameborder=0 scrolling=no></iframe>
+  <!-- How many events?-->
+  <iframe height=400 width=600 src="https://docs.google.com/spreadsheets/d/1tagKQjWHGmLBQruKn2Ng-rBOBvcUOWyglMqFf3gOZ_w/pubchart?oid=607724484&amp;format=interactive" seamless frameborder=0 scrolling=no></iframe>
+  <!-- Social media-->
+  <iframe height=400 width=800 src="https://docs.google.com/spreadsheets/d/1tagKQjWHGmLBQruKn2Ng-rBOBvcUOWyglMqFf3gOZ_w/pubchart?oid=343669304&amp;format=interactive" seamless frameborder=0 scrolling=no></iframe>
+  <!-- what should we do?-->
+  <iframe height=400 width=600 src="https://docs.google.com/spreadsheets/d/1tagKQjWHGmLBQruKn2Ng-rBOBvcUOWyglMqFf3gOZ_w/pubchart?oid=1074256890&amp;format=interactive" seamless frameborder=0 scrolling=no></iframe>
+  
+  <div class="row-fluid">
+    <div class="span12"><!-- average age-->
+      <iframe height=350 width=500 src="https://docs.google.com/spreadsheets/d/1tagKQjWHGmLBQruKn2Ng-rBOBvcUOWyglMqFf3gOZ_w/pubchart?oid=963374366&amp;format=interactive" seamless frameborder=0 scrolling=no></iframe>
+    </div>
+    
+    <div class="span12"><!-- rel status-->
+      <iframe height=350 width=500 src="https://docs.google.com/spreadsheets/d/1tagKQjWHGmLBQruKn2Ng-rBOBvcUOWyglMqFf3gOZ_w/pubchart?oid=1866068274&amp;format=interactive" seamless frameborder=0 scrolling=no></iframe>
+    </div>
+  </div>
+  
+  <div class="row-fluid">
+    <div class="span12"><!-- family status-->
+      <iframe height=350 width=500 src="https://docs.google.com/spreadsheets/d/1tagKQjWHGmLBQruKn2Ng-rBOBvcUOWyglMqFf3gOZ_w/pubchart?oid=1662355824&amp;format=interactive" seamless frameborder=0 scrolling=no></iframe>
+    </div>
+    <div class="span12"><!-- employment status-->
+      <iframe height=350 width=500 src="https://docs.google.com/spreadsheets/d/1tagKQjWHGmLBQruKn2Ng-rBOBvcUOWyglMqFf3gOZ_w/pubchart?oid=744473281&amp;format=interactive" seamless frameborder=0 scrolling=no></iframe>
+    </div>
+  </div>
+  
+  {% if page.tags_count > 0 %}
+  <div class="page-tags">
+    {% include "page_tags" with page %}
+  </div>
+  {% endif %}
+  
+  <div class="like-page">
+    <strong>Share this page!</strong>
+        {% include "like_page" %}
+  </div>
+  
+  {% if page.show_stream? %}
+  {% include "page_stream" %}
+  {% endif %}
+  
+</div>

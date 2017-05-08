@@ -1,0 +1,27 @@
+<div class="mobile-visible">
+  {% include "breadcrumbs" %}
+</div>
+
+
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+
+ {{ page.basic.content }}
+
+<div id="homeintro" class="home-intro section scrollspy hide">
+  <h4>We welcome all who share an interest in world affairs and a commitment to volunteer service. <a href="/join">Join us</a> and share this page far and wide!</h4>
+</div>
+<div class="like-page" id="share-page">
+  {% include "like_page" %}
+</div>
+<hr>
+<!-- this widget only appears on the homepage with the proper page tag -->
+{% for tag in page.tags %} 
+{% if page.is_homepage? == true and tag.name == 'events_left' %}
+
+{% subpage "events" with "homepage_event_widget" %}
+
+{% endif %}
+{% endfor %}
+

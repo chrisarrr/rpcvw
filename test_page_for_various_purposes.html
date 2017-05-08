@@ -1,0 +1,65 @@
+<script>
+  $.ajax({
+    type: "POST",
+    url: "https://mandrillapp.com/api/1.0/messages/send.json",
+    data: {
+      'key': 'mTp9N8__NIa75DMryMUx9A',
+      'message': {
+        'from_email': 'chrisarrr@gmail.com',
+        'to': [
+          {
+            'email': 'chris@chrisarobinson.com',
+            'name': 'RECIPIENT NAME (OPTIONAL)',
+            'type': 'to'
+          }
+        ],
+        'autotext': 'true',
+        'subject': 'YOUR SUBJECT HERE!',
+        'html': 'YOUR EMAIL CONTENT HERE! YOU CAN USE HTML!'
+      }
+    }
+  });
+</script>
+
+<script>
+  
+  $('#yourButtonId').click(function() {
+    $.ajax({
+      // ...
+    });
+  });
+</script>
+
+<a href="#" class="button" id="yourButtonId">Test</a>
+
+<div class="mobile-visible">
+  {% include "breadcrumbs" %}
+</div>
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+
+<div id="content">
+  
+  <div id="intro" class="intro">
+    <div class="text-content">
+      {{ page.basic.content }}
+    </div>
+  </div>
+  
+  {% if page.tags_count > 0 %}
+  <div class="page-tags">
+    {% include "page_tags" with page %}
+  </div>
+  {% endif %}
+  
+  <div class="like-page">
+    <strong>Share this page!</strong>
+    
+  </div>
+  
+  {% if page.show_stream? %}
+  {% include "page_stream" %}
+  {% endif %}
+  
+</div>

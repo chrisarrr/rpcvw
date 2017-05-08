@@ -1,0 +1,36 @@
+{% include "breadcrumbs" %}
+
+<div class="headline">
+  <h2>{{ page.headline }}</h2>
+
+  {% if page.has_author? %}
+  {% include "page_byline" %}
+  {% endif %}
+</div>
+
+<div id="content">
+
+  <div id="intro" class="intro">
+    <div class="content">
+      {{ page.blog_post.content_full }}
+      
+      <p  style=" margin: 12px auto 6px auto; font-family: Helvetica,Arial,Sans-serif; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal; -x-system-font: none; display: block;">   <a title="View 2013-2014 RPCVW Annual Report on Scribd" href="http://www.scribd.com/doc/238487553/2013-2014-RPCVW-Annual-Report"  style="text-decoration: underline;" >2013-2014 RPCVW Annual Report</a> by <a title="View Returned Peace Corps Volunteers of Washington, DC's profile on Scribd" href="http://www.scribd.com/rpcvw"  style="text-decoration: underline;" >Returned Peace Corps Volunteers of Washington, DC</a></p><iframe class="scribd_iframe_embed" src="//www.scribd.com/embeds/238487553/content?start_page=1&view_mode=scroll&access_key=key-bQEQAAD4sK3KnNkEBrNb&show_recommendations=true" data-auto-height="false" data-aspect-ratio="0.7729220222793488" scrolling="no" id="doc_30860" width="100%" height="600" frameborder="0"></iframe>
+    </div>
+  </div>
+
+  {% if page.tags_count > 0 %}
+  <div class="page-tags">
+    {% include "page_tags" with page %}
+  </div>
+  {% endif %}
+
+  <div class="like-page">
+    <strong>Do you like this post?</strong>
+    {% include "like_page" %}
+  </div>
+
+  {% if page.show_stream? %}
+  {% include "page_stream" %}
+  {% endif %}
+
+</div>

@@ -1,0 +1,98 @@
+
+
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+
+{% comment %} Hi Allison! Welcome to the template! Below is your intro, styled with HTML to look pretty. 
+When you write text between the comment tags, they'll show up here but not publicly. Comments are a good way
+to keep track of what you do and leave messages for others. {% endcomment %}
+
+<p><strong>Helpers&rsquo; high:</strong>&nbsp;a&nbsp;euphoric feeling, followed by a longer period of calm, experienced after performing a kind act.&nbsp;The physical sensation results from the release of&nbsp;endorphins, and is followed by a longer-lasting period of improved&nbsp;emotional well-being&nbsp;and sense of self-worth, feelings that in turn reduce stress and improve the health of the helper.</p>
+<p>As returned Peace Corps Volunteers we have all felt like this at one point or another. The goal of the Community Service Director is to connect RPCVs to local service organizations to continue the Peace Corps spirit of service and feel more connected to the community where we live, work and play. Each month we have group community service events and each week we post announcements for individual service opportunities that volunteers can get involved with on a long-term basis. We hope you can join us soon! &nbsp;</p>
+<h3>A Letter from the RPCV/W Community Service Director</h3>
+<p><img style="float: right; margin: 10px;" src="DSC05595.JPG" alt="DSC05595.JPG" width="30%" /></p>
+<p>When I first moved to DC I immediately put &ldquo;volunteer&rdquo; on my to-do list. It ended up staying there month after month with no progress made towards finding some type of meaningful volunteer opportunity. As an RPCV I obviously like to volunteer or I wouldn&rsquo;t have spent 27 months of my life eating rice and beans if it weren&rsquo;t worth it. I also wanted to volunteer to feel more connected to my new community. But I didn&rsquo;t want to just do anything; I had criteria. I wanted to find an organization that I believed in; I wanted to match my skills with their needs; and I wanted it to fit into my schedule fairly conveniently. A Google search for &ldquo;volunteer DC&rdquo; comes back with endless search results. At first it was a little overwhelming and other tasks on my to-do list seemed to take precedence.</p>
+<p>In the late spring I received an e-mail announcing an information session about running for the RPCV/W Board. I attended the meeting and was extremely impressed by the pro</p>
+<p>fessionalism and enthusiasm of the board members at the time. I decided to run for the Community Service Director as a perfect way to get involved in service in DC and work to serve other RPCVs interested in volunteering, but who may have also felt a little overwhelmed by it all.</p>
+<p>My goal as the Community Service Director is to connect RPCVs to service organizations in the DC area to continue the Peace Corps spirit of service. To achieve this goal I organize a monthly group event where volunteers can simply show up and give a few hours of their time. In addition, for those volunteers who are interested in a more consistent and long-term commitment I do my best to link them with organizations that need their skills by communicating calls for volunteers or training opportunities.</p>
+<p>If you are interested in volunteering watch for our monthly events and our announcements for long-term volunteers in our newsletter and Facebook group page.&nbsp;</p>
+<p>If you know of a great organization in DC that could use our help please let me know. &nbsp;</p>
+<p>Paz,</p>
+<p>Allison O&rsquo;Donnell</p>
+<p>Honduras, &rsquo;07-&lsquo;09</p>
+
+{% comment %} Here's where the intro stops and the blog posts begin, separated by a single space. You may wish to add one more line, 
+or a subheader saying something like: "Projects or  check out our service blog for pictures and descriptions of our projects". {% endcomment %}
+
+<div id="content">
+  {% if page.blog.is_posting_public? %}
+
+  <div class="padbottommore">
+    <div class="form-wrap">
+      <div class="form">
+          {% form_for blog_post_page %}
+
+          <div class="form-errors">{% error_messages_for blog_post_page %}</div>
+
+          <div id="blog-post-page-page-headline-input" class="blog-post-page-page-headline-input">
+            {% text_field "page_headline", class:"text", placeholder: "{{ page.blog.public_posting_prompt }}" %}
+          </div>
+
+          <div id="blog-post-page-form-expanded" class="blog-post-page-form-expanded hide">
+            <div class="padtopmore">
+              {% text_area "content_editable", class:"textarea-tinymce" %}
+            </div>
+            <div class="padtop">
+              {% submit_tag "Post", class:"submit-button" %}
+              <div class="form-submit"></div>
+            </div>
+          </div>
+
+          {% endform_for %}
+      </div>
+      {% unless request.logged_in? %}
+      <div class="user-session-form-container hide">
+        {% include "user_session_form" %}
+      </div>
+      {% endunless %}
+    </div>
+  </div>
+
+  {% endif %}
+
+  <div class="blog" id="blog-page-{{ page.id }}">
+    {% for post in page.blog.most_recent_blog_posts %}
+    <div class="page-excerpt" id="blog-post-page-{{ post.id }}">
+      <h3><a href="{{ post.url }}">{{ post.headline }}</a></h3>
+
+      <div class="byline">
+        Posted by {{ post.author.published_name_linked }} &middot; {{ post.published_at | date: '%B %d, %Y %l:%M %p' }}
+      </div>
+
+      <div class="excerpt">
+        {{ post.blog_post.content }}
+        {% if post.blog_post.is_extended? %}
+        <span class="read-more"><a href="{{ post.url }}">Read more</a></span>
+        {% endif %}
+      </div>
+
+      {% if post.show_stream? %}
+
+      <a href="{{ post.url }}#addreaction" class="button small-button">
+      {% if post.public_activities_count > 0 %}
+        {{ post.public_activities_count }} reaction{% if post.public_activities_count > 1 %}s{% endif %}
+      {% else %}
+        Comment
+      {% endif %}
+      {% endif %}
+      </a>
+      {{ "Share" | share_button page_id: post.id }}
+    </div>
+
+    <hr/>
+    {% endfor %}
+  </div>
+
+  {{ page.blog.most_recent_blog_posts | paginate prev_label: "&laquo;" next_label: "&raquo;" }}
+</div>

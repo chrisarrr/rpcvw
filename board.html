@@ -1,0 +1,32 @@
+<!--Create a new leaderboard and replace the template text with the code below -->
+
+<div class ="mobile-visible">
+  {% include "breadcrumbs" %}
+</div>
+<!--standard stuff -->
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+
+<div id="content">
+  <div id="intro">
+    <div class="text-content">
+      {{ page.directory.content }}
+    </div>
+  </div>
+  
+  {% include "board_emailer" %}
+  <div class="padtopmore"></div>
+  <!--/standard stuff -->
+  
+  <div class="board-box-container"><!-- increases the container width to 104% and hides overflow in Aware theme when in desktop view. change or remove as needed -->
+    {% include "leaders" %}
+  </div>
+  
+  <script src="//platform.linkedin.com/in.js" type="text/javascript"></script><!-- javascript neccessary for Linkedin widget to work -->
+  
+  <div class="like-page padtop">
+    <strong>Share this page!</strong>
+    {% include "like_page" %}
+  </div>
+</div>

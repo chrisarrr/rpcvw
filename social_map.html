@@ -1,0 +1,32 @@
+
+
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+
+<div id="content">
+
+  <div id="intro" class="intro">
+    <div class="text-content">
+      {{ page.basic.content }}
+    </div>
+  </div>
+
+<iframe width="100%" height="600" frameborder="1px" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps/ms?msid=212399952245132352193.0004c2df66dc84a5e2c44&amp;msa=0&amp;ie=UTF8&amp;t=m&amp;ll=38.920421,-77.029266&amp;spn=0.256427,0.439453&amp;z=11&amp;output=embed"></iframe><br /> <a href="https://maps.google.com/maps/ms?msid=212399952245132352193.0004c2df66dc84a5e2c44&amp;msa=0&amp;ie=UTF8&amp;ll=-12.272036,22.788906&amp;spn=124.212953,291.056328&amp;t=m&amp;source=embed" style="color:#0000FF;text-align:center">Add to the map</a>   
+  
+  {% if page.tags_count > 0 %}
+  <div class="page-tags">
+    {% include "page_tags" with page %}
+  </div>
+  {% endif %}
+
+  <div class="like-page">
+    <strong>Do you like this page?</strong>
+    {% include "like_page" %}
+  </div>
+
+  {% if page.show_stream? %}
+  {% include "page_stream" %}
+  {% endif %}
+
+</div>

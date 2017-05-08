@@ -1,0 +1,59 @@
+<div class="padcontainer">
+  
+  <div class="content-container">
+    {{ page.calendar.event_type_name }}
+    {% if page.headline.size > 0 %}
+    <h2 class="headline">{{ page.headline }}</h2>
+    {% endif %}
+    
+    <div id="content">
+      
+      <div id="intro" class="intro">
+        {{ page.calendar.content }}
+        <p>This page lists {{ page.calendar.events_past_count }} events since this site launched in 2013.</p>       
+      </div>
+      
+      {% if page.calendar.show_map? %}
+      
+      {% if page.calendar.events_past_count > 0 %}
+      
+      <div class="padbottom">
+        
+        {{ page.calendar.events_past_map }}
+        
+      </div>
+      
+      {% endif %}
+      
+      {% endif %}
+      
+      {% for event in page.calendar.events_past_all %}
+      
+      {% capture 2016 %}{{ event.event.local_start_at | date: '%Y' | contains '2016'% | size }}{% endcapture %}
+      
+      {% endfor %}
+            
+      <p>Use the map or the buttons below to browse them. Click on an event title to learn more. To see events going back to 2010, <a href="http://rpcvw.wildapricot.org/events" target="_blank">click here to visit our old site</a>.</p>
+      
+      <div class="padbottommore">
+        
+        <div class="pagination">
+          <ul>
+            <li><a href="#2013"><b>2013</b></a></li> 
+            <li><a href="#2014"><b>2014</b></a></li>  
+            <li><a href="#2015"><b>2015</b></a></li>  
+            <li><a href="#2016"><b>2016</b></a></li>
+            <li><a href="#2017"><b>2017</b></a></li> 
+          </ul>
+        </div>
+      </div>
+      
+      <ul class="event-wrap">
+        {% for event in page.calendar.events_past_all reversed %}
+        <li>{% include "past_event" %}</li>
+        {% endfor %}
+      </ul>
+      
+    </div>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+<div class="mobile-visible">
+  {% include "breadcrumbs" %}
+</div>
+
+<h3 class="headline center">Membership Status</h3>
+
+
+<div id="content">
+  
+  <div id="intro" class="intro">
+    <div class="text-content">
+      {{ page.basic.content }}
+    </div>
+    
+    {% if request.current_user.is_member? %}
+    <div id="flash_container">
+      <div id="flash">
+        <div class="notice success clearfix center">
+          <div class="flash-message">Your membership is currently active.</div>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div id="flash_container">
+      <div id="flash">
+        <div class="notice error clearfix center">
+          <div class="flash-message">Your membership is expired.<div class="padtop padbottom"></div><a href="/renew" class="button">Renew</a></div>
+          <div class="padtopmore padbottomless">You must renew your membership in order to access member resources</div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+     <div class="row-fluid center">
+    <div class="padbottom">
+      <h3 class="headline">Renew for another year</h3><a href="/one-year_regular_membership" class="button mentoropen" target="_blank">$15 level</a> <a href="/one-year_friend_of_rpcv_w" class="button mentoropen" target="_blank">$100 level</a>
+    </div> 
+    </div>
+    {% if page.tags_count > 0 %}
+    <div class="page-tags">
+      {% include "page_tags" with page %}
+    </div>
+    {% endif %}
+    
+    
+    
+    {% if page.show_stream? %}
+    {% include "page_stream" %}
+    {% endif %}
+  </div>
+</div>

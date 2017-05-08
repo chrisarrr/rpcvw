@@ -1,0 +1,132 @@
+
+<div class="mobile-visible">
+  {% include "breadcrumbs" %}
+</div>
+
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+
+<div id="content">
+  
+  {% if page.suggestion_box.content.size > 0 %}
+  <div id="intro" class="intro">
+    {{ page.suggestion_box.content }}
+  </div>
+  {% endif %}
+  
+  <h5>RPCV employee resource groups of any size and status are encouraged to post below, just click 'Add A Group' </h5>
+  
+  <hr>
+  
+  <div class="padbottom">
+    
+    <div class="padtopless padbottom">
+      <ul class="tag-list">
+        <li class="{% if request.url_path == page.url or request.url_path == '/' + page.slug %}current{% endif %}"><a href="{{ page.url }}">Most recent</a></li>
+        {% capture alphabetical_url %}/{{ page.slug }}/alphabetical{% endcapture %}
+        <li class="{% if request.url_path == alphabetical_url %}current{% endif %}"><a href="{{ alphabetical_url }}">Alphabetical</a></li>
+        {% for tag_name in page.suggestion_box.tag_names %}
+        {% capture tag_url %}/{{ page.slug }}/tags/{{ tag_name }}{% endcapture %}			  
+        <li class="{% if request.url_path == tag_url %}current{% endif %}"><a href="{{ tag_url }}">{{ tag_name | capitalize }}</a></li>
+        {% endfor %}
+        <li class="current"><a href="#addagroup">Add a Group</a></li>
+      </ul>
+    </div>
+    
+    <div class="padtop suggestion-box content-list" id="suggestion-box-page-{{ page.id }}">
+      
+      {% if request.url_path == page.url or request.url_path == '/' + page.slug %} <!-- show most recent -->
+      {% assign suggestions = page.suggestion_box.most_recent_suggestions %}
+      {% elsif request.url_path == alphabetical_url %} <!-- show alphabetical -->
+      {% assign suggestions = page.suggestion_box.alphabetical_suggestions %}
+      {% else %} <!-- show tagged -->
+      {% assign suggestions = page.suggestion_box.tagged_suggestion_pages %}
+      {% endif %}
+      
+      {% for post in suggestions %}
+      
+      <div class="square-content">
+        <ul>
+          <li>
+            <a href="{{ post.url }}" class = "title" title="{{ post.suggestion.content | strip_html | truncatechars: 150 }}" > 
+              <strong>{{ post.headline }}</strong>
+              <hr>
+              <img src="{{ post.suggestion.image_url }}" style="width:137px;height:137px" />
+              <hr>
+            </a> 
+          </li>
+        </ul>
+      </div>
+      {% endfor %}
+      
+      <div class="row-fluid">
+        {% if request.url_path == page.url %} <!-- show most recent -->
+        {{ page.suggestion_box.most_recent_suggestions | paginate prev_label: "&laquo;" next_label: "&raquo;" }}
+        {% elsif request.url_path == alphabetical_url %}
+        {{ page.suggestion_box.alphabetical_suggestions | paginate prev_label: "&laquo;" next_label: "&raquo;" }}
+        {% else %}
+        {{ page.suggestion_box.tagged_suggestions | paginate prev_label: "&laquo;" next_label: "&raquo;" }}
+        {% endif %}
+      </div>
+      
+    </div>
+    <div id="addagroup"></div>
+    <p>Don't see your group? Go ahead and add it using the form below. While you're at it, ensure that your group is also listed with the <a title="NPCA Member Groups" href="http://www.peacecorpsconnect.org/resources/member-groups/" target="_blank">National Peace Corps Association</a></p>
+    
+    <div class="form-wrap">
+      <div class="form">
+        
+        {% form_for suggestion_page %}
+        
+        <div class="form-errors">{% error_messages_for suggestion_page %}</div>
+        
+        <div id="suggestion-page-page-headline-input" class="suggestion-headline">
+          <div class="padbottom">
+            <small>
+              Enter the name of your group
+            </small>
+          </div>
+          {% text_field "page_headline", class:"text", placeholder:"Official Name", required: "required" %}
+        </div>
+        <div id="suggestion-page-form-expanded" class="suggestion-page-form-expanded">
+          <div class="padtop padbottom">
+            <small>
+              Write a short blurb about your group below. If possible, provide a general email address or point of contact. This information will be publicly visible. You may return to your group page and edit this content in the future.
+            </small>
+          </div>
+          {% text_area "content_editable", class:"textarea-tinymce" %}
+          <div class="padtop">
+            <small><a href="https://commons.wikimedia.org/wiki/Category:Seals_of_United_States_Government_Executive_Departments" target="_blank">Find your agency's logo at this website</a>, save the small thumbnail version to your computer, and upload it here.</small>
+          </div>
+          {% file_field "image", class:"file" %}
+          <hr>
+          {% submit_tag "Post Your Affiliate Group", class:"submit-button" %}
+          <div class="form-submit">
+          </div>
+        </div>
+        
+        {% endform_for %}
+        
+      </div>
+      {% unless request.logged_in? %}
+      <div class="user-session-form-container hide">
+        {% include "user_session_form" %}
+      </div>
+      {% endunless %}
+    </div>
+  </div>
+  
+  <div class="like-page">
+    <strong>Like and Share!</strong>
+    {% include "like_page" %}
+  </div>
+  
+</div>
+
+<script src="/assets/liquid/suggestions.js"></script>
+<script type="text/javascript">
+  $(function(){
+    new NB.Liquid.Suggestions();
+  });
+</script>

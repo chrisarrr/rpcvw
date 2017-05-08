@@ -1,0 +1,76 @@
+<div class="mobile-visible">{% include "breadcrumbs" %}</div>
+
+{% if request.current_user.is_member? %}
+<div id="flash">
+  <div class="notice notice clearfix">
+    <div class="flash-message"> Hi {{ request.current_user.first_name }}. Our records indicate that your email, <b>{{ request.current_user.email }}</b>, is already in our system. Fill out the form below or contact our <a href="mailto:secretary@rpcvw.org">Secretary</a> if you're not receiving the newsletter. 
+      <button class="flash-close">×</button>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+
+<div id="content">
+  
+  <div id="intro" class="intro">
+    <div class="text-content">
+      {{ page.basic.content }}
+    </div>
+  </div>
+  
+    <div class="form-wrap scrollspy" id="subscribe">
+    <div class="form row-fluid">
+      <h4>Use this form to subscribe to our newsletter</h4>
+      <div class="padtopmore"></div>
+      <div class="box span6">
+        <div id="mc_embed_signup">
+          <form action="//rpcvw.us4.list-manage.com/subscribe/post?u=6542714c69023bc7f6fa51510&amp;id=b97898cf65" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+            <div id="mc_embed_signup_scroll">
+              <input type="email" value="" name="EMAIL" class="text" id="mce-EMAIL" placeholder="email address" required>
+              <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+              <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                <input type="text" name="b_6542714c69023bc7f6fa51510_b97898cf65" tabindex="-1" value=""></div>
+              <div class="clear">
+                <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="submit-button">
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>  
+    </div>
+  </div>
+  
+  <div class="padtopmore"></div>
+  
+  <div class="form-wrap scrollspy" id="submit">
+    <div class="form">
+      <h4>Use this form to submit an item to our newsletter</h4>
+      <div class="padtopmore"></div>
+      <iframe src="https://docs.google.com/forms/d/1SgyorfNWVaTb7u_oT5uq5peGKKjMnDLyYyDvU4pot3U/viewform?embedded=true" width="100%" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+    </div>
+    <div class="padtopmore"></div>
+    <a class="small_button" href="https://docs.google.com/forms/d/1SgyorfNWVaTb7u_oT5uq5peGKKjMnDLyYyDvU4pot3U/viewform?c=0&w=1" target="_blank">Open form in a new page<i class="padleft fa fa-external-link-square"></i></a>
+  </div>
+  
+  {% if page.tags_count > 0 %}
+  <div class="page-tags">
+    {% include "page_tags" with page %}
+  </div>
+  {% endif %}
+  
+  <h3 class="scrollspy" id="recent">Recent Newsletters</h3>
+  <hr>
+  <script language="javascript" src="http://us4.campaign-archive2.com/generate-js/?u=6542714c69023bc7f6fa51510&fid=4677&show=5" type="text/javascript"></script>
+  <div class="like-page">
+    <strong>Share the newsletter with your friends!</strong>
+    {% include "like_page" %}
+  </div>  
+  
+  {% if page.show_stream? %}
+  {% include "page_stream" %}
+  {% endif %}
+</div>

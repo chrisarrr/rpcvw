@@ -1,0 +1,69 @@
+<div class="mobile-visible">{% include "breadcrumbs" %}</div>
+<div id="flash">
+  <div class="notice notice clearfix">
+    <div class="flash-message"><strong>Note:</strong> We're retooling the layout of this page to accommodate all the groups and incorportate a search function, so please check back often. If you'd like to add a group, send your info to us at <a href="mailto:info@rpcvw.org">info@rpcvw.org. </a> Thank you for your patience 
+      <button class="flash-close">×</button>
+    </div>
+  </div>
+</div>
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+<div id="content">
+  <div id="intro" class="intro">
+    <p> We don't fund projects abroad, but these Country Groups do. Each one has a local contact who keeps the info current and would be delighted to hear from you. Click a flag to learn more.</p>
+  </div>
+  
+  {% include "country_group_grid" %}
+  
+  {% if page.tags_count > 0 %}
+  <div class="page-tags">
+    {% include "page_tags" with page %}
+  </div>
+  {% endif %}
+  
+  <div class="like-page padtopmore">
+    <strong>Share this page!</strong>
+    {% include "like_page" %}
+  </div>
+  {% if page.show_stream? %}
+  {% include "page_stream" %}
+  {% endif %}
+</div>
+
+<hr>
+  {% if page.blog.is_posting_public? %}
+  
+  <div id="add_country" class="padtopmore">
+    <div class="form">
+      {% form_for blog_post_page %}
+      <div class="form-errors">{% error_messages_for blog_post_page %}</div>
+      
+      <div id="blog-post-page-page-headline-input" class="blog-post-page-page-headline-input">
+        {% text_field "page_headline", class:"text", placeholder: "{{ page.blog.public_posting_prompt }}" %}
+      </div>
+      
+      <div id="blog-post-page-form-expanded" class="blog-post-page-form-expanded hide">
+        <div class="padtopmore">
+          {% file_field "image", class:"file" %}
+        
+        </div>
+        
+        <div class="padtop">
+          {% submit_tag "Post", class:"submit-button" %}
+          <div class="form-submit"></div>
+        </div>
+      </div>
+      
+      {% endform_for %}
+    </div>
+    {% unless request.logged_in? %}
+    <div class="user-session-form-container hide">
+      {% include "user_session_form" %}
+    </div>
+    {% endunless %}
+  </div>
+  
+  {% endif %}
+  
+

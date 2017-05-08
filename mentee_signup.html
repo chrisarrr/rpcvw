@@ -1,0 +1,239 @@
+{% include "breadcrumbs" %}
+
+{% if page.headline.size > 0 %}
+<div id="flash_container">
+      <div id="flash">
+<h2 class="headline">{{ page.headline }}</h2>
+  </div>
+</div>
+{% endif %}
+
+<div id="content">
+  
+  
+  <h4 class="padbottommore">Right now, it looks like this:</h4>
+  <div class="row-fluid">
+    <div class="span6">
+      <div class="mentorpeople">
+        <div class="networkbox">       
+          <a href="{{ current_signup.profile_url }}" title="View {{ current_signup.first_name }}'s profile" class="mentorbadge {% if current_signup.tags contains "mentor_open" or current_signup.tags contains "mentee_open" %}mentoropen"> {% else %}mentormatched">{% endif %}  
+            {% if current_signup.tags contains "mentor_open" or current_signup.tags contains "mentee_open" %}  
+            Open 
+            {% elsif current_signup.tags contains "mentor_matched" or current_signup.tags contains "mentee_matched" %}          
+            Matched 
+            {% else %}
+            Unlisted
+            {% endif %}       
+          </a>
+          {% if current_signup.bigger_profile_image.size > 0 %}{{ current_signup.bigger_profile_image }}{% else %}<div class="blankbox"></div><div class="blankbox"></div>{% endif %} 
+          <a class="mentornetwork" href="mailto:{{ current_signup.email }}" title="Email {{ current_signup.first_name }}">Contact</a>
+        </div>
+        
+        {% if current_signup.linkedin_profile_url.size  > 0 %}<a href="{{ current_signup.linkedin_profile_url }}"><i class="fa fa-linkedin-square"></i></a>{% endif %}
+        
+        <div class="ment-name">{{ current_signup.published_name_linked }}</div>
+        
+        <div class="ment-byline strong">{% if current_signup.occupation.size  > 2 or current_signup.employer.size  > 2 %}{% if current_signup.occupation.size  > 2 %}{{ current_signup.occupation }}{% endif %}{% if current_signup.occupation.size  > 2 and current_signup.employer.size  > 2 %}, {% endif %}{% if current_signup.employer.size  > 2 %}{{ current_signup.employer }}{% endif %}{% else %}&nbsp;{% endif %}</div>
+        
+        <div class="ment-byline">{% if current_signup.custom_values_for_display['country_of_service_1'].size > 0 %}{{ current_signup.custom_values_for_display['country_of_service_1'] }}{% if current_signup.custom_values_for_display['dates_of_service_1'].size > 0 %} {{ current_signup.custom_values_for_display['dates_of_service_1'] | remove: '.0' }}{% endif %}
+          {% endif %}</div> 
+        
+        {% if current_signup.relationships.size  > 0 %}
+        <div class="ment-byline">
+          {% for relationship in current_signup.relationships %}
+          {% if relationship.type == "mentor_of" %}Mentor of {% elsif relationship.type == "mentee_of" %}Mentee of {% endif %}{{ relationship.other_current_signup.published_name_linked }}
+          {% endfor %}
+        </div>
+        {% endif %}
+        
+      </div>
+    </div>
+  </div>
+  
+  {% if page.signup.content.size > 0 %}
+  <div id="intro" class="intro">
+    {{ page.signup.content }}
+  </div>
+  {% endif %}
+  
+  <div class="form-wrap">
+    <div class="form">
+      
+      {% form_for signup %}
+      
+      <div class="form-errors">{% error_messages_for signup %}</div>
+      
+      <h4 class="padbottom">Status</h4>
+      
+      <div id="flash_container">
+        <div id="flash">
+          <div class="notice notice error">
+            <div class="flash-message" align="center"><small>If none of these boxes are checked, you will not appear in the listings</small></div>
+            
+          </div>
+        </div>
+      </div>
+      
+      <hr>
+      
+      {% if page.signup.has_labeled_tags? %}
+      
+      {% include "labeled_tags" %}
+      
+      {% endif %}
+      <div class="padtopmore"></div>
+      <h4 class="padbottom">Profile</h4>
+      <small>This information is visible to other participants</small>
+      <hr>
+      
+      <div class="row-fluid">
+        <div class="span6"><label for="signup_signup_profile_image"><strong>Select profile image</strong></label><div style="float:left; margin-right:10px">{{ request.current_signup.bigger_profile_image }}</div><small>You may upload a small, square image here to serve as your avatar. Otherwise, the website will use a profile image from your Facebook or Twitter account, if available. Any image you upload here will overwrite existing data.</small></div>
+        <div class="span6">{% file_field "signup_profile.image", class:"file" %}</div>
+      </div>
+      <div class="row-fluid">
+        <div class="span12"><label for="signup_website_input"><strong>Linkedin url (recommended)</strong></label> 
+          <div><small>Add your Linkedin <a href="https://community.linkedin.com/questions/20194/how-do-i-find-my-url-in-linkedin.html">public profile url</a> exactly as it appears in your address bar. This is the best way for people to contact you for professional networking.</small></div>
+          <div class="padtop"></div>
+        </div>{% text_field "website", class:"text" %}
+      </div>
+      
+      <small>If you don't use Linkedin, you may also designate a Facebook or Twitter account as alternate methods of contact.</small>
+      <div class="padtopmore"></div>
+      <div class="row-fluid">
+        <div class="span6"><label for="signup_first_name"><strong>Connect Facebook</strong></label>
+          {% if request.current_signup.has_facebook_authorization? %}
+          <div id="flash_container">
+            <div id="flash">
+              <div class="notice success clearfix">
+                <div class="flash-message" align="center">Facebook Connected</div>
+              </div>
+            </div>
+          </div>
+          {% else %} 
+          <div id="flash_container">
+            <div id="flash">
+              <div class="notice notice error">
+                <div class="flash-message" align="center">Facebook Not Connected</div>
+                <strong><a href="{{ request.facebook_connect_url }}"> Click here to connect</a></strong>
+              </div>
+            </div>
+          </div>
+          {% endif %} 
+        </div>
+        <div class="span6"><label for="signup_first_name"><strong>Connect Twitter</strong></label>
+          {% if request.current_signup.has_twitter_authorization? %}
+          <div id="flash_container">
+            <div id="flash">
+              <div class="notice success clearfix">
+                <div class="flash-message" align="center">Twitter Connected</div>
+              </div>
+            </div>
+          </div>
+          {% else %} 
+          <div id="flash_container">
+            <div id="flash">
+              <div class="notice error clearfix">
+                <div class="flash-message" align="center">Twitter Not Connected</div>
+                <strong><a href="{{ request.twitter_connect_url }}"> Click here to connect</a></strong>
+              </div>
+            </div>
+          </div>
+          {% endif %} 
+        </div>
+      </div>
+      
+      <div class="row-fluid">
+        <div class="span4"><label for="signup_first_name"><strong>First Name</strong></label>{% text_field "first_name", class:"text" %}</div>
+        <div class="span4"><label for="signup_last_name"><strong>Middle</strong></label>{% text_field "middle_name", class:"text" %}</div>
+        <div class="span4"><label for="signup_last_name"><strong>Last Name</strong></label>{% text_field "last_name", class:"text" %}</div>
+      </div>
+      
+      <div class="row-fluid">
+        <div class="span6"><label for="signup_employer_input">Employer / Organization</label>{% text_field "employer", class:"text" %}</div>
+        <div class="span6"><label for="signup_occupation_input">Job Title</label>{% text_field "occupation", class:"text" %}</div>
+      </div>
+      
+      <small>If you served in Peace Corps, tell us where and when</small>
+      <div class="row-fluid padtop">
+        <div class="span6"><label for="signup_bio"><strong>First Peace Corps Country</strong></label> 
+          {% text_field "custom_values.country_of_service_1", class:"text" %}</div>
+        <div class="span6"><label for="signup_bio"><strong>Dates of Service</strong></label> 
+          {% text_field "custom_values.dates_of_service_1", class:"text" %}</div>
+      </div>      
+      
+      <div class="padtopmore"></div>
+      <div class="row-fluid">
+        <div class="span12">
+          <label for="signup_profile_content_editable"><strong>Write a few lines about yourself</strong></label>
+          <small>This blurb will display on your full profile page, which is also visible to the public. Use it to describe your service, your work and what you are looking to get out of this program. You may include hyperlinks and alternative methods of contact. We recommend you do not disclose private email addresses or phone numbers.</small>
+          <div class="padtop"></div>
+          <div class="so_ie_does_not_put_this_in_the_footer">{% text_area "profile_content_editable", class:"textarea-tinymce" %}</div>
+        </div>
+      </div>
+      
+      <div class="form-errors"></div>
+      <small>For the time being, your email will be accessible to other participants in the mentoring program. Eventually we hope to replace it with a private messaging feature.</small>
+      <div class="row-fluid padtop">
+        <div class="span4"><label for="signup_email">Email</label>{% email_field "email", class:"text" %}</div>
+      </div>      
+      <h4 class="padbottom">Private Information</h4>
+      <small>This information is for our records. It will only be visible to group administrators</small>
+      <hr>
+      <div class="row-fluid">        
+        <div class="span6"><label for="signup_phone_number">Phone</label>{% phone_field "phone_number", class:"text" %}</div>
+        <div class="span6"><label for="signup_born_at_chronic">Date of Birth (MM/DD/YYYY)</label>{% text_field "born_at_chronic", class:"text" %}</div> 
+        {% comment %} Work in progress
+        <div class="span4"><label for="signup_employer_input">Facebook</label><input id="signup_facebook" maxlength="255" name="signup[facebook]" type="text" value= "{{  signup.facebook_profile_url }}" class="focus"></div>
+        <div class="span4"><label for="signup_occupation_input">Linkedin</label><input id="signup_linkedin" maxlength="255" name="signup[linkedin]" type="text" value= "{{ linkedin_profile_url }}" class="focus"></div>
+        {% endcomment %} 
+      </div>
+      {% comment %} cut for now
+      <div class="row-fluid">
+        <div class="span6"><label class="checkbox" for="signup_email_opt_in">
+          {% check_box "email_opt_in", class:"check_box" %} 
+          Keep me updated</label></div>
+        <div class="span6">
+          {% if signup.is_opted_in? %}
+          <div id="flash_container">
+            <div id="flash">
+              <div class="notice success clearfix">
+                <div class="flash-message" align="center">Subscribed to emails</div>
+              </div>
+            </div>
+          </div>
+          {% else %} 
+          <div id="flash_container">
+            <div id="flash">
+              <div class="notice notice clearfix">
+                <div class="flash-message" align="center">Unsubscribed from emails</div>
+              </div>
+            </div>
+          </div>
+          {% endif %} 
+        </div>
+      </div>
+      {% endcomment %} 
+      
+      {% comment %} Activate the code below when ready
+      <div class="row-fluid">
+        <div class="span12"><label class="checkbox" for="signup_mobile_opt_in">{% check_box "mobile_opt_in", class:"check_box" %} Receive text messages</label></div>
+      </div>
+      {% endcomment %}
+      <div class="row-fluid">
+        <div class="span12"><label for="signup_submitted_address">Address (Street, City, State, Postal code)</label>
+          {% text_field "submitted_address", class:"text" %}
+        </div>
+        <small>Keep it all in one line separated by commas, ex: 1234 Street Name, Washington, DC, 20000</small>
+      </div>   
+      <div class="row-fluid padtopmore">
+        <div class="span12">
+          {% submit_tag "Save Information", class:"submit-button" %}
+          <div class="form-submit"></div>
+        </div>
+      </div>
+      
+      {% endform_for %}
+      
+    </div>
+  </div>
+</div>

@@ -1,0 +1,128 @@
+
+<div class="mobile-visible">
+  {% include "breadcrumbs" %}
+</div>
+
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+
+<div id="content">
+  
+  {% if page.suggestion_box.content.size > 0 %}
+  <div id="intro" class="intro">
+    {{ page.suggestion_box.content }}
+  </div>
+  {% endif %}
+  
+  <div class="padbottom">
+    
+    <div class="padtopless padbottom">
+      <ul class="tag-list">
+        <li class="{% if request.url_path == page.url or request.url_path == '/' + page.slug %}current{% endif %}"><a href="{{ page.url }}">Most recent</a></li>
+        {% capture alphabetical_url %}/{{ page.slug }}/alphabetical{% endcapture %}
+        <li class="{% if request.url_path == alphabetical_url %}current{% endif %}"><a href="{{ alphabetical_url }}">Alphabetical</a></li>
+        {% for tag_name in page.suggestion_box.tag_names %}
+        {% capture tag_url %}/{{ page.slug }}/tags/{{ tag_name }}{% endcapture %}			  
+        <li class="{% if request.url_path == tag_url %}current{% endif %}"><a href="{{ tag_url }}">{{ tag_name | capitalize }}</a></li>
+        {% endfor %}
+        <li class="current"><a href="#addagroup">Post an Item</a></li>
+      </ul>
+    </div>
+    
+    <div class="padtop suggestion-box content-list" id="suggestion-box-page-{{ page.id }}">
+      
+      {% if request.url_path == page.url or request.url_path == '/' + page.slug %} <!-- show most recent -->
+      {% assign suggestions = page.suggestion_box.most_recent_suggestions %}
+      {% elsif request.url_path == alphabetical_url %} <!-- show alphabetical -->
+      {% assign suggestions = page.suggestion_box.alphabetical_suggestions %}
+      {% else %} <!-- show tagged -->
+      {% assign suggestions = page.suggestion_box.tagged_suggestion_pages %}
+      {% endif %}
+    
+        <div id="bbcolumns">
+          {% for post in suggestions %}  
+          <div class="post {% if request.is_sidebar? == false %}wide{% endif %}">
+            <a href="{{ post.url }}" title="{{ post.suggestion.content | strip_html | truncatechars: 150 }}" > 
+              <strong>{{ post.headline }}</strong>
+              <hr>
+              <img src="{{ post.suggestion.image_url }}"/>
+              <hr>
+              <p>{{ post.suggestion.content | strip_html | truncatechars: 150 }}</p>
+            </a> 
+          </div>            
+          {% endfor %}
+        </div>
+ 
+      <div class="row-fluid">
+        {% if request.url_path == page.url %} <!-- show most recent -->
+        {{ page.suggestion_box.most_recent_suggestions | paginate prev_label: "&laquo;" next_label: "&raquo;" }}
+        {% elsif request.url_path == alphabetical_url %}
+        {{ page.suggestion_box.alphabetical_suggestions | paginate prev_label: "&laquo;" next_label: "&raquo;" }}
+        {% else %}
+        {{ page.suggestion_box.tagged_suggestions | paginate prev_label: "&laquo;" next_label: "&raquo;" }}
+        {% endif %}
+      </div>
+      {% if suggestion.number > 6  %}
+      {{ paginate prev_label: "&laquo;" next_label: "&raquo;" }}
+      {% endif %}      
+    </div>
+    <div id="addagroup"></div>   
+      <div class="form">
+        {% form_for suggestion_page %}
+        <div class="form-errors">{% error_messages_for suggestion_page %}</div>
+        <div id="suggestion-page-page-headline-input" class="suggestion-headline">
+          <strong>Post something!</strong>
+          <div class="padtop"></div>
+          <small>
+            Enter the title of your post
+          </small>
+          {% text_field "page_headline", class:"text", placeholder:"This text will display above the picture", required: "required" %}
+        </div>
+        <div id="suggestion-page-form-expanded" class="suggestion-page-form-expanded">
+          <div class="padtop padbottom">
+            <small>
+              Write a short blurb. You may include links and HTML 
+            </small>
+          </div>
+          {% text_area "content_editable", class:"textarea-tinymce" %}
+          <div class="padtop">
+            <small>
+              Upload an image here
+            </small></div>
+          <div>{% file_field "image", class:"file" %}</div>
+          <small>
+            You may edit the text you post at any time, but you will have to contact the website administrator to change the picture.
+          </small>
+          <div class="padtop">
+          </div>
+          <div class="row-fluid">
+            <div class="span2 pull-right">
+              {% submit_tag "Post", class:"submit-button" %}
+            </div>
+          </div>
+          <div class="form-submit">
+          </div>
+        </div>
+        {% endform_for %}
+      </div>
+      {% unless request.logged_in? %}
+      <div class="user-session-form-container hide">
+        {% include "user_session_form" %}
+      </div>
+      {% endunless %}
+    </div>
+  
+  <div class="like-page">
+    <strong>Like and Share!</strong>
+    {% include "like_page" %}
+  </div>
+  
+</div>
+
+<script src="/assets/liquid/suggestions.js"></script>
+<script type="text/javascript">
+  $(function(){
+    new NB.Liquid.Suggestions();
+  });
+</script>

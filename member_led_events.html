@@ -1,0 +1,90 @@
+<div class="padcontainer">
+  
+  <div class="content-container">
+    
+    {% if page.headline.size > 0 %}
+    <h2 class="headline">{{ page.headline }}</h2>
+    {% endif %}
+    
+    <div id="content">
+      <div class="desktop-visible">
+        <iframe id="iframe_container" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen="" width="100%" height="490" src="https://prezi.com/embed/pxcyekhjxvam/?bgcolor=ffffff&amp;lock_to_path=1&amp;autoplay=0&amp;autohide_ctrls=0&amp;PARENT_REQUEST_ID=39399fb3d6c80322#"></iframe>
+      </div>
+      
+      {% if page.calendar.content.size > 0 %}
+      <div id="intro" class="intro">
+        {{ page.calendar.content }}
+      </div>
+      {% endif %}
+      
+      <div class= "row-fluid">
+        <div class= "span12">
+          {% comment %}
+          {% unless request.current_user.is_member? %}
+          <h5>You must be a <a href="/login">logged in</a> member to post an event</h5>
+          {% else %}
+          <a class= "button supporter-nav-button waves-effect waves-ripple waves-light" href="{{ page.calendar.new_event_url }}">Post an Event</a>
+          {% endunless %}
+          {% endcomment %} 
+          
+          <a class= "button supporter-nav-button submit-link" id="add-member-led-event" href="{{ page.calendar.new_event_url }}">Post an Event</a>
+        </div>
+      </div>
+      
+      <h3 class="padtopmore">{% if page.calendar.events_upcoming_count == 0 %}No Member-Led events listed, post one and it wil display below{% else %} There {% if page.calendar.events_upcoming_count > 1 %}are {{ page.calendar.events_upcoming_count }} Member-Led events coming up{% else %} is one Member-Led event coming up{% endif %}{% endif %}</h3>
+      
+      <hr>
+      
+      {% if page.calendar.show_map? %}
+      
+      {% if page.calendar.events_upcoming_count > 0 %}
+      
+      <div class="padtopmore padbottommore map-wrap">
+        {{ page.calendar.events_upcoming_map }}
+      </div>
+      
+      {% endif %}
+      
+      {% endif %}
+      
+      {% if page.calendar.events_upcoming_count > 0 %}
+      
+      {% comment %}Moderation code
+      <ul class="event-wrap">
+        {% for event in page.calendar.events_upcoming %}
+        
+        {% assign tags_list = "" %}
+        {% for tag in event.tags %}
+        {% assign tags_list = tag.name | append: ", " | append: tags_list %}
+        {% endfor %}
+        
+        {% if tags_list contains "Pending" %}{% else %}<li>{% include "community_event" %}</li>{% endif %}
+        
+        {% endfor %}
+      </ul>
+      {% endcomment %}
+      
+      <ul class="event-wrap">
+        {% for event in page.calendar.events_upcoming %}
+        <li>{% include "community_event" %}</li>
+        {% endfor %}
+      </ul>
+      
+      <div class= "row-fluid padtopmore">
+        <div class= "span6 pull-left">
+          <p>{% if request.current_signup.is_member? %}<a href="/member_led_events" class="submit-link" id="add-member-led-event">Add your own</a>{% elsif request.current_signup.tags contains "member" %} <a href="/join"  id="renew-to-add-member-led-event" class="button login-button-join" >Renew your membership</a> to post an event {% else %} Only members can post events. <a href="/login" id="login-to-add-member-led-event">Log in</a> to your account or <a href="/join" id="join-to-add-member-led-event">join us</a> to post yours.{% endif %}</p>
+        </div>
+        <div class= "span6 pull-right">
+          <a class= "small-button scrollspy right" href="#intro">Back to Top</a>
+        </div>
+      </div>
+      
+      <div class="padtop">
+        {{ page.calendar.events_upcoming | paginate prev_label: "&laquo;" next_label: "&raquo;" }}
+      </div>
+      
+      {% endif %}
+      
+    </div>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+{% include "breadcrumbs" %}
+
+<div class="headline">
+  <h2>{{ page.headline }}</h2>
+  
+  {% if page.has_author? %}
+  {% include "page_byline" %}
+  {% endif %}
+</div>
+
+<div id="content">
+  
+  <div id="intro" class="intro">
+    <div class="content">
+      {{ page.blog_post.content_full }}     
+    </div>
+      <div class="padtop padbottom">
+        <embed src="https://d3n8a8pro7vhmx.cloudfront.net/rpcvw/pages/61/attachments/original/1433313591/2015-2016_RPCV_W_Board_Positions.pdf?1433313591" width="100%" height="750">
+      </div>
+  </div>
+  
+  {% if page.tags_count > 0 %}
+  <div class="page-tags">
+    {% include "page_tags" with page %}
+  </div>
+  {% endif %}
+  
+  <div class="like-page">
+    <strong>Do you like this post?</strong>
+    {% include "like_page" %}
+  </div>
+  
+  {% if page.show_stream? %}
+  {% include "page_stream" %}
+  {% endif %}
+  
+</div>

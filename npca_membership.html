@@ -1,0 +1,95 @@
+{% include "breadcrumbs" %}
+
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+
+<div id="content">
+
+  {% if page.signup.content.size > 0 %}
+  <div id="intro" class="intro">
+    {{ page.signup.content }}
+  </div>
+  {% endif %}
+
+  {% if page.show_social_slider? and page.public_activities_count > 0 %}
+  {% include "social_slider" %}
+  {% endif %}
+
+  <div class="form-wrap">
+    <div class="form">
+
+      {% form_for signup %}
+
+      {% if request.sorta_logged_in? %}
+        
+
+      {% if request.logged_in? == false %}
+        <div class="padbottommore"><small>If you're not {{ request.current_signup.name_or_email }}, <a href="{{ request.current_signup.logout_url }}">click here to signup</a>.</small></div>
+      {% endif %}
+
+      {% endif %}
+
+      <div class="form-errors">{% error_messages_for signup %}</div>
+
+        <div class="row-fluid">
+          <div class="span6"><label for="signup_first_name">First Name</label>{% text_field "first_name", class:"text" %}</div>
+          <div class="span6"><label for="signup_last_name">Last Name</label>{% text_field "last_name", class:"text" %}</div>
+        </div>
+      
+
+        <div class="row-fluid">
+          <div class="span6"><label for="signup_email">Email</label>{% email_field "email", class:"text" %}</div>
+        </div>
+    
+
+      {% if page.signup.has_optional_tags? %}
+      <div class="row-fluid">
+        <div class="span12"><label for="signup_optional_tag">Choose one</label>{% collection_select "optional_tag", page.signup.optional_tags, class:"select" %}</div>
+      </div>
+      {% endif %}
+
+      {% if page.signup.is_volunteers? and site.ask_for_volunteers? %}
+      {% if request.sorta_logged_in? == false or request.current_signup.is_volunteer == false %}
+      <div class="row-fluid">
+        <div class="span12"><label class="checkbox" for="signup_is_volunteer">{% check_box "is_volunteer", class:"checkbox" %} I want to volunteer</label></div>
+      </div>
+
+      {% endif %}
+      {% endif %}
+
+      {% if request.sorta_logged_in? %}
+      {% submit_tag "Activate NPCA/RPCV/W Membership Extension", class:"supporter-nav-button" %}
+      {% else %}
+      {% submit_tag "Activate NPCA/RPCV/W Membership Extension", class:"supporter-nav-button" %}
+      {% endif %}
+    
+      <div class="form-submit"></div>
+
+      {% endform_for %}
+
+      {% if page.text_keyword_instructions.size > 0 %}
+      <div class="row-fluid padbottom padtopmore">
+        <div class="span12">
+        or {{ page.text_keyword_instructions }}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+  {% if page.tags_count > 0 %}
+  <div id="page-tags" class="page-tags">
+    {% include "page_tags" with page %}
+  </div>
+  {% endif %}
+
+  <div class="like-page">
+    <strong>Share this page with your friends</strong>
+    {% include "like_page" %}
+  </div>
+
+  {% if page.show_stream? %}
+  {% include "page_stream" %}
+  {% endif %}

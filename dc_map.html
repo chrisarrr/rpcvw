@@ -1,0 +1,47 @@
+<div class="mobile-visible">
+  {% include "breadcrumbs" %}
+</div>
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+
+<div id="content">
+  
+  <div id="intro" class="intro">
+    <div class="text-content">
+      {{ page.basic.content }}
+    </div>
+  </div>
+  
+  <div id='map'></div>
+  
+  <script src="HeatLayer.js"></script>
+  <script src="leaflet-heat.js"></script>
+  
+  <script src="2016heatmap.js"></script>
+  <script>
+    var map = L.map('map').setView([ 38.902096, -77.014681 ], 11);
+    var tiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+    addressPoints = addressPoints.map(function (p) { return [p[0], p[1]]; });
+    var heat = L.heatLayer(addressPoints).addTo(map);
+    
+  </script>  
+  
+  {% if page.tags_count > 0 %}
+  <div class="page-tags">
+    {% include "page_tags" with page %}
+  </div>
+  {% endif %}
+  
+  <div class="like-page">
+    <strong>Share this page!</strong>
+    {% include "like_page" %}
+  </div>
+  
+  {% if page.show_stream? %}
+  {% include "page_stream" %}
+  {% endif %}
+  
+</div>

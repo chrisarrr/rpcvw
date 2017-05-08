@@ -1,0 +1,5 @@
+{{ page.basic.content }}
+
+{% if request.current_user.can_publish? %}
+<a href="https://rpcvw.nationbuilder.com/admin/sites/1/pages/763/basic/edit">Edit</a>
+{% endif %}

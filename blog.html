@@ -1,0 +1,95 @@
+{% include "breadcrumbs" %}
+
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+<h4>{{ page.excerpt }}</h4>
+<div class="padtop padbottomless">
+  <a href="{{ page.rss_url }}"><i class="icon-rss"></i></a> <a href="{{ page.rss_url }}">Subscribe with RSS</a>
+</div>
+<hr>
+<div id="content">
+  {% if page.blog.is_posting_public? %}
+  
+  <div class="padbottommore">
+    <div class="form-wrap">
+      <div class="form">
+        {% form_for blog_post_page %}
+        
+        <div class="form-errors">{% error_messages_for blog_post_page %}</div>
+        
+        <div id="blog-post-page-page-headline-input" class="blog-post-page-page-headline-input">
+          {% text_field "page_headline", class:"text", placeholder: "{{ page.blog.public_posting_prompt }}" %}
+        </div>
+        
+        <div id="blog-post-page-form-expanded" class="blog-post-page-form-expanded hide">
+          <div class="padtopmore">
+            {% text_area "content_editable", class:"textarea-tinymce" %}
+          </div>
+          <div class="padtop">
+            {% submit_tag "Post", class:"submit-button" %}
+            <div class="form-submit"></div>
+          </div>
+        </div>
+        
+        {% endform_for %}
+      </div>
+      {% unless request.logged_in? %}
+      <div class="user-session-form-container hide">
+        {% include "user_session_form" %}
+      </div>
+      {% endunless %}
+    </div>
+  </div>
+  
+  {% endif %}
+  
+  <div class="blog" id="blog-page-{{ page.id }}">
+    {% for post in page.blog.most_recent_blog_posts %}
+    <div class="page-excerpt" id="blog-post-page-{{ post.id }}">
+      <h3><a href="{{ post.url }}">{{ post.headline }}</a></h3>
+      
+      <div class="byline padbottom">
+        By {{ post.author.published_name_linked }} &middot; {{ post.published_at | date: '%B %d, %Y' }}
+      </div>
+      
+      <div class="row-fluid">
+        {% if post.has_meta_image? %}
+        <div class="span4">
+          
+          <a href="{{ post.url }}"><img src="{{ post.meta_image_url }}" class="blog-featured-image"></a>
+          
+        </div>
+        {% endif %}  
+        <div class="span{% if post.has_meta_image? %}8{% else %}12{% endif %} blog-featured-image">
+          
+          {{ post.blog_post.content | strip_html }}
+          
+        </div>  
+      </div>      
+      
+      {% if post.blog_post.is_extended? %}
+      <a href="{{ post.url }}" class="button small-button">
+        Read
+      </a>
+      {% endif %}   
+      
+      {% if post.show_stream? %}
+      
+      <a href="{{ post.url }}#addreaction" class="button small-button">
+        {% if post.public_activities_count > 0 %}
+        {{ post.public_activities_count }} comment{% if post.public_activities_count > 1 %}s{% endif %}
+        {% else %}
+        Comment
+        {% endif %}
+        {% endif %}
+      </a>
+      {{ "Share" | share_button page_id: post.id }}
+    </div>
+    
+    <hr/>
+    {% endfor %}
+  </div>
+  
+  {{ page.blog.most_recent_blog_posts | paginate prev_label: "&laquo;" next_label: "&raquo;" }}
+</div>

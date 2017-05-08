@@ -1,0 +1,98 @@
+<div class="padcontainer">
+  <div class="content-container">
+
+    <div class="row-fluid">
+      <div class="span6">
+        {% if page.headline.size > 0 %}
+        <h2 class="headline">{{ page.headline }}</h2>
+        {% endif %}
+      </div>
+      <div class="span6 pull-right">
+        <a href="https://www.google.com/calendar/render?cid=communityservice@rpcvw.org" class="small_button right">Sync w/ Google Calendar<i class="fa fa-refresh padleft" aria-hidden="true"></i></a>
+      </div>
+    </div>
+    
+    <div class="row-fluid center">{%comment%}This is a test comment{%endcomment%}
+      <div class="span4"><a href="#public">Public</a>
+      </div>
+      <div class="span4"><a href="#member">Member</a>
+      </div>
+      <div class="span4"><a href="#community">Community</a>
+      </div>
+    </div>
+
+    {% if page.calendar.show_map? %}
+
+        {% if page.calendar.events_upcoming_count > 0 %}
+
+        <div class="padtopmore padbottommore map-wrap">
+          {{ page.calendar.events_upcoming_map }}
+        </div>
+        <div class="padbottommore"></div>
+
+        {% endif %}
+
+        {% endif %}
+
+
+    <div class=""  id="public">
+    <h3>Public</h3>
+    <hr>
+    <p>These are our public events, open to everyone!</p>
+    <div class="padtop"></div>
+<ul class="event-wrap">
+          {% for event in page.calendar.events_upcoming %}
+          <li>{% include "event" %}</li>
+          {% endfor %}
+
+        <div class="padtop">
+          {{ page.calendar.events_upcoming | paginate prev_label: "&laquo;" next_label: "&raquo;" }}
+        </div>
+
+        </ul>
+    </div>
+    <div class=""  id="member"><h3>Member</h3></div>
+    <div class=""  id="community"><h3>Community</h3>
+{% subpage "member_led_events" with "member_led_events_section" %}
+    </div>
+
+
+    
+    <h3>{% if page.calendar.events_upcoming_count > 0 %}{{ page.calendar.events_upcoming_count }} coming up! {% else %}No official {{ page.calendar.event_name | pluralize | downcase }} posted right now. Check back soon!{% endif %}</h3>
+    <div class="padtopmore"></div>
+    
+    <h5><a href="member_led_events">& {% subpage "member_led_events" with "member_led_events_count" %} member-led events</a></h5>
+    <div class="padtop"></div>
+    
+    <div id="content">
+
+      {% if page.calendar.content.size > 0 %}
+      <div id="intro" class="intro">
+        {{ page.calendar.content }}
+      </div>
+      {% endif %}
+      
+      <div class="padtopless"></div>
+      <a href="#calendar" title="Click to view traditional calendar layout" class="button small-button"  id="fullcalendar" data-track="_gaq.push(['_trackEvent','FullCallendar','click','full-calendar'])"><i class="fa fa-calendar" aria-hidden="true"></i>&nbsp;&nbsp;Block-style calendar</a>
+      <div class="padtop"></div>
+      <div id="result"></div>
+      
+      <script>
+        $("#fullcalendar").on("click", function(){
+          $("#result").load("/block_calendar");
+        });
+      </script>
+
+        {% if page.calendar.allow_user_submitted? %}
+        <div class="padtopmore">
+          <a class="submit-link" href="{{ page.calendar.new_event_url }}">Host your own {{ page.calendar.event_name | downcase }}</a>
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+
+    <div class="like-page">
+      {% include "like_page" %}
+    </div>
+  </div>

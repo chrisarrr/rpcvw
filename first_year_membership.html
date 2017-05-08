@@ -1,0 +1,177 @@
+
+
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+
+{% if request.current_user.tags contains "member" %}
+
+<div id="flash">
+  <div class="notice notice clearfix">
+    <div class="flash-message"> Hi {{ request.current_user.first_name }}. Our records indicate you already are (or were) a member, so you're not eligible for the free membership. <br><br>Feel free to share this page with your friends, though! They will see an application form here, which will be sent to our Outreach Director for approval.
+      <button class="flash-close">×</button>
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+{% if request.logged_in? == false and request.current_signup.tags contains "member" %}
+
+<div id="flash">
+  <div class="notice notice clearfix">
+    <div class="flash-message"> Hi {{ request.current_signup.first_name }}. It appears you're not fully logged in. Check your email to activate your account and set a password. If you clicked an email to get here, you may <a href="/login">log in here</a>. If you're not {{ request.current_signup.name_or_email }}, <a href="{{ request.current_signup.logout_url }}">click here to log out</a>.
+      <button class="flash-close">×</button>
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+<div id="content">
+  
+  {% if page.signup.content.size > 0 %}
+  <div id="intro" class="intro">
+    {{ page.signup.content }}
+  </div>
+  {% endif %}
+  
+  {% for tag in page.tags %} 
+  
+  {% unless request.is_intern? == false and request.current_user.tags contains "member" or request.current_signup.tags contains "member" or tag.name == 'lockdown' %}
+  
+  <div class="form-wrap">
+    <div class="form">
+      
+      {% form_for signup %}
+      
+      {% if request.sorta_logged_in? %}
+      <h4>Hi {{ request.current_signup.name_or_email }}, are you ready for your free, One-Year Membership?</h4>
+      
+      {% if request.logged_in? == false %}
+      <div class="padbottommore"><small>If you're not {{ request.current_signup.name_or_email }}, <a href="{{ request.current_signup.logout_url }}">click here to signup</a>.</small></div>
+      {% endif %}
+      
+      {% endif %}
+      
+      <div class="form-errors">{% error_messages_for signup %}</div>
+      <div class="row-fluid">
+        <div class="span4"><label for="signup_first_name"><strong>First Name</strong><span class="red">*</span></label>{% text_field "first_name", class:"text" %}</div>
+        <div class="span4"><label for="signup_last_name"><strong>Middle</strong></label>{% text_field "middle_name", class:"text" %}</div>
+        <div class="span4"><label for="signup_last_name"><strong>Last Name</strong><span class="red">*</span></label>{% text_field "last_name", class:"text" %}</div>
+      </div>
+      <div class="row-fluid">
+        <div class="span6"><label for="signup_email">Email<span class="red">*</span></label>{% email_field "email", class:"text" %}</div>
+        <div class="span6"><label for="signup_phone_number">Phone</label>{% phone_field "phone_number", class:"text" %}</div>
+      </div>
+      
+      <div class="row-fluid padtop">
+        <small>Your email will be automatically subscribed to our weekly newsletter. We also send out occaisional email blasts for down-to-the-wire announcements and special offers for members. You may opt-out from email-blasts at any time. The newsletters are managed independently of the website and contain unsubcribe links of their own.</small>
+      </div>
+      
+      <div class="row-fluid padbottom">
+        <small>The system will send you reminders when your membership is about to expire and other notifications relating to your account. You may also unsubscribe from these emails, but doing so may mark your account for deletion.</small>
+      </div>
+      
+      <div class="row-fluid">
+        <div class="span12"><label for="signup_submitted_address">Address (Street, City, State, Postal code)<span class="red">*</span></label>{% text_field "submitted_address", class:"text" %}</div>
+      </div>
+      
+      {% if page.signup.is_volunteers? and site.ask_for_volunteers? %}
+      {% if request.current_signup.is_volunteer == false %}
+      <div class="row-fluid">
+        <div class="span12"><label class="checkbox" for="signup_is_volunteer">{% check_box "is_volunteer", class:"checkbox" %} I want to volunteer</label></div>
+      </div>
+      {% endif %}
+      {% endif %}
+      
+      <div class="row-fluid">
+        <small>If you served in Peace Corps, please tell us where and when. Ex: Jamaica 1962-1963</small>
+      </div>
+      <div id="Country1" class="row-fluid">
+        <div class="span6"><label for="signup_bio"><strong>First Peace Corps Country<span class="red">*</span></strong></label> 
+          <select id="signup_custom_values_country_of_service_1" name="signup[custom_values][country_of_service_1]" class="user-success" required>
+            <option value="{% if request.current_signup.custom_values_for_display['country_of_service_1'].size > 0 %}{{ request.current_signup.custom_values_for_display['country_of_service_1'] }}{% else %}Haven't served yet!{% endif %}" selected="selected">{% if request.current_signup.custom_values_for_display['country_of_service_1'].size > 0 %}{{ request.current_signup.custom_values_for_display['country_of_service_1'] }}{% else %}Not Applicable{% endif %}</option>
+            {% include "country_of_service_dropdown" %}
+          </select>  
+        </div>
+        <div class="span6"><label for="signup_bio"><strong>Dates of Service</strong></label> 
+          {% text_field "custom_values.dates_of_service_1", class:"text" %}</div>
+      </div>
+      <div id="Country2" class="row-fluid">
+        <div class="span6"><label for="signup_bio"><strong>Second Peace Corps Country</strong></label> 
+          <select id="signup_custom_values_country_of_service_2" name="signup[custom_values][country_of_service_2]" class="user-success">
+            <option value="{% if request.current_signup.custom_values_for_display['country_of_service_2'].size > 0 %}{{ request.current_signup.custom_values_for_display['country_of_service_2'] }}{% else %}{% endif %}" selected="selected">{% if request.current_signup.custom_values_for_display['country_of_service_2'].size > 0 %}{{ request.current_signup.custom_values_for_display['country_of_service_2'] }}{% else %}{% endif %}</option>
+            {% include "country_of_service_dropdown" %}
+          </select>
+        </div>
+        <div class="span6"><label for="signup_bio"><strong>Dates of Service</strong></label> 
+          {% text_field "custom_values.dates_of_service_2", class:"text" %}</div>
+      </div>
+      
+      <div class="row-fluid clearfix">
+        {% capture now %}{{ settings.stats_updated_at | date: '%Y-%m-%d' }}{% endcapture %}
+        <div class="span4"><label>Birthdate<span class="red">*</span></label><input id="signup_born_at" class="text" name="signup[born_at_chronic]" min="1900-01-01" max="{{ now | date: "%s" | minus : 473381997 | date: "%Y-%m-%d" | uri_encode | replace:"+","%20"}}" type="date" value= "{{ request.current_signup.born_at_chronic | date: '%Y-%m-%d' }}" required></div>
+        <div class="span4"><label for="signup_employer_input">Employer / Organization</label>{% text_field "employer", class:"text" %}</div>
+        <div class="span4"><label for="signup_occupation_input">Job Title</label>{% text_field "occupation", class:"text" %}</div>
+      </div>
+      
+      <div class="row-fluid center">
+        <label for="signup_born_at_chronic">Gender</label>
+        <select name="signup[sex]">
+          <option value="{{ signup.sex }}">{{ signup.sex }}</option>
+          <option value="F">F</option>
+          <option value="M">M</option>
+          <option value="O">O</option>
+        </select>
+      </div>
+      
+      <div class="row-fluid center padbottommore">
+        <small>By clicking the signup button below, you agree to abide by the <a href="/rules">rules</a> and uphold the policies set forth in the <a href="https://d3n8a8pro7vhmx.cloudfront.net/rpcvw/pages/55/attachments/original/1408399542/2011-2012_RPCVW_Bylaws.pdf?1408399542">Bylaws</a>.</small>
+      </div>
+      
+      <div class="row-fluid center">
+        {% if page.signup.is_all_info_collected? == false %}
+        {% if request.sorta_logged_in? %}
+        {% submit_tag "Join RPCV/W", class:"submit-button" %}
+        {% else %}
+        {% submit_tag "Signup", class:"submit-button" %}
+        {% endif %}
+        {% endif %}
+        <div class="form-submit"></div>
+      </div> 
+      {% endform_for %}
+      
+      {% if page.text_keyword_instructions.size > 0 %}
+      <div class="row-fluid padbottom padtopmore">
+        <div class="span12">
+          or {{ page.text_keyword_instructions }}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endunless %}
+  {% endfor %}
+</div>
+
+{% if page.tags_count > 0 %}
+<div id="page-tags" class="page-tags">
+  {% include "page_tags" with page %}
+</div>
+{% endif %}
+
+<div class="like-page">
+  <strong>Share our First Year Free Membership!</strong>
+  {% include "like_page" %}
+</div>
+
+{% if page.show_stream? %}
+{% include "page_stream" %}
+{% endif %}
+
+<script>
+  if ( $('[type="date"]').prop('type') != 'date' ) {
+    $('[type="date"]').datepicker();
+  }
+</script>

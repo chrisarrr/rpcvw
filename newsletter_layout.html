@@ -1,0 +1,12 @@
+{% capture newsletter_code %}
+<!-- Copy everything on this page and paste it in Mailchimp using the <> Source button in the editor -->
+<h1 class="mc-toc-title" style="text-align:center"><a href="http://www.rpcvw.org/events">Official Events</a></h1>
+<br><br>
+{% subpage "events" with "newsletter_section_1" %}
+<!-- End Official Events, Begin Member Led Events -->
+<h1 class="mc-toc-title" style="text-align:center"><a href="http://www.rpcvw.org/events">Member-Led Events</a></h1>
+<br><br>
+{% subpage "member_led_events" with "newsletter_section_1" %}
+{% endcapture %}
+{{ newsletter_code | escape }}
+<!-- End Member Led Events, Begin Community Events -->

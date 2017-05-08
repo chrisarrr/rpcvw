@@ -1,0 +1,107 @@
+<div class="mobile-visible">
+{% include "breadcrumbs" %}
+</div>
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+
+<div id="content">
+
+  <div id="intro" class="intro">
+    <div class="text-content">
+      {{ page.basic.content }}
+    </div>
+    <div class="square-content">
+<a href="#"  > 
+<div> 
+<h3>Governance</h3> 
+  <hr>
+  <p>RPCV/W Bylaws and policies</p> 
+<small></small> 
+</div> 
+</a> 
+
+<a href="#"  > 
+<div> 
+<h3>Minutes</h3> 
+  <hr>
+<p>Records of meetings for the Board of Directors</p>
+<small></small>
+</div> 
+</a>
+ 
+      <a href="#"  > 
+<div> 
+<h3>Photos</h3> 
+  <hr>
+  <p>Pictures on our Facebook page</p> 
+<small></small> 
+</div> 
+</a> 
+ 
+<a href="#"  >
+<div> 
+<h3>Surveys</h3> 
+  <hr>
+<p>Check out the results of past surveys</p> 
+<small></small> 
+</div> 
+</a> 
+
+      <a href="#">
+<div> 
+<h3>Annual Reports</h3> 
+  <hr>
+<p>Full reports of yearly activities</p> 
+<small></small> 
+</div> 
+</a> 
+ 
+<a href="#"  >
+<div> 
+<h3>Special Events</h3> 
+  <hr>
+<p>Documentation for past special events</p> 
+<small></small> 
+</div> 
+</a> 
+ 
+<a href="#"  > 
+<div> 
+<h3>Press Kit</h3> 
+  <hr>
+  <p>Logos, stats and other information on RPCV/W at a glance</p> 
+<small></small> 
+</div> 
+</a> 
+ 
+      <a href="#"  > 
+<div> 
+<h3>Newsletter Archives</h3> 
+  <hr>
+  <p>Past Newsletters</p> 
+<small></small> 
+</div> 
+</a> 
+      
+      </div>
+ </div>
+
+  
+  
+  {% if page.tags_count > 0 %}
+  <div class="page-tags">
+    {% include "page_tags" with page %}
+  </div>
+  {% endif %}
+
+  <div class="like-page">
+    <strong>Share this page!</strong>
+    {% include "like_page" %}
+  </div>
+
+  {% if page.show_stream? %}
+  {% include "page_stream" %}
+  {% endif %}
+
+</div>

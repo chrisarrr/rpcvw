@@ -1,0 +1,72 @@
+<div class="mobile-visible">
+  {% include "breadcrumbs" %}
+</div>
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+
+<div class="row-fluid splash">
+  <div class="span8">
+    <div class="slider-container">
+      <div class="sliderbox">
+        <div class="shadow"></div>
+        <div class="slider fullscreen">
+          <ul class="slides">
+            {% for feature in page.features %}
+            <li>
+              <img src="{{ feature.image_url }}">
+              <div class="caption left-align desktop-visible">
+                <div class="shine-container">
+                  <h2>{{ feature.name }}</h2>
+                  <p>{{ feature.headline }}</p>
+                  <div class="shine"></div>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="span4 pull-right">
+    <div class="right-container">
+      <div class="logo">
+        <a href="/home" title="Click here to go to our main page" id="gala-to-home-via-logo">
+          <img src="2016_Holiday_Party_Gatsby_Gala_Basic_Logo.svg">
+        </a>
+        <h4 class="center padtop">7-11PM SATURDAY, DECEMBER 3, 2016</h4>
+        <h4 class="center">AU WASHINGTON COLLEGE OF LAW</h4>
+        <h4 class="center">4300 NEBRASKA AVE NW</h4>
+        {% if request.current_user.can_publish? %}
+        <h4 class="center"><a href="{{ page.admin_edit_url }}">Edit this page</a></h4>
+        {% endif %}
+      </div>
+      <ul class="navigation">
+        <li class="button shine-container"><a href="/2016_holiday_party_nonmember" id="nonmbember-tickets">Purchase Tickets</a><div class="shine"></div></li>
+        <li class="button shine-container"><a target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLScHZZXTWW3zbbrxL6dp_XHQqiUxphZcQMTbaHfeiR881cPEGg/viewform" id="auction-form">Donate to Silent Auction</a><div class="shine"></div></li>
+        <li class="button shine-container"><a target="_blank" href="mailto:development@rpcvw.org" id="email-development">Become a Sponsor</a><div class="shine"></div></li>
+        <li class="button shine-container"><a target="_blank" href="https://d3n8a8pro7vhmx.cloudfront.net/rpcvw/pages/762/attachments/original/1477586972/RPCVW_December_3_Invite_Holiday_Gala.pdf?1477586972" id="download-invite">Download Invitation</a><div class="shine"></div></li>
+        <div class="gold-text">
+          {{ page.basic.content }}
+        </div>
+        <div class="row-fluid">
+          <div class="span6 gold-text">
+            <a href="/join" class="gold-text-button" id="gala-join">Join</a>
+          </div>
+          <div class="span6 gold-text">
+            <a href="/login" class="gold-text-button" id="gala-login">Login</a>      
+          </div>
+        </div>
+        <div class="row-fluid">
+          <div class="span6 gold-text">
+            <a href="/recruit"  class="gold-text-button" id="gala-share">Share</a>
+          </div>
+          <div class="span6 gold-text">
+            <a href="/" class="gold-text-button" id="gala-to-home">Main Site</a>          
+          </div>
+        </div>
+      </ul>
+    </div>
+  </div>  
+</div>

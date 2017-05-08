@@ -1,0 +1,107 @@
+<div class="mobile-visible">
+  {% include "breadcrumbs" %}
+</div>
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+
+{% if request.current_signup.is_member? == true %}
+<div id="flash">
+  <div class="notice notice clearfix">
+    <div class="flash-message"> Hi {{ request.current_signup.first_name }}. Our records indicate your {{ request.current_signup.membership_level_name }} is active, and will remain so until <b>{{ request.current_signup.membership_expires_at | date: '%B %d, %Y ' }}</b>. On that date, you may renew or change your membership level on this page.
+      <button class="flash-close">×</button>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% if request.current_signup.is_member? == false and request.current_signup.tags contains "member" %}
+<div id="flash">
+  <div class="notice notice clearfix">
+    <div class="flash-message"> Hi {{ request.current_signup.first_name }}. Looks like your {{ request.current_signup.membership_level_name }} expired on <b>{{ request.current_signup.membership_expires_at | date: '%B %d, %Y ' }}</b>. You can renew your membership by choosing one of the options below. If you're a member of us through NPCA, please <a href="/contact">notify us</a> as it's possible we need to update our records.
+      <button class="flash-close">×</button>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<div id="content">
+  
+  <div id="intro" class="intro">
+    <div class="text-content">
+      {{ page.basic.content }}
+      
+      <div class ="padtop hide"></div>
+      
+      <h2 class="headline center hide">Automatic Renewal</h2>
+      
+      <div class ="padtopmore hide"></div>
+      
+       <div id="flash">
+            <div class="notice error clearfix hide">
+              <div class="flash-message">Autorenewal memberships are undergoing redevelopment. Please choose the one of the options below.
+                <button class="flash-close">×</button>
+              </div>
+            </div>
+          </div>
+      
+      <ul class="membership-list hide">
+        
+        <div class="featured">
+          
+      
+          
+          {% comment %} {% subpage "ongoing_regular_membership" with "membership_excerpt"%}
+          
+          {% subpage "ongoing_friend_of_rpcv_w" with "membership_excerpt"%} {% endcomment %}
+          
+        </div>
+        
+      </ul>
+      
+      <div class ="padtop hide"></div>
+      
+      <h2 class="headline center">Membership Options</h2>
+      
+      <div class ="padtopmore"></div>
+      
+      <ul class="membership-list">
+        
+        {% subpage "first_year_membership" with "membership_excerpt"%}
+        
+        {% subpage "one-year_regular_membership" with "membership_excerpt"%}
+        
+        {% subpage "one-year_friend_of_rpcv_w" with "membership_excerpt"%}
+        
+        {% subpage "npca_membership" with "membership_excerpt"%}
+        
+      </ul>
+      
+    </div>
+  </div>
+  
+  <div class="hide">
+  <h3>Automatic vs Manual</h3>
+  <p><span>There are two options for renewing your membership. 
+    With the <b>One-Year</b> option, when your membership expires, the website will prevent your account from accessing certain "Members Only" pages. Your membership will remain inactive until you navigate to this page and purchase another, at which point you will receive full access again. The <b>Ongoing</b> option automatically bills Paypal when your membership expires, so your dues are always current and you're never locked out of the website. We recommend this option for its convenience, and it can be disabled at any time through your PayPal account settings.</span></p>
+    </div>
+    
+    <h3>Additional Methods of Payment</h3>
+  <p>We accept cash or check, mailed to the address below. You may also renew your dues in person at an event. For more information, please <a title="Email our Treasurer" href="mailto:treasurer@rpcvw.org" target="_blank">contact our Treasurer.</a></p>
+
+  
+  {% if page.tags_count > 0 %}
+  <div class="page-tags">
+    {% include "page_tags" with page %}
+  </div>
+  {% endif %}
+  
+  <div class="like-page">
+    <strong>Share this page</strong>
+    {% include "like_page" %}
+  </div>
+  
+  {% if page.show_stream? %}
+  {% include "page_stream" %}
+  {% endif %}
+  
+</div>

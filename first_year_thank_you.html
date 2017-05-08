@@ -1,0 +1,24 @@
+<div class="mobile-visible">
+  {% include "breadcrumbs" %}
+</div>
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+
+<div id="content">
+  
+  <div id="intro" class="intro">
+    <div class="text-content">
+      {{ page.basic.content }}
+    </div>
+  </div>
+  
+  <div id="options" class="intro">
+    <div class="row-fluid">
+      <div class="span6">
+        <a class="button supporter-nav-button waves-effect waves-ripple waves-light" href="http://www.rpcvw.org/members" onclick="ga('send', 'event', { eventCategory: 'button', eventAction: 'click', eventLabel: 'Members Only'});">Proceed to member dashboard  <i class="fa fa-long-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+  
+</div>

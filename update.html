@@ -1,0 +1,314 @@
+{% include "breadcrumbs" %}
+
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+
+<em>The content of this page was last updated on {{ page.published_at | date: '%b %d, %Y' }}</em>
+{% comment %}Go to Page Settings, change status to Unlisted, save, then change it back to published to reset the date above{% endcomment %}
+
+<div id="content">
+
+  {% if page.signup.content.size > 0 %}
+  <div id="intro" class="intro">
+    {{ page.signup.content }}
+  </div>
+  {% endif %}
+  <div class="row-fluid">
+    <div class="span1"></div>
+    <div class="span10">
+      <div class="form-wrap">
+        <div class="form">
+          {% form_for signup %}{% comment %}< Do not delete. This starts the form{% endcomment %}
+
+          <div class="row-fluid">
+
+            <div class="form-errors">{% error_messages_for signup %}</div>{% comment %}< Do not delete. Form won't function without{% endcomment %}  
+
+            {% if current_signup.is_profile_published? %}<a href="{{ signup.profile_url }}" class="small_button right" target="_blank" title="Click here to view your public profile in a new tab"> Click here to view your public profile in a new window<i class="padleft fa fa-external-link-square"></i></a>{% else %}<a href="#" class="small_button dead right">Your public profile is disabled</a>{% endif %}
+
+            <h4>Public profile</h4>
+
+          </div>
+          <hr>
+
+          <div class="row-fluid" id="public">
+            <div class="span6"><label><strong>Public Profile Status</strong></label>
+              {% comment %}Anyone can disable their profile here. Disabled profiles are unclickable{% endcomment %}
+              {% if request.current_signup.is_profile_published? %}
+              <div id="flash_container">
+                <div id="flash">
+                  <div class="notice success clearfix">
+                    <div class="flash-message">Your profile is live</div>
+                  </div>
+                </div>
+              </div>
+              {% else %} 
+              <div id="flash_container">
+                <div id="flash">
+                  <div class="notice notice error">
+                    <div class="flash-message">Profile Disabled</div>
+                  </div>
+                </div>
+              </div>
+              {% endif %} 
+              <input name="signup[is_profile_private]" type="hidden" value="0">
+              <input class="checkbox user-success" id="signup_is_profile_private" name="signup[is_profile_private]" type="checkbox" value="1" {% if request.current_signup.is_profile_published? %}{% else %}checked{% endif %}> {% if request.current_signup.is_profile_published? %}Check this box to disable it.{% else %} Uncheck this box to enable it{% endif %}
+            </div>
+            <div class="span6"><label for="signup_first_name"><strong>Allow search engines to find my profile?</strong></label>
+              {% if request.current_signup.is_profile_searchable? %}
+              <div id="flash_container">
+                <div id="flash">
+                  <div class="notice success clearfix">
+                    <div class="flash-message" align="center">Yes</div>
+                  </div>
+                </div>
+              </div>
+              {% else %} 
+              <div id="flash_container">
+                <div id="flash">
+                  <div class="notice error clearfix">
+                    <div class="flash-message" align="center">No</div>
+                  </div>
+                </div>
+              </div>
+              {% endif %} 
+
+              <input name="signup[is_profile_searchable]" type="hidden" value="1">
+              <input class="checkbox user-success" id="is_profile_searchable" name="signup[is_profile_searchable]" type="checkbox" value="0" {% if request.current_signup.is_profile_searchable? %}{% else %}checked{% endif %}> {% if request.current_signup.is_profile_searchable? %}Check this box to not allow.{% else %} Uncheck this box to allow.{% endif %}       
+
+            </div>
+          </div>    
+
+          <div class="row-fluid">
+            <div class="span6"><label for="signup_signup_profile_image"><strong>Profile image</strong></label><div style="float:left; margin-right:10px">{{ request.current_signup.bigger_profile_image }}</div><div class="row-fluid center">{% file_field "signup_profile.image", class:"file" %}</div><div><small>You may upload a small, square image here to serve as your avatar. If you use Linkedin, your profile image from there is a good choice. Otherwise, the website will use a profile image from your Facebook or Twitter account, if available. Any image you upload here will overwrite existing data. Image must be perfectly square and under 45kb</small></div></div>
+            <div class="span6"><label for="username"><strong>Username</strong></label>{% text_field "username", class:"text" %}<small>Your public profile is a unique page on our website. Your username determines the address where your profile will live. If you do not put a username, a number will be used instead. Your member profile will be at <a href="{{ site.full_url }}{% if request.current_signup.has_username? %}{{ request.current_signup.username }}{% else %}{{ request.current_signup.id }}{% endif %}">{{ site.full_url }}{% if request.current_signup.has_username? %}{{ request.current_signup.username }}{% else %}{{ request.current_signup.id }}{% endif %}</a></small></div>
+          </div>
+
+
+          <div class="row-fluid padtop">
+            <div class="span12"><label for="signup_website_input"><strong>Linkedin url (or website)</strong></label> <div><small>Add your Linkedin <a href="https://community.linkedin.com/questions/20194/how-do-i-find-my-url-in-linkedin.html">public profile url</a> exactly as it appears in your address bar</small></div>
+          </div>{% text_field "website", class:"text" %}
+        </div>
+
+        <div class="row-fluid" id="social-media-login">
+          <div class="span6"><label for="signup_first_name"><strong>Connect Facebook</strong></label>
+            {% if request.current_signup.has_facebook_authorization? %}
+            <div id="flash_container">
+              <div id="flash">
+                <div class="notice success clearfix">
+                  <div class="flash-message" align="center">Facebook Connected</div>
+                </div>
+              </div>
+            </div>
+            {% else %} 
+            <div id="flash_container">
+              <div id="flash">
+                <div class="notice notice error">
+                  <div class="flash-message" align="center">Facebook Not Connected</div>
+                  <strong><a href="{{ request.facebook_connect_url }}"> Click here to connect</a></strong>
+                </div>
+              </div>
+            </div>
+            {% endif %} 
+          </div>
+          <div class="span6"><label for="signup_first_name"><strong>Connect Twitter</strong></label>
+            {% if request.current_signup.has_twitter_authorization? %}
+            <div id="flash_container">
+              <div id="flash">
+                <div class="notice success clearfix">
+                  <div class="flash-message" align="center">Twitter Connected</div>
+                </div>
+              </div>
+            </div>
+            {% else %} 
+            <div id="flash_container">
+              <div id="flash">
+                <div class="notice error clearfix">
+                  <div class="flash-message" align="center">Twitter Not Connected</div>
+                  <strong><a href="{{ request.twitter_connect_url }}"> Click here to connect</a></strong>
+                </div>
+              </div>
+            </div>
+            {% endif %} 
+          </div>
+        </div>
+
+        <div class="row-fluid">
+          <div class="span4"><label for="signup_first_name"><strong>First Name</strong><span class="red">*</span></label>{% text_field "first_name", class:"text", required: "required" %}</div>
+          <div class="span4"><label for="signup_last_name"><strong>Middle</strong></label>{% text_field "middle_name", class:"text" %}</div>
+          <div class="span4"><label for="signup_last_name"><strong>Last Name</strong><span class="red">*</span></label>{% text_field "last_name", class:"text" %}</div>
+        </div>
+
+        <div class="row-fluid" id="country">
+          <div class="span12">
+            <small>If you were a Peace Corps volunteer or staff member, please tell us where and when (YYYY - YYYY). You may add up to four. If not, just pick Not Applicable</small>  
+            <ul class=" padbottommore span6 hide">
+              <li class="tab span3"><a class="active" href="#Country1">Country 1</a></li>
+              <li class="tab span3"><a href="#Country2">Country 2</a></li>
+              <li class="tab span3"><a href="#Country3">Country 3</a></li>
+              <li class="tab span3"><a href="#Country4">Country 4</a></li>
+            </ul>
+          </div>
+        </div>
+
+        {% comment %}Note that the country_of_service field will accept whatever text we put in it, so to force uniformity we use a dropdown box listing all PC countries. That's at country_of_service_dropdown.html in Theme > Files {% endcomment %}
+
+        <div id="Country1" class="row-fluid">
+          <div class="span6"><label for="signup_bio"><strong>First Peace Corps Country<span class="red">*</span></strong></label> 
+            <select id="signup_custom_values_country_of_service_1" name="signup[custom_values][country_of_service_1]" class="user-success" required>
+              <option value="{% if request.current_signup.custom_values_for_display['country_of_service_1'].size > 0 %}{{ request.current_signup.custom_values_for_display['country_of_service_1'] }}{% else %}Haven't served yet!{% endif %}" selected="selected">{% if request.current_signup.custom_values_for_display['country_of_service_1'].size > 0 %}{{ request.current_signup.custom_values_for_display['country_of_service_1'] }}{% else %}Not Applicable{% endif %}</option>
+              {% include "country_of_service_dropdown" %}
+            </select>  
+          </div>
+          <div class="span6"><label for="signup_bio"><strong>Dates of Service</strong></label> 
+            {% text_field "custom_values.dates_of_service_1", class:"text" %}</div>
+          </div>
+          <div id="Country2" class="row-fluid">
+            <div class="span6"><label for="signup_bio"><strong>Second Peace Corps Country</strong></label> 
+              <select id="signup_custom_values_country_of_service_2" name="signup[custom_values][country_of_service_2]" class="user-success">
+                <option value="{% if request.current_signup.custom_values_for_display['country_of_service_2'].size > 0 %}{{ request.current_signup.custom_values_for_display['country_of_service_2'] }}{% else %}{% endif %}" selected="selected">{% if request.current_signup.custom_values_for_display['country_of_service_2'].size > 0 %}{{ request.current_signup.custom_values_for_display['country_of_service_2'] }}{% else %}{% endif %}</option>
+                {% include "country_of_service_dropdown" %}
+              </select>
+            </div>
+            <div class="span6"><label for="signup_bio"><strong>Dates of Service</strong></label> 
+              {% text_field "custom_values.dates_of_service_2", class:"text" %}</div>
+            </div>
+            <div id="Country3" class="row-fluid">
+              <div class="span6"><label for="signup_bio"><strong>Third Peace Corps Country</strong></label> 
+                <select id="signup_custom_values_country_of_service_3" name="signup[custom_values][country_of_service_3]" class="user-success">
+                  <option value="{% if request.current_signup.custom_values_for_display['country_of_service_3'].size > 0 %}{{ request.current_signup.custom_values_for_display['country_of_service_3'] }}{% else %}{% endif %}" selected="selected">{% if request.current_signup.custom_values_for_display['country_of_service_3'].size > 0 %}{{ request.current_signup.custom_values_for_display['country_of_service_3'] }}{% else %}{% endif %}</option>
+                  {% include "country_of_service_dropdown" %}
+                </select>
+              </div>
+              <div class="span6"><label for="signup_bio"><strong>Dates of Service</strong></label> 
+                {% text_field "custom_values.dates_of_service_3", class:"text" %}</div>
+              </div>
+              <div id="Country4" class="row-fluid">
+                <div class="span6"><label for="signup_bio"><strong>Fourth Peace Corps Country</strong></label> 
+                  <select id="signup_custom_values_country_of_service_4" name="signup[custom_values][country_of_service_4]" class="user-success">
+                    <option value="{% if request.current_signup.custom_values_for_display['country_of_service_4'].size > 0 %}{{ request.current_signup.custom_values_for_display['country_of_service_4'] }}{% else %}{% endif %}" selected="selected">{% if request.current_signup.custom_values_for_display['country_of_service_4'].size > 0 %}{{ request.current_signup.custom_values_for_display['country_of_service_4'] }}{% else %}{% endif %}</option>
+                    {% include "country_of_service_dropdown" %}
+                  </select>
+                </div>
+                <div class="span6"><label for="signup_bio"><strong>Dates of Service</strong></label> 
+                  {% text_field "custom_values.dates_of_service_4", class:"text" %}</div>
+                </div>
+
+                <div class="padtopmore"></div>
+
+                <span class="hide">{% comment %}if you put hide in any class, it will make the element invisible. Leaving this here just in case we need it again. See next comment {% endcomment %}
+                  <label for="signup_profile_content_editable"><strong>Write a few lines about yourself</strong></label>
+
+                  <div id="flash_container">
+                    <div id="flash">
+                      <div class="notice error clearfix">
+                        <div class="flash-message" align="center">Normally there'd be a section here where you could write a brief bio, but we're doing some maintenance on that feature. Check back later</div>
+                      </div>
+                    </div>
+                  </div>
+                </span>
+
+                <div class="row-fluid padtopmore">
+
+                  {% comment %}This was giving us problems. There's a character limit and if you go over it the form won't save... but we don't know what the limit is{% endcomment %}
+
+                  <label for="signup_profile_content_editable"><strong>Write a few lines about yourself</strong></label>
+                  <small>This blurb will display on your public profile. Use it to describe your service, your work and whatever else you want other members to know. You may include hyperlinks and alternative methods of contact. We recommend you do not disclose private email addresses or phone numbers. You can create paragraph breaks by typing "<code>&lt;br&gt;&lt;br&gt;</code>", but adding additional HTML may result in an error that will prevent the form from saving.
+                  <div class="padtop"></div>
+                  <textarea class="text tinyMCE long-bio" id="long-bio" name="signup[profile_content_editable]" style="min-height: 200px">{{ request.current_signup.profile_content }}</textarea>
+                  <label class="checkbox"><div id="long-bio-result" style="height:30px" class="word-counter"></div></label>
+                </div>
+
+                {% if settings.is_donor? %}
+                <div class="row-fluid padtopmore">
+                  <div class="span12"><label for="signup_donations_to_raise_amount"><strong>I can commit to fundraising:</strong></label><div><small>When you pledge to fundraise, a progress bar will appear on your profile page where your friends can pitch in. You get credit for the number of donors you recruit!</small></div>{% text_field "donations_to_raise_amount", class:"text" %}</div>
+                </div>
+                {% endif %}
+
+                <div class="row-fluid">
+                  <div class="span12 hide"><label class="checkbox hide" for="signup_is_survey_question_private">{% check_box "is_survey_question_private", class:"checkbox" %}Don't publish my survey question answers on the website</label></div>
+                </div>
+
+                <div class="row-fluid">
+                  <div class="span12"><label class="checkbox" for="signup_is_leaderboardable">{% check_box "is_leaderboardable", class:"checkbox" %} Include me in <a href="/leaderboard" target="_blank">leaderboards</a></label></div>
+                </div>
+
+                <div class="padtopmore" id="private"></div>
+
+                <h4>Private settings</h4>
+
+                <hr>
+
+                <div class="form-errors"></div>
+
+                <small>This information will not be shared unless you are participating in our mentoring program, in which case your Job Title, Employer and Email will be accessible to other participants</small>
+
+                <div class="row-fluid padtopmore">
+                  {% capture now %}{{ settings.stats_updated_at | date: '%Y-%m-%d' }}{% endcapture %}
+                  <div class="span4"><label for="signup_email">Email<span class="red">*</span></label>{% email_field "email", class:"text" required: "required" %}</div>
+                  <div class="span4"><label for="signup_phone_number">Phone</label>{% phone_field "phone_number", class:"text" %}</div>
+                  <div class="span4"><label>Birthdate<span class="red">*</span></label><input id="signup_born_at" class="text" name="signup[born_at_chronic]" min="1900-01-01" max="{{ now | date: "%s" | minus : 473381997 | date: "%Y-%m-%d" | uri_encode | replace:"+","%20"}}" type="date" value= "{{ request.current_signup.born_at_chronic | date: '%Y-%m-%d' }}" required></div>
+                </div>
+
+                <hr>
+
+                <div class="row-fluid">
+                  <label class="checkbox" for="signup_email_opt_in">{% check_box "email_opt_in", class:"check_box" %} Receive emails</label>
+                  <small>If this box is unchecked, it means you unsubscribed completely from our emails, including automatic dues reminders and communicatons relating to your membership. If we cannot get in touch with you, and your membership lapses, your account may be marked for deletion.</small>
+                </div>
+
+                <hr>	
+
+                <div class="row-fluid">
+                  <div class="span4"><label for="signup_born_at_chronic">Gender</label>
+                    <select name="signup[sex]">
+                      <option value="{{ signup.sex }}">{{ signup.sex }}</option>
+                      <option value="F">F</option>
+                      <option value="M">M</option>
+                      <option value="O">O</option>
+                    </select></div>
+                    <div class="span4"><label for="signup_employer_input">Employer / Organization</label>{% text_field "employer", class:"text" %}</div>
+                    <div class="span4"><label for="signup_occupation_input">Job Title</label>{% text_field "occupation", class:"text" %}</div>
+                  </div>
+
+                  {% comment %} This is only really neccessary if we're sending people mass text messages. Remove the comments if ever that's the case
+                  <div class="row-fluid">
+                    <div class="span12"><label class="checkbox" for="signup_mobile_opt_in">{% check_box "mobile_opt_in", class:"check_box" %} Receive text messages</label></div>
+                  </div>
+                  {% endcomment %}
+
+                  <div class="row-fluid">
+                    <div class="span6"><label for="signup_submitted_address">Address (Street, City, State, Postal code)<span class="red">*</span></label>
+                      <div class="padbottom"><small>Keep it all in one line separated by commas, ex: 1234 Street Name, Washington, DC, 20000</small></div>
+                      {% text_field "submitted_address", class:"text" %}
+                    </div>
+                    <div class="span6">
+                      {% comment %}These are controlled at Signup settings > Checkboxes{% endcomment %}
+                      <label for="signup_submitted_address">Additional Information</label>
+                      <div class="padbottom"><small>Check all that apply. You can always return to this page to undo your selections.</small></div>
+                      {% if page.signup.has_labeled_tags? %}        
+                      {% include "labeled_tags" %}
+                      {% endif %}
+                    </div>  
+                  </div>   
+                  <div class="row-fluid">
+                    <div class="span12">
+                      {% submit_tag "Save Information", class:"submit-button" %}{% comment %}< Do not delete. This makes the button{% endcomment %}
+                      <div class="form-submit"></div>{% comment %}< Do not delete. Form won't function without{% endcomment %}
+                    </div>
+                  </div>
+                  {% endform_for %}{% comment %}< Do not delete. This ends the form{% endcomment %}
+                </div>
+              </div><!--end form inner--> 
+            </div><!--end form wrap--> 
+            <div class="span1"></div>
+          </div><!--end row-fluid-->  
+        </div><!--end main-->  
+
+        {% comment %}This makes the date-picker when selecting date of birth. Might not work on all browsers{% endcomment %}
+        <script>
+          if ( $('[type="date"]').prop('type') != 'date' ) {
+            $('[type="date"]').datepicker();
+          }
+        </script>

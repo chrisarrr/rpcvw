@@ -1,0 +1,38 @@
+<div class="mobile-visible">
+  {% include "breadcrumbs" %}
+</div>
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+
+<div id="content">
+  
+  <div id="intro" class="intro">
+    <div class="text-content">
+      {{ page.basic.content }}
+    </div>
+  </div>
+  
+  
+  <script type="text/javascript" language="javascript" src="http://creately.com/player/createlyplayerstart.js"></script>
+  <div id="container-hjrwma9l1"></div>
+  <script type="text/javascript">
+    createlyPlayerStart( {
+      container: "container-hjrwma9l1",
+      title : "RPCVW External Communications Process" ,
+      docid :"hjrwma9l1",
+      width :600,
+      height :400,
+      bgcolor :"#EEE"
+    } );</script>
+  
+  
+  {% if page.tags_count > 0 %}
+  <div class="page-tags">
+    {% include "page_tags" with page %}
+  </div>
+  {% endif %}
+  
+  {% subpage "activity_stream" with "activity_stream" %}
+  
+</div>

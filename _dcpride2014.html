@@ -1,0 +1,34 @@
+{% include "breadcrumbs" %}
+
+<div class="headline">
+  <h2>{{ page.headline }}</h2>
+
+  {% if page.has_author? %}
+  {% include "page_byline" %}
+  {% endif %}
+</div>
+
+<div id="content">
+
+  <div id="intro" class="intro">
+    <div class="content">
+     <div class="storify"><iframe src="//storify.com/rpcvw/capitol-pride-2014/embed?border=false" width="100%" height=750 frameborder=no allowtransparency=true></iframe><script src="//storify.com/rpcvw/capitol-pride-2014.js?border=false"></script><noscript>[<a href="//storify.com/rpcvw/capitol-pride-2014" target="_blank">View the story "Capitol Pride 2014" on Storify</a>]</noscript></div>
+    </div>
+  </div>
+
+  {% if page.tags_count > 0 %}
+  <div class="page-tags">
+    {% include "page_tags" with page %}
+  </div>
+  {% endif %}
+
+  <div class="like-page">
+    <strong>Do you like this post?</strong>
+    {% include "like_page" %}
+  </div>
+
+  {% if page.show_stream? %}
+  {% include "page_stream" %}
+  {% endif %}
+
+</div>

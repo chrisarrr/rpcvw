@@ -1,0 +1,53 @@
+{% include "breadcrumbs" %}
+
+
+<div id="content">
+  
+  
+  <div class="row-fluid">
+    <div class="span4">
+    </div>
+    <div class="span4">
+      
+      <div class="onecolumn_container">
+            
+            <div id="intro" class="intro">
+              <div class="text-content">
+                {{ page.basic.content }}
+              </div>
+            </div>
+        <div class="padtopmore padbottommore"></div>
+        <div class="onecolumn">
+          
+          <div align="center" class="one_column">
+            
+            <div class="form_wrap" align="center">
+              <div class="form">
+                
+                {% if request.sorta_logged_in? %}
+                
+                {% form_for account %}
+                
+                {% hidden_field_tag "account[email]", request.current_signup.email %}
+                
+                <div class="padtop">
+                  {% submit_tag "I Accept", class:"submit-button" %}
+                  <div class="form_submit"></div>
+                </div>
+                
+                {% endform_for %}
+                
+                {% endif %}
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="span4">
+    </div>
+  </div>
+  
+</div>
