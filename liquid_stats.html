@@ -1,0 +1,56 @@
+<div id="content">
+  <div id="intro" class="intro">
+    <div class="text-content">
+      {{ page.basic.content }}
+    </div>
+  </div>
+</div>
+<h3 class="padbottommore">Request variables</h3>
+<div>
+  request.current_theme : {{ request.current_theme }}
+</div>
+<div>
+  request.is_mobile? : {{ request.is_mobile? }} - {% if request.is_mobile? %}true{% elsif request.is_mobile == false %}false{% endif %}
+</div>
+<div>
+request.session_id : {{ request.session_id }}{{ request.session_id.size }}
+</div>
+<div>
+  request.logged_in? : {{ request.logged_in? }} - {% if request.is_loggedin? %}true{% else %}false{% endif %}
+</div>
+<div>
+  request.sorta_logged_in? : {{ request.sorta_logged_in? }} - {% if request.sorta_logged_in? %}true{% else %}false{% endif %}
+</div>
+<div>
+  request.facebook_logged_in? : {{ request.facebook_logged_in? }} - {% if request.facebook_logged_in? %}true{% else %}false{% endif %}
+</div>
+<div>
+  request.template : {{ request.template }}
+</div>
+<div>
+  request.is_admin? : {{ request.is_admin? }} - {% if request.is_admin? %}true{% else %}false{% endif %}
+</div>
+<div>
+  request.is_ajax? : {{ request.is_ajax? }} - {% if request.is_ajax? %}true{% else %}false{% endif %}
+</div>
+<div>
+  request.current_browser : {{ request.current_browser }}
+</div>
+<div>
+  request.is_ie6? : {{ request.is_ie6? }}
+</div>
+<div>
+  page.current_browser : {{ request.current_browser }}
+</div>
+<div>
+  request.current_user.first_name : {{ request.current_user.first_name }}
+</div>
+<div>
+  current_signup.current_browser : {{ current_signup.current_browser }}
+</div>
+<div>
+  settings.current_browser : {{ settings.current_browser }}
+</div>
+<div>
+  settings.current_browser : {{ settings.current_browser }}
+</div>

@@ -1,0 +1,8 @@
+<div class="facebook-stream">
+{% if site.has_facebook_page? %}
+<div class="fb-page" data-href="{{ site.broadcaster.facebook_page_profile_url }}" data-tabs="timeline" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="{{ site.broadcaster.facebook_page_profile_url }}" class="fb-xfbml-parse-ignore"><a href="{{ site.broadcaster.facebook_page_profile_url }}">{{ site.broadcaster.facebook_page_username }}</a></blockquote></div>
+{% else %}
+<fb:like href="{{ site.full_url }}" colorscheme="{{ site.facebook_colorscheme }}" width="240"></fb:like>
+{% endif %}
+</div>
+{{ content_for_footer }}

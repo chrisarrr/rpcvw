@@ -27,7 +27,7 @@
           {% endunless %}
           {% endcomment %} 
           
-          <a class= "button supporter-nav-button submit-link" id="add-member-led-event" href="{{ page.calendar.new_event_url }}">Post an Event</a>
+          <a class= "button supporter-nav-button submit-link" id="add-member-led-event-top" href="{{ page.calendar.new_event_url }}">Click Here to Post an Event</a>
         </div>
       </div>
       
@@ -72,7 +72,7 @@
       
       <div class= "row-fluid padtopmore">
         <div class= "span6 pull-left">
-          <p>{% if request.current_signup.is_member? %}<a href="/member_led_events" class="submit-link" id="add-member-led-event">Add your own</a>{% elsif request.current_signup.tags contains "member" %} <a href="/join"  id="renew-to-add-member-led-event" class="button login-button-join" >Renew your membership</a> to post an event {% else %} Only members can post events. <a href="/login" id="login-to-add-member-led-event">Log in</a> to your account or <a href="/join" id="join-to-add-member-led-event">join us</a> to post yours.{% endif %}</p>
+          <p>{% if request.current_signup.is_member? %}<a href="{{ page.calendar.new_event_url }}" class="submit-link" id="add-member-led-event-bottom">Add your own</a>{% elsif request.current_signup.tags contains "member" %} <a href="/join"  id="renew-to-add-member-led-event" class="button login-button-join" >Renew your membership</a> to post an event {% else %} Only members can post events. <a href="/login" id="login-to-add-member-led-event">Log in</a> to your account or <a href="/join" id="join-to-add-member-led-event">join us</a> to post yours.{% endif %}</p>
         </div>
         <div class= "span6 pull-right">
           <a class= "small-button scrollspy right" href="#intro">Back to Top</a>

@@ -2,7 +2,6 @@
   {% include "breadcrumbs" %}
 </div>
 
-
 {% if page.headline.size > 0 %}
 <h2 class="headline">{{ page.headline }}</h2>
 {% endif %}
@@ -16,6 +15,8 @@
   {% include "like_page" %}
 </div>
 <hr>
+
+
 <!-- this widget only appears on the homepage with the proper page tag -->
 {% for tag in page.tags %} 
 {% if page.is_homepage? == true and tag.name == 'events_left' %}
