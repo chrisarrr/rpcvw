@@ -1,7 +1,4 @@
 
-<div class="mobile-visible">
-  {% include "breadcrumbs" %}
-</div>
 
 {% if page.headline.size > 0 %}
 <h2 class="headline">{{ page.headline }}</h2>
@@ -14,7 +11,8 @@
     {{ page.suggestion_box.content }}
   </div>
   {% endif %}
-  
+
+
   <div class="padbottom">
     
     <div class="padtopless padbottom">
@@ -86,10 +84,16 @@
         <div id="suggestion-page-form-expanded" class="suggestion-page-form-expanded">
           <div class="padtop padbottom">
             <small>
-              Write a short blurb about your group below. Be sure to link to your group's website and provide a name and/or email for a DC-area representative who can respond to questions. 
+              Write a short blurb about your group below, limited to 1600 characters. Be sure to link to your group's website and provide a name and/or email for a DC-area representative who can respond to questions. 
             </small>
           </div>
-          {% text_area "content_editable", class:"textarea-tinymce" %}
+
+{% comment %}Must be limited to 1600 characters{% endcomment %}
+
+          {% text_field "content_editable", class:"textarea form-control textarea-tinymce" %}
+
+<div id="mce-label" class="mce-label mce-charactercount"></div>
+
           <div class="padtop">
             <small>
               <a href="http://commons.wikimedia.org/wiki/National_insignia">Find your country's flag at this website</a>, save the small thumbnail version to your computer, and upload it here. 
@@ -125,3 +129,32 @@
     new NB.Liquid.Suggestions();
   });
 </script>
+
+<script>
+      //bio section counter
+    function wordCount( val ){
+      var wom = val.match(/\S+/g);
+      return {
+        charactersNoSpaces : val.replace(/\s+/g, '').length,
+        characters         : val.length,
+        words              : wom ? wom.length : 0,
+        lines              : val.split(/\r*\n/).length
+      };
+    }
+    var textarea = document.getElementById("suggestion_page_content_editable");
+    var result   = document.getElementById("mce-label");
+
+    textarea.addEventListener("input", function(){
+      var v = wordCount( this.value );
+      result.innerHTML = (
+          "<br>Characters (no spaces):  "+ v.charactersNoSpaces +
+      "&nbsp;Characters (and spaces): "+ v.characters +
+      "&nbsp;Words: "+ v.words +
+      "&nbsp;Lines: "+ v.lines
+        );
+    }, false);
+    if ( $('[type="date"]').prop('type') != 'date' ) {
+      $('[type="date"]').datepicker();
+    }
+
+    </script>

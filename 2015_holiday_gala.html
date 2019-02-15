@@ -1,5 +1,61 @@
+<head>
+    <meta charset="utf-8">
+    {% comment %}prevent analytics on admins{% if request.current_user.is_intern? %}<title>{{ page_title }}</title>{% else %}{% endif %}{% endcomment %}
+    <script>
+      dataLayer = [{
+        'pageCategory': '{{ page.type_slug }}',
+        'notification': '{% if flash.message.size > 0 %}{{ flash.message | remove: ''' }}{% else %}none{% endif %}',
+        'loginStatus':  {% if request.logged_in? %}'logged_in'{% elsif request.sorta_logged_in? %}'sorta_logged_in'{% else %}'not_logged_in'{% endif %},
+        'uid': '{{ request.current_signup.id }}',
+        'points_total': '{{ request.current_signup.capital_amount_format }}',{% if request.current_signup.is_donor? or request.current_signup.is_customer? %}
+        'donation_total': '{{ request.current_signup.donations_amount_format }}',
+        'revenue_total': '{{ request.current_signup.revenue_amount_format }}',
+        'lifetime_total': '{{ request.current_signup.donations_amount_in_cents | plus:request.current_signup.revenue_amount_in_cents | divided_by:100 | prepend: '$' }}',{% endif %}
+        {% comment %}cant get this to work'last_donation': '{{ request.current_signup.last_donation | date: '%m/%d/%Y %I:%M%p' }}',{% endcomment %}
+        'last_activity': {% for activity in request.current_signup.activities limit:1 %}'{{ activity.type_name }}'{% endfor %}, 
+        'last_activity_time': {% for activity in request.current_signup.activities limit:1 %}'{{ activity.created_at | date: '%m/%d/%Y %I:%M%p' }}'{% endfor %},
+        'recruits_count': '{{ request.current_signup.recruits_count }}',
+        'opted_in': {% if request.current_signup.is_opted_in? %}'opted_in'{% else %}'not_opted_in'{% endif %},
+        'do_not_contact': {% if request.current_signup.do_not_contact? %}'do_not_contact'{% else %}'not_do_not_contact'{% endif %},
+        'is_volunteer':  {% if request.current_signup.is_volunteer? %}'volunteer'{% else %}'not_volunteer'{% endif %},
+        {% if page.type_name == 'Donation' %}'Amount': '{{ page.donation.amount_formatted }}'{% endif %}
+      }];
+    </script>
+    <style>.async-hide{opacity:0!important}</style>
+    <script>!function(e,n,t,a,c,s,d,i,m){n.className+=" "+t,s.start=1*new Date,s.end=d=function(){n.className=n.className.replace(RegExp(" ?"+t),"")},(e[a]=e[a]||[]).hide=s,setTimeout(function(){d(),s.end=null},5e3),s.timeout=5e3}(window,document.documentElement,"async-hide","dataLayer",0,{"GTM-P8LTCD8":!0})</script>
+    <script>!function(e,t,a,n,c,o,s){e.GoogleAnalyticsObject=c,e[c]=e[c]||function(){(e[c].q=e[c].q||[]).push(arguments)},e[c].l=1*new Date,o=t.createElement(a),s=t.getElementsByTagName(a)[0],o.async=1,o.src="https://www.google-analytics.com/analytics.js",s.parentNode.insertBefore(o,s)}(window,document,"script",0,"ga"),ga("create","UA-27284180-1","auto"),ga("require","GTM-P8LTCD8")</script>
+    
+    <title>{{ page_title }}</title>
+    
+    <script>!function(e,t,a,n,g){e[n]=e[n]||[],e[n].push({"gtm.start":(new Date).getTime(),event:"gtm.js"});var m=t.getElementsByTagName(a)[0],r=t.createElement(a);r.async=!0,r.src="https://www.googletagmanager.com/gtm.js?id=GTM-THNS3S",m.parentNode.insertBefore(r,m)}(window,document,"script","dataLayer")</script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="theme.scss">
+    <link rel="stylesheet" href="tablet-and-desktop.scss" media="screen and (min-width:768px)">
+    <link rel="stylesheet" href="2015_gala.css">
+<!--[if IE 8]>
+<link rel="stylesheet" href="tablet-and-desktop.scss">
+<![endif]-->
+<!--[if IE]>
+<link rel="stylesheet" href="ie.scss">
+<![endif]-->
+
+{% include "schema_markup" %}
+{{ content_for_header }}
+<link rel="alternate" hreflang="x-default" href="{{site.full_url}}">
+<div id="fb-root"></div>
+<script>!function(e,n,t){var o,c=e.getElementsByTagName(n)[0];e.getElementById(t)||(o=e.createElement(n),o.id=t,o.src="//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=126739610711965",c.parentNode.insertBefore(o,c))}(document,"script","facebook-jssdk")</script>
+<meta name="twitter:widgets:csp" content="on">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@{{ site.broadcaster.twitter_login }}">
+<meta name="twitter:title" content="{{ page.title }}">
+<meta name="twitter:description" content="{% if page.excerpt.size > 0 %}{{ page.excerpt | strip_html }}{% else %}{{ page.event.content | strip_html | truncatewords:60}}{% endif %}">
+<meta name="twitter:image" content="{{ page.meta_image_url }}">
+
+</head>
+
 <div class="mobile-visible">
-  {% include "breadcrumbs" %}
+  
 </div>
 {% if page.headline.size > 0 %}
 <h2 class="headline">{{ page.headline }}</h2>
@@ -33,7 +89,7 @@
           <div class="text-content">
             {{ page.basic.content }}
           </div>
-          <li class="button"><a href="/2016_holiday_party_nonmember" title="">Purchase Tickets</a></li>
+          <li class="button"><a href="annual_holiday_party_and_silent_auction_2015_nonmember" title="">Purchase Tickets</a></li>
           <li class="button"><a href="https://docs.google.com/forms/d/e/1FAIpQLScHZZXTWW3zbbrxL6dp_XHQqiUxphZcQMTbaHfeiR881cPEGg/viewform" title="">Donate to Silent Auction</a></li>
           <li class="button"><a href="mailto:development@rpcvw.org" title="">Become a Sponsor</a></li>
           <li class="button"><a href="/home" title="Click here to proceed to our homepage">Continue to Main Site</a></li>
@@ -42,4 +98,6 @@
     </div>
   </div>
 </div>
+
+<script>$(document).ready(function(){$(".slider").slider({full_width:!0})})</script>
 

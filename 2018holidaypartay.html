@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- data layer -->
+  <script>
+    dataLayer = [{
+      'pageCategory': '{{ page.type_slug }}',
+      'notification': '{% if flash.message.size > 0 %}{{ flash.message | remove: ''' }}{% else %}none{% endif %}',
+      'loginStatus':  {% if request.logged_in? %}'logged_in'{% elsif request.sorta_logged_in? %}'sorta_logged_in'{% else %}'not_logged_in'{% endif %},
+      'uid': '{{ request.current_signup.id }}',
+      'points_total': '{{ request.current_signup.capital_amount_format }}',{% if request.current_signup.is_donor? or request.current_signup.is_customer? %}
+      'donation_total': '{{ request.current_signup.donations_amount_format }}',
+      'revenue_total': '{{ request.current_signup.revenue_amount_format }}',
+      'lifetime_total': '{{ request.current_signup.donations_amount_in_cents | plus:request.current_signup.revenue_amount_in_cents | divided_by:100 | prepend: '$' }}',{% endif %}
+      {% comment %}cant get this to work'last_donation': '{{ request.current_signup.last_donation | date: '%m/%d/%Y %I:%M%p' }}',{% endcomment %}
+      'last_activity': {% for activity in request.current_signup.activities limit:1 %}'{{ activity.type_name }}'{% endfor %},
+      'last_activity_time': {% for activity in request.current_signup.activities limit:1 %}'{{ activity.created_at | date: '%m/%d/%Y %I:%M%p' }}'{% endfor %},
+      'recruits_count': '{{ request.current_signup.recruits_count }}',
+      'opted_in': {% if request.current_signup.is_opted_in? %}'opted_in'{% else %}'not_opted_in'{% endif %},
+      'do_not_contact': {% if request.current_signup.do_not_contact? %}'do_not_contact'{% else %}'not_do_not_contact'{% endif %},
+      'is_volunteer':  {% if request.current_signup.is_volunteer? %}'volunteer'{% else %}'not_volunteer'{% endif %},
+      {% if page.type_name == 'Donation' %}'Amount': '{{ page.donation.amount_formatted }}'{% endif %}
+    }];
+  </script>
+
+  <!-- analytics -->
+  <style>.async-hide{opacity:0!important}</style>
+  <script>!function(e,n,t,a,c,s,d,i,m){n.className+=" "+t,s.start=1*new Date,s.end=d=function(){n.className=n.className.replace(RegExp(" ?"+t),"")},(e[a]=e[a]||[]).hide=s,setTimeout(function(){d(),s.end=null},5e3),s.timeout=5e3}(window,document.documentElement,"async-hide","dataLayer",0,{"GTM-P8LTCD8":!0})</script>
+  <script>!function(e,t,a,n,c,o,s){e.GoogleAnalyticsObject=c,e[c]=e[c]||function(){(e[c].q=e[c].q||[]).push(arguments)},e[c].l=1*new Date,o=t.createElement(a),s=t.getElementsByTagName(a)[0],o.async=1,o.src="https://www.google-analytics.com/analytics.js",s.parentNode.insertBefore(o,s)}(window,document,"script",0,"ga"),ga("create","UA-27284180-1","auto"),ga("require","GTM-P8LTCD8")</script>
+
+  <title>{{ page_title }}</title>
+
+  <script>!function(e,t,a,n,g){e[n]=e[n]||[],e[n].push({"gtm.start":(new Date).getTime(),event:"gtm.js"});var m=t.getElementsByTagName(a)[0],r=t.createElement(a);r.async=!0,r.src="https://www.googletagmanager.com/gtm.js?id=GTM-THNS3S",m.parentNode.insertBefore(r,m)}(window,document,"script","dataLayer")</script>
+
+  <!-- meta tags -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+
+  <!-- schema_markup -->
+  {% include "schema_markup" %}
+
+  <!-- content_for_header -->
+  {{ content_for_header }}
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" type="text/css" href="bootstrap.min.css" >    
+  
+  <!-- Main Style -->
+  <link rel="stylesheet" type="text/css" href="2017holiday.scss">
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script type="text/javascript" src="number-polyfill.js"></script>
+
+  </head>
+  <body>
+
+    <!-- notifications -->
+    {{ content_for_notifications }}
+
+    <div class="sidebar-overlay"></div>
+
+    <!-- Material sidebar -->
+    <aside id="menubar" class="sidebar sidebar-fixed-right sidebar-default" role="navigation">
+      {% if request.logged_in? %}
+      <!-- Sidebar header -->
+      <div class="sidebar-header">
+        <!-- Top bar -->
+        <div class="top-bar"></div>
+        <!-- Sidebar toggle button -->
+        <button type="button" class="sidebar-toggle">
+          <i class="fa fa-2x fa-close" aria-hidden="true"></i>
+        </button>
+        <!-- Sidebar brand image -->
+        <div class="sidebar-image">
+          <img src="{{ request.current_signup.profile_image_url }}">
+        </div>
+        <!-- Sidebar brand name -->
+        <a data-toggle="dropdown" class="sidebar-brand" href="#settings-dropdown" id="settings-drop">
+          {{ request.current_signup.name_or_email }}
+          <i class="fa fa-chevron-down" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <!-- Sidebar navigation -->
+      <ul class="nav sidebar-nav">
+        <li class="dropdown">
+          <ul id="settings-dropdown" class="dropdown-menu">
+
+            {% if request.current_signup.custom_values_for_display['country_of_service_1'].size > 0 %}
+            <li>
+              <a href="#" tabindex="-1">
+                <b>First Country of Service</b>
+              </a>
+              <a href="#" tabindex="-1">
+                {{ request.current_signup.custom_values_for_display['country_of_service_1'] }} {% if request.current_signup.custom_values_for_display['dates_of_service_1'].size > 0 %}{{ request.current_signup.custom_values_for_display['dates_of_service_1'] | remove: '.0' }}{% endif %}
+              </a>
+            </li>
+            {% endif %}
+            {% if request.current_signup.custom_values_for_display['country_of_service_2'].size > 0 %}
+            <li>
+              <a href="#" tabindex="-1">
+                <b>Second Country of Service</b>
+              </a>
+              <a href="#" tabindex="-1">
+                {{ request.current_signup.custom_values_for_display['country_of_service_2'] }} {% if request.current_signup.custom_values_for_display['dates_of_service_2'].size > 0 %}{{ request.current_signup.custom_values_for_display['dates_of_service_2'] | remove: '.0' }}{% endif %}
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </li>
+        <li>
+          {% if request.current_signup.is_member? %}
+          <a class="alert-success" role="alert" href="#">
+            <i class="sidebar-icon md-send fa fa-check"></i>
+            Membership Active
+          </a>
+          {% else %}
+          <a class="alert-danger" role="alert" href="/renew" target="_blank" id="sidebar-inactive-renew">
+            <i class="sidebar-icon md-send fa fa-times"></i>
+            Membership Inactive
+          </a>
+        </li>
+        <li>
+          <a class="alert-success" href="/join" target="_blank" id="sidebar-join">
+            <i class="sidebar-icon md-send fa fa-check"></i>
+            Join
+          </a>
+        </li>
+        <li>
+          <a class="alert-warning" href="/renew" target="_blank" id="sidebar-renew">
+            <i class="sidebar-icon md-send fa fa-refresh"></i>
+            Renew
+          </a>
+        </li>
+        <li>
+          <a class="alert-info" href="/contact" target="_blank" id="sidebar-contact">
+            <i class="sidebar-icon md-send fa fa-envelope"></i>
+            Contact us
+          </a>
+        </li>
+        {% endif %}
+        <li>
+         <a href="/update" target="_blank" id="sidebar-update">
+          <i class="sidebar-icon md-send fa fa-user"></i>
+          Profile
+        </a>
+      </li>
+      <li>
+        <a href="{{ request.current_signup.settings_url }}" target="_blank" id="sidebar-settings">
+          <i class="sidebar-icon md-send fa fa-gear"></i>
+          Settings
+        </a>
+      </li>
+      <li>
+        <a href="{{ request.current_signup.logout_url }}"  id="sidebar-logout">
+          <i class="sidebar-icon md-send fa fa-sign-out"></i>
+          Log Out
+        </a>
+      </li>
+      <li class="divider"></li>
+      {% if request.current_signup.is_admin? %}
+      <li>
+        <a href="{{ page.admin_edit_url }}" target="_blank" id="sidebar-edit">
+          <i class="sidebar-icon md-send fa fa-pencil"></i>
+          Edit this page
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+    {% else %}
+    <div class="sidebar-welcome">
+      <button type="button" class="sidebar-toggle">
+        <i class="fa fa-2x fa-close" aria-hidden="true"></i>
+      </button>
+
+      <br>Log in to your account<br>
+    </div>
+    <ul class="nav sidebar-nav">
+      <li>
+        <a href="{{ request.new_user_session_url }}" class="email" id="sidebar-login-with-email">
+          <i class="sidebar-icon md-send fa fa-envelope"></i>
+          Email
+        </a>
+      </li>
+      <li>
+        <a href="{{ request.facebook_connect_url }}" class="facebook" id="sidebar-login-with-facebook">
+          <i class="sidebar-icon md-send fa fa-facebook"></i>
+          Facebook
+        </a>
+      </li>
+      <li>
+        <a href="{{ request.twitter_connect_url }}" class="twitter" id="sidebar-login-with-twitter">
+          <i class="sidebar-icon md-send fa fa-twitter"></i>
+          Twitter
+        </a>
+      </li>
+      <li>
+        <a href="{{ request.new_password_reset_url }}" class="reset" id="sidebar-reset-password">
+          <i class="sidebar-icon md-send fa fa-envelope-o"></i>
+          Reset Password
+        </a>
+      </li>
+      <li>
+        <a href="/join" id="sidebar-notloggedin-join">
+          <i class="sidebar-icon md-send fa fa-check"></i>
+          Join us!
+        </a>
+      </li>
+    </ul>
+    {% endif %}
+    <!-- Sidebar divider -->
+    <!-- <div class="sidebar-divider"></div> -->
+
+    <!-- Sidebar text -->
+    <!--  <div class="sidebar-text">Text</div> -->
+  </aside>
+
+  <div class="wrapper">
+    <canvas id='canv' class="full-bg"></canvas>
+    <!-- Sidebar Constructor -->
+    <div class="constructor">
+      <header id="header-wrap">
+        <!-- Roof area Starts -->
+        <div id="roof" class="hidden-xs">
+          <div class="container">
+            <div class="col-md-6 col-sm-6">
+              <div class="info-bar-address">
+
+
+                <i class="fa fa-lg fa-clock-o"></i> Saturday, December 8 from 8pm to 12am at 
+
+                <a href="{{ page.event.venue_address.google_map_link }}" id="google-map-button-show-event" target="_blank" title="Click here for Google Map" id="roof-map"><i class="fa fa-lg fa-map-marker"></i> {{ page.event.venue_name }}</a> 
+
+               {% comment %}
+               <img class="metro-icon" src="metro.svg"> Union Station
+               {% endcomment %}
+
+             </div>
+           </div>
+           <div class="col-md-6 col-sm-6">
+            <!-- Quick Contacts Starts -->
+            <div class="quick-contacts">
+              {% comment %}<span><i class="fa fa-phone"></i> {{ page.event.contact_phone_number }}</span>{% endcomment %}
+              <span><i class="fa fa-envelope"></i> {{ page.event.contact_email | enkode_email }}</span>
+            </div>
+            <!-- Quick Contacts End -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Roof area End -->
+      <!-- Nav Menu Section Start -->
+      <div class="navigation-menu">
+        <nav class="navbar navbar-default navbar-event affix-top" role="navigation" data-spy="affix" data-offset-top="20">
+          {% comment %}<canvas id='canv'></canvas>{% endcomment %}
+          {% if request.logged_in? %}
+          <a class="slicknav_menu btn mobile-login-button green sidebar-toggle"  data-btn-alt="Account Details"><i class="fa fa-user" aria-hidden="true"></i> Account</a>
+          {% else %}
+          <a class="slicknav_menu btn mobile-login-button green sidebar-toggle"><i class="fa fa-user" aria-hidden="true"></i> Login</a>
+          {% endif %}
+          <div class="navbar-header col-sm-3">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <i class="fa fa-bars" aria-hidden="true"></i>
+            </button>
+            <a class="navbar-brand" id="nav-go-to-home" href="/"><img src="https://d3n8a8pro7vhmx.cloudfront.net/themes/5253646978c2720367000002/attachments/original/1522188119/rpcvw_logo_white_slim.svg?1522188119" class="navbrand" alt=""></a>
+          </div>
+
+          <div class="collapse navbar-collapse" id="navbar">
+            <ul class="nav navbar-nav navbar-right">
+              <li class="active animated bounceIn"><a href="#tickets" class="btn-common" id="nav-desktop-tickets"><i class="fa fa-ticket" aria-hidden="true"></i> Tickets</a></li>
+
+
+
+              <li><a href="#program" id="nav-desktop-program">Program</a></li>
+
+
+
+              <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSdNJuk2hD2DsoAfLIJhHUvXozwBMFWZegG5BGb1x0mXfpT33w/viewform" id="nav-mobile-auction" target="_blank" id="nav-desktop-auction">Auction</a></li>  
+
+{% comment %}
+
+              <li class="end"><a href="#sponsors" id="nav-desktop-sponsors">Sponsors</a></li> 
+
+              {% endcomment %}
+
+              {% if request.logged_in? %}
+              <li><a class="btn green sidebar-toggle" id="sidebar-account-toggle"><i class="fa fa-user" aria-hidden="true"></i> Account</a></li>
+              {% else %}
+              <li><a class="btn green sidebar-toggle" id="sidebar-login-toggle"><i class="fa fa-user" aria-hidden="true"></i> Login</a></li>
+              {% endif %}              
+            </ul>
+          </div><!-- /navbar-collapse -->
+
+          <!-- Mobile Menu Start -->
+          <ul class="wpb-mobile-menu">
+            <li><a href="#details" id="nav-mobile-date">When/Where</a></li>
+            <li><a href="#program" id="nav-mobile-program">Program</a></li>
+            <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSdNJuk2hD2DsoAfLIJhHUvXozwBMFWZegG5BGb1x0mXfpT33w/viewform" id="nav-mobile-auction" target="_blank">Auction</a></li>               
+            <li><a href="#sponsors" id="nav-mobile-sponsors">Sponsors</a></li>
+            <li class="active"><a href="#tickets" id="nav-mobile-tickets"><i class="fa fa-ticket" aria-hidden="true"></i> Tickets</a></li>    
+          </ul>
+          <!-- Mobile Menu End -->
+        </nav>
+      </div>
+      <!-- Nav Menu Section End -->
+
+    </header>
+    <!-- Header Area wrapper End -->
+
+    <!-- Main Slider Section Start -->
+    <div id="carousel-area">
+      <div id="carousel-slider" class="carousel slide" data-ride="carousel">
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner" role="listbox">
+          <div class="item active">
+            <img src="https://d3n8a8pro7vhmx.cloudfront.net/themes/5253646978c2720367000002/attachments/original/1507946485/2017holiday.dsc_0475.jpg?1507946485" alt="">
+            <div class="carousel-caption">
+              <img src="2017holiday-logo-darkbg.svg" class="hidden-xs hidden-sm logo-plate wow fadeInUp animated" alt="" data-wow-delay="0.5s" style="visibility: visible;-webkit-animation-delay: 0.5s; -moz-animation-delay: 0.5s; animation-delay: 0.5s;">
+              <h2 class="wow fadeInRight animated" data-wow-delay="1s" style="visibility: visible;-webkit-animation-delay: 1s; -moz-animation-delay: 1s; animation-delay: 1s;">2018 Holiday Party</h2>
+              {% comment %}<div class="buttons wow fadeInDown animated" data-wow-delay="0.2s" style="visibility: visible;-webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s; animation-delay: 0.2s;"><a class="btn btn-lg btn-border" href="#tickets" id="carousel-tickets-btn">You're Invited!</a></div>
+              <a data-scroll="" href="#details">
+                <div class="rev-scroll-btn wow fadeInUp animated" data-wow-delay="600ms" style="visibility: visible;-webkit-animation-delay: 600ms; -moz-animation-delay: 600ms; animation-delay: 600ms;">
+                  <span></span>
+                </div>
+              </a>{% endcomment %}
+            </div>
+          </div>
+          <div class="item">
+            <img src="https://d3n8a8pro7vhmx.cloudfront.net/themes/5253646978c2720367000002/attachments/original/1507946484/2017holiday.dsc_0328.jpg?1507946484" alt="">
+            <div class="carousel-caption">
+              <h2 class="wow fadeInUp animated" data-wow-delay="300ms" style="visibility: visible;-webkit-animation-delay: 300ms; -moz-animation-delay: 300ms; animation-delay: 300ms;">Tickets on Sale!<br> </h2>
+              {% comment %}<div class="buttons">
+                <a class="btn btn-lg btn-common wow fadeInLeft animated" data-wow-delay="300ms" href="/join" id="carousel-join-btn" style="visibility: visible;-webkit-animation-delay: 300ms; -moz-animation-delay: 300ms; animation-delay: 300ms;">Join Us</a>
+                <a class="btn btn-lg btn-border wow fadeInRight animated" data-wow-delay="300ms" href="/renew" id="carousel-renew-btn" style="visibility: visible;-webkit-animation-delay: 300ms; -moz-animation-delay: 300ms; animation-delay: 300ms;">Renew Your Membership</a>
+              </div>{% endcomment %}               
+              {% comment %}<a data-scroll="" href="#details">
+                <div class="rev-scroll-btn wow fadeInUp animated" data-wow-delay="600ms" style="visibility: visible;-webkit-animation-delay: 600ms; -moz-animation-delay: 600ms; animation-delay: 600ms;">
+                  <span></span>
+                </div>
+              </a>{% endcomment %}
+            </div>
+          </div>
+          <div class="item">
+            <img src="https://d3n8a8pro7vhmx.cloudfront.net/themes/5253646978c2720367000002/attachments/original/1507946484/2017holiday.dsc_0384.jpg?1507946484" alt="">
+            <div class="carousel-caption">
+              <h2 class="wow fadeInDown animated" data-wow-delay="300ms" style="visibility: visible;-webkit-animation-delay: 300ms; -moz-animation-delay: 300ms; animation-delay: 300ms;">Celebrate with the Peace Corps Community</h2>
+              {% comment %}<div class="wow fadeInUp animated" data-wow-delay="300ms" style="visibility: visible;-webkit-animation-delay: 300ms; -moz-animation-delay: 300ms; animation-delay: 300ms;"><a class="btn btn-lg btn-common" href="#details" id="carousel-details-btn">Learn More</a></div>
+              x<a data-scroll="" href="#details">
+                <div class="rev-scroll-btn wow fadeInUp animated" data-wow-delay="600ms" style="visibility: visible;-webkit-animation-delay: 600ms; -moz-animation-delay: 600ms; animation-delay: 600ms;">
+                  <span></span>
+                </div>
+              </a>{% endcomment %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <a class="left carousel-control" href="#carousel-slider" role="button" data-slide="prev" id="carousel-nav-left">
+          <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        </a>
+        <a class="right carousel-control" href="#carousel-slider" role="button" data-slide="next" id="carousel-nav-right">
+          <i class="fa fa-chevron-right" aria-hidden="true"></i>
+        </a>
+        <div class="fade-up"></div>
+      </div>
+    </div><!-- Main Slider Section End -->
+    <div class="section-fade-down"></div>
+    <!-- Countdown Section Start -->
+    <section id="details" class="countdown-timer section">
+      {% comment %}<canvas id='canv' class="event-bg"></canvas>{% endcomment %}
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 col-sm-6 col-xs-12 wow fadeInLeft animated" data-wow-delay="0.2s" style="visibility: visible;-webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s; animation-delay: 0.2s;">
+            <div class="text">
+
+              <img src="2017holiday-logo-darkbg.svg" class="logo-plate wow fadeInUp animated" alt="" data-wow-delay="0.5s" style="visibility: visible;-webkit-animation-delay: 0.5s; -moz-animation-delay: 0.5s; animation-delay: 0.5s;">
+              
+              <h2 class="padtop">{{ page.title }}</h2>
+              <h4> {{ page.event.venue_name }}<br/>
+                {% for line in page.event.venue_address.multi_line %}
+                {{ line | remove: 'United States' }} <br>{% endfor %} 
+
+{% comment %}
+
+                {% if page.event.is_multi_day? %}
+                {{ page.event.local_start_at | event_time }} - {{ page.event.local_end_at | event_date }}
+                {{ page.event.local_start_at | event_time }} - {{ page.event.local_end_at | event_date }}
+                {% else %}
+                {{ page.event.local_start_at | event_time }} - {{ page.event.local_end_at | event_just_time }}
+              {% endif %}
+
+              {% endcomment %}
+
+              Saturday, December 8 from 8pm to 12am
+            </h4>
+            <div class="padtopmore">
+              <a href="#tickets" class="btn btn-common wow fadeInUp animated animated" id="details-ticket-button" data-wow-delay="0.3s" style="visibility: visible;-webkit-animation-delay: 0.3s; -moz-animation-delay: 0.3s; animation-delay: 0.3s;">Purchase Tickets!</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-sm-6 col-xs-12 wow fadeInRight animated" data-wow-delay="0.2s" style="visibility: visible;-webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s; animation-delay: 0.2s;">
+
+<img src="https://d3n8a8pro7vhmx.cloudfront.net/rpcvw/pages/3546/meta_images/original/2018_Holiday_Party!_%282%29.png?1540661903" class="hidden-xs hidden-sm logo-plate wow fadeInUp animated" alt="" data-wow-delay="0.5s" style="visibility: visible;-webkit-animation-delay: 0.5s; -moz-animation-delay: 0.5s; animation-delay: 0.5s;">
+
+
+ {% comment %}
+
+            <div class="text time-countdown">
+              <div id="clock" class="time-count"> </div>
+              <script type="text/javascript">
+                $(document).ready(function() {
+                 $('#clock').countdown('{{ page.event.local_start_at | date: '%Y/%m/%d %H:%M:%S' }}', function(event) {
+                  $(this).html(
+                    event.strftime(''
+                      +'<div class="time-entry days"><span>%-D</span> Days</div> '
+                      +'<div class="time-entry hours"><span>%H</span> Hours</div> '
+                      +'<div class="time-entry minutes"><span>%M</span> Minutes</div> '));
+                });
+               });
+             </script>
+
+             <div class="time-countdown">
+              <div class="time-count">
+               <div class="time-entry"><span>{{ page.event.rsvps_count }}</span> Tickets<br>Sold</div>
+                <div class="time-entry"><span>{{ page.event.maximum_capacity | minus:page.event.rsvps_count }}</span> Tickets<br>Left</div> 
+            
+              </div>
+            </div>
+          </div>
+          {% endcomment %} 
+
+
+          {% comment %}
+
+          <span class="addtocalendar atc-style-rpcvw" id="details-addtocalendar-btn">
+            <a class="atcb-link" title="Click here to add this event to your Google, Yahoo, iCal or Outlook calendar" id="{{ page.slug }}"><i class="fa fa-3x fa-calendar-plus-o" aria-hidden="true"></i><p>Save the Date!</p><div>Click here to add this event to your calendar</div></a>
+            <var class="atc_event wow fadeInDown animated" data-wow-delay="0.2s" style="visibility: visible;-webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s; animation-delay: 0.2s;" id="{{ page.slug }}">
+              <var class="atc_date_start">{{ page.event.local_start_at | date: '%m/%d/%Y %H:%M:%S' }}</var>
+              <var class="atc_date_end">{{ page.event.local_end_at | date: '%m/%d/%Y %H:%M:%S' }}</var>
+              <var class="atc_timezone">America/New_York</var>
+              <var class="atc_title">{{ page.headline }}</var>
+              <var class="atc_description">Check {{ page.full_url }} for the latest info.</var>
+              <var class="atc_location">{{ page.event.venue_address.one_line }}</var>
+              <var class="atc_organizer">{{ page.event.contact_name }}</var>
+              <var class="atc_organizer_email">{{ page.event.contact_email }}</var>
+            </var>
+          </span>
+
+
+          {% endcomment %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="text">
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSdNJuk2hD2DsoAfLIJhHUvXozwBMFWZegG5BGb1x0mXfpT33w/viewform" target="_blank" class="btn btn-small btn-border wow fadeInRight animated animated animated margintop" id="program-auction-button" data-wow-delay="1s" style="visibility: visible;-webkit-animation-delay: 1s; -moz-animation-delay: 1s; animation-delay: 1s;">Contribute an Auction Item</a>
+          &nbsp;
+          <a href="/donate" target="_blank" class="btn btn-small btn-border wow fadeInRight animated animated animated margintop" id="program-donation-button" data-wow-delay="1.5s" style="visibility: visible;-webkit-animation-delay: 1.5s; -moz-animation-delay: 1.5s; animation-delay: 1.5s;">Make a Donation</a>
+          &nbsp;
+          <a href="https://d3n8a8pro7vhmx.cloudfront.net/rpcvw/pages/3546/meta_images/original/2018_Holiday_Party!_%282%29.png?1540661903" target="_blank" class="btn btn-small btn-border wow fadeInRight animated animated animated margintop" id="program-download-invitation-button" data-wow-delay="2s" style="visibility: visible;-webkit-animation-delay: 2s; -moz-animation-delay: 2s; animation-delay: 2s;">Download Invitation</a> 
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Coundown Section End -->
+  <div class="section-fade-up"></div>
+  <!-- Welocome Event Start -->
+  <section id="event" class="section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="tab-block wow fadeInDown animated" data-wow-delay="0s" style="visibility: visible;-webkit-animation-delay: 0s; -moz-animation-delay: 0s; animation-delay: 0s;">
+            <div class="icon">
+              <i class="fa fa-map-marker"></i>
+            </div>
+            <div class="desc">
+              <h4>Location</h4>
+              <p><a href="{{ page.event.venue_address.google_map_link }}" id="event-map" target="_blank" title="Click here for Google Map">{{ page.event.venue_name }}</a>
+                <br>Union Station Metro</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="tab-block wow fadeInDown animated" data-wow-delay="0.2s" style="visibility: visible;-webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s; animation-delay: 0.2s;">
+              <div class="icon">
+                <i class="fa fa-calendar"></i>
+              </div>
+              <div class="desc">
+                <h4>Date &amp; Time</h4>
+                <p>
+
+                  Saturday, December 8 from 8pm to 12am
+
+{% comment %}
+
+                  {{ page.event.local_start_at | date: '%a, %b %d' }} {{ page.event.local_start_at | date: '%I' }} - {{ page.event.local_end_at | event_just_time }}
+
+                  {% endcomment %}
+
+                  <br>
+
+
+                  <span class="addtocalendar" id="event-addtocalendar-link" >
+                    <a class="atcb-link" title="Click here to add this event to your Google, Yahoo, iCal or Outlook calendar" id="{{ page.slug }}">Add to Calendar</a>
+                    <var class="atc_event" id="{{ page.slug }}">
+                      <var class="atc_date_start">{{ page.event.local_start_at | date: '%m/%d/%Y %H:%M:%S' }}</var>
+                      <var class="atc_date_end">{{ page.event.local_end_at | date: '%m/%d/%Y %H:%M:%S' }}</var>
+                      <var class="atc_timezone">America/New_York</var>
+                      <var class="atc_title">{{ page.headline }}</var>
+                      <var class="atc_description">Check {{ page.full_url }} for the latest info.</var>
+                      <var class="atc_location">{{ page.event.venue_address.one_line }}</var>
+                      <var class="atc_organizer">{{ page.event.contact_name }}</var>
+                      <var class="atc_organizer_email">{{ page.event.contact_email }}</var>
+                    </var>
+                  </span> 
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="tab-block wow fadeInDown animated" data-wow-delay="0.4s" style="visibility: visible;-webkit-animation-delay: 0.4s; -moz-animation-delay: 0.4s; animation-delay: 0.4s;">
+              <div class="icon">
+                <i class="fa fa-microphone"></i>
+              </div>
+              <div class="desc">
+                <h4>Activities</h4>
+                <p>Open Bar, Food, Board Election Results, Peace Corps Champion Award, Silent Auction</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="tab-block last-block wow fadeInDown animated" data-wow-delay="0.6s" style="visibility: visible;-webkit-animation-delay: 0.6s; -moz-animation-delay: 0.6s; animation-delay: 0.6s;">
+              <div class="icon">
+                <i class="fa fa-ticket"></i>
+              </div>
+              <div class="desc left">
+                <h4>Attendees</h4>
+                <p>{{ page.event.rsvps_count }} RPCVs and Friends</p>    
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-xs-12">
+            <div class="content-text">
+              <h3 class="wow fadeInUp animated" data-wow-delay="0.8s" style="visibility: visible;-webkit-animation-delay: 0.8s; -moz-animation-delay: 0.8s; animation-delay: 0.8s;">Celebrate with the Peace Corps Community</h3>
+              <p class="wow fadeInUp animated" data-wow-delay="1s" style="visibility: visible;-webkit-animation-delay: 1s; -moz-animation-delay: 1s; animation-delay: 1s;">{{ page.excerpt }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fade-up"></div>
+    </section>
+    <div class="section-fade-down"></div>
+    <!-- Featured Section Start -->
+    <section id="program" class="section bg-light">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            {{ page.event.content }}
+          </div>
+
+          <div class="col-md-12">
+            <div class="button-container section">
+              <a href="#tickets" class="btn btn-common wow fadeInUp animated animated animated" id="program-tickets-button" data-wow-delay="0.3s" style="visibility: visible;-webkit-animation-delay: 0.3s; -moz-animation-delay: 0.3s; animation-delay: 0.3s;">Tickets</a>   
+            </div>
+          </div>
+        </div>
+        {% if request.current_signup.tags contains "board" %}
+        <div class="alert alert-info">Begin - only logged in board members can see this v v v </div>
+        <div class="row">
+          <div class="col-md-12">
+            <h2 class="section-title wow fadeInUp animated" data-wow-delay="0s" style="visibility: visible;-webkit-animation-delay: 0s; -moz-animation-delay: 0s; animation-delay: 0s;">Program</h2>
+            <p class="section-subcontent wow fadeInUp animated" data-wow-delay="0.2s" style="visibility: visible;-webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s; animation-delay: 0.2s;">Here's how the night will go</p>
+            <div class="col-md-4 col-sm-6">
+              <div class="featured-box wow fadeInLeft animated" data-wow-delay="0.1s" style="visibility: visible;-webkit-animation-delay: 0.1s; -moz-animation-delay: 0.1s; animation-delay: 0.1s;">
+                <div class="icon">
+                  <i class="fa fa-bolt"></i>
+                </div>
+                <div class="featured-content">
+                  <h4>6:30-8</h4>
+                  <p>Check in, get nametag, doors open at 7</p>
+                  <p>Begin bidding in silent auction</p>
+                  <p>Photo booth open</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+              <div class="featured-box wow fadeInLeft animated" data-wow-delay="0.2s" style="visibility: visible;-webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s; animation-delay: 0.2s;">
+                <div class="icon">
+                  <i class="fa fa-exclamation"></i>
+                </div>
+                <div class="featured-content">
+                  <h4>8-8:30</h4>
+                  <p>Brief Remarks</p>
+                  <p>Partner for Peace welcomed</p>
+                  <p>New board introduced</p>
+                  <p>Peace Corps Champion awarded</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+              <div class="featured-box wow fadeInLeft animated" data-wow-delay="0.3s" style="visibility: visible;-webkit-animation-delay: 0.3s; -moz-animation-delay: 0.3s; animation-delay: 0.3s;">
+                <div class="icon">
+                  <i class="fa fa-heart"></i>
+                </div>
+                <div class="featured-content">
+                  <h4>8:30-11</h4>
+                  <p>Food, Drink and General Merriment</p>
+                  <p>9:30 - Silent auction winners announced</p>
+                  <p>10:00 - Proceed to after-party</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="alert alert-info">End - only logged in board members can see this ^ ^ ^</div>
+        {% endif %}
+      </div>
+    </section>
+    <!-- Featured Section End -->
+
+{% comment %}
+
+    <!-- Sponsors Section Start -->
+    <section id="sponsors" class="section">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12">
+            <h2 class="section-title wow fadeInUp animated text-light" data-wow-delay="0s" style="visibility: visible;-webkit-animation-delay: 0s; -moz-animation-delay: 0s; animation-delay: 0s;">Our Sponsors</h2>
+            <p class="section-subcontent wow fadeInUp animated text-bright" data-wow-delay="0.2s" style="visibility: visible;-webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s; animation-delay: 0.2s;">Their generosity will make this a night to remember!<br><a href="/sponsorship_donation" target="_blank">Click here</a> to view sponsorship levels.</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3 col-sm-4 col-xs-6">
+            <div class="spnsors-logo wow fadeInUp animated" data-wow-delay="0.1s" style="visibility: visible;-webkit-animation-delay: 0.1s; -moz-animation-delay: 0.1s; animation-delay: 0.1s;">
+              <h3 class="sideheading"><span>Cocktail Party</span></h3>
+              <a href="http://www.lagreedc.com/" target="_blank" class="center"><img src="2017-sponsor-logo-lagreedc.png" alt=""><br>Lagree DC</a>
+            </div>            
+          </div>
+          <div class="col-md-3 col-sm-4 col-xs-6">
+            <div class="spnsors-logo wow fadeInUp animated" data-wow-delay="0.1s" style="visibility: visible;-webkit-animation-delay: 0.1s; -moz-animation-delay: 0.1s; animation-delay: 0.1s;">
+              <h3 class="sideheading"><span>Dessert</span></h3>
+              <a href="http://www.districttitle.com/" target="_blank" class="center"><img src="2017-sponsor-logo-district-title.png" alt=""><br>District Title</a>
+            </div>            
+          </div>
+          <div class="col-md-3 col-sm-4 col-xs-6">
+            <div class="spnsors-logo wow fadeInUp animated" data-wow-delay="0.1s" style="visibility: visible;-webkit-animation-delay: 0.1s; -moz-animation-delay: 0.1s; animation-delay: 0.1s;">
+              <h3 class="sideheading"></h3>
+              <a href="http://www.dinapaxenos.com/" target="_blank" class="center"><img src="2017-sponsor-logo-dina.png" alt=""><br>Dina Paxenos, RLAH Realtor</a>
+            </div>            
+          </div>
+          <div class="col-md-3 col-sm-4 col-xs-6">
+            <div class="spnsors-logo wow fadeInUp animated" data-wow-delay="0.1s" style="visibility: visible;-webkit-animation-delay: 0.1s; -moz-animation-delay: 0.1s; animation-delay: 0.1s;">
+              <h3 class="sideheading"><span>Wine Toss</span></h3>
+              <a href="https://www.firstsavingsmortgage.com/officedirectory/profile.cfm?advisorcode=292" target="_blank" class="center"><img src="2017-sponsor-logo-first-saving.png" alt=""><br>JD Teitelman, First Savings Mortgage</a>
+            </div>            
+          </div>
+          <div class="col-md-3 col-sm-4 col-xs-6">
+            <div class="spnsors-logo wow fadeInUp animated" data-wow-delay="0.2s" style="visibility: visible;-webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s; animation-delay: 0.2s;">
+              <h3 class="sideheading"><span>Partnership for Peace</span></h3>
+              <a href="http://www.talemconsulting.com/" target="_blank" class="center"><img src="2017-sponsor-logo-talem-consulting.png" alt=""><br>Rachel Branaman, Talem Consulting</a>
+            </div>            
+          </div>
+          <div class="col-md-3 col-sm-4 col-xs-6">
+            <div class="spnsors-logo wow fadeInUp animated" data-wow-delay="0.2s" style="visibility: visible;-webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s; animation-delay: 0.2s;">
+              <h3 class="sideheading"><span>Auction Pens</span></h3>
+              <a href="http://www.rlathome.com/" target="_blank" class="center"><img src="2017-sponsor-logo-rlah-real-estate.png" alt=""><br>RLAH Real Estate</a>
+            </div>            
+          </div>
+          <div class="col-md-3 col-sm-4 col-xs-6">
+            <div class="spnsors-logo wow fadeInUp animated" data-wow-delay="0.2s" style="visibility: visible;-webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s; animation-delay: 0.2s;">
+              <h3 class="sideheading"><span>Coat Check</span></h3>
+              <a href="https://www.statefarm.com/agent/US/MD/Silver-Spring/Leslie-Riehl-FPB611YS000" target="_blank" class="center"><img src="2017-sponsor-logo-leslie.png" alt=""><br>Leslie Riehl, State Farm® Insurance Agent</a>
+            </div>            
+          </div>
+          <div class="col-md-3 col-sm-4 col-xs-6">
+            <div class="spnsors-logo wow fadeInUp animated" data-wow-delay="0.2s" style="visibility: visible;-webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s; animation-delay: 0.2s;">
+              <h3 class="sideheading"><span>Photo Booth</span></h3>
+              <a href="#" target="_blank" class="center"><img src="2017-sponsor-logo-mark.png" alt=""><br>Mark Monninger CFP(®), Tax-Masters, Inc.</a>
+            </div>            
+          </div>
+          <div class="col-md-3 col-sm-4 col-xs-6">
+          </div>            
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="col-sm-6">
+             <div class="spnsors-logo wow fadeInUp animated" data-wow-delay="0.3s" style="visibility: visible;-webkit-animation-delay: 0.3s; -moz-animation-delay: 0.3s; animation-delay: 0.3s;">
+              <h3 class="sideheading"><span>In Kind Partners</span></h3>
+              <a href="https://www.lyft.com/" target="_blank" class="center"><img src="2017-sponsor-logo-lyft.png" alt=""><br>Lyft</a>
+            </div>            
+          </div>
+          <div class="col-sm-6">
+            <div class="spnsors-logo wow fadeInUp animated" data-wow-delay="0.3s" style="visibility: visible;-webkit-animation-delay: 0.3s; -moz-animation-delay: 0.3s; animation-delay: 0.3s;">
+              <h3 class="sideheading"><span></span></h3>
+              <a href="https://insomniacookies.com/" target="_blank" class="center"><img src="2017-sponsor-logo-insomnia-cookies.png" alt=""><br>Insomnia Cookies</a>
+            </div>            
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="col-sm-6">
+            <div class="spnsors-logo wow fadeInUp animated" data-wow-delay="0.3s" style="visibility: visible;-webkit-animation-delay: 0.3s; -moz-animation-delay: 0.3s; animation-delay: 0.3s;">
+              <h3 class="sideheading"><span></span></h3>
+              <a href="https://mandelacoffee.com/" target="_blank" class="center"><img src="2017-sponsor-logo-mandela-coffee.png" alt=""><br>Mandela Coffee</a>
+            </div>            
+          </div>
+          <div class="col-sm-6">
+            <div class="spnsors-logo wow fadeInUp animated hide" data-wow-delay="0.3s" style="visibility: visible;-webkit-animation-delay: 0.3s; -moz-animation-delay: 0.3s; animation-delay: 0.3s;">
+              <h3 class="sideheading"><span></span></h3>
+              <a href="http://www.lagreedc.com/" target="_blank" class="center"><img src="2017-sponsor-logo-first-saving.png" alt=""><br>Mark Monninger CFP(®), Tax-Masters, Inc.</a>
+            </div>            
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Sponsors Section End --> 
+
+  <!-- Auction Section Start -->
+  <section id="auction" class="section bg-light">
+    <div class="container">
+      <ul class="row tiles">
+        <div class="col-md-12 col-xs-12">
+          <h2 class="section-title wow fadeInUp animated" data-wow-delay="0s" style="visibility: visible;-webkit-animation-delay: 0s; -moz-animation-delay: 0s; animation-delay: 0s;">Silent Auction</h2>
+
+          <p class="section-subcontent wow fadeInUp animated" data-wow-delay="0.2s" style="visibility: visible;-webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s; animation-delay: 0.2s;">Proceeds from the silent auction will benefit our Partner in Peace, Upwardly Global,<br> and our endowment fund, to sustain RPCV/W for many years to come!</p>                      
+        </div>
+        <div class="button-container padbottom">
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSdas262TQdVHx7Ao1g4pL_gp6QIcF2GiFEG_lZg9AtnAL9M4A/viewform?usp=sf_link" target="_blank" class="btn btn-common wow fadeInUp animated animated" id="auction-auction-form-button" data-wow-delay="0.3s" style="visibility: visible;-webkit-animation-delay: 0.3s; -moz-animation-delay: 0.3s; animation-delay: 0.3s;">Donate an Item</a>   
+        </div> 
+        {% subpage "silent_auction_items" with "silent_auction_item_widget" %}
+      </ul>
+    </div>
+  </section> 
+  <!-- auction Section End -->
+
+  <!-- Pricing Table Section Start -->
+  <section id="partner" class="section bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h2 class="section-title wow fadeInUp animated" data-wow-delay="0s" style="visibility: visible;-webkit-animation-delay: 0s; -moz-animation-delay: 0s; animation-delay: 0s;">Become a Sponsor</h2>
+          <p class="section-subcontent wow fadeInUp animated" data-wow-delay="0.2s" style="visibility: visible;-webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s; animation-delay: 0.2s;">Underwriting opportunities include: pens for the silent auction ($250), napkins ($500), photo booth ($750), dessert ($750), goody bags ($750), and cocktail hour ($1,000). Sponsors will be recognized by logo placement on event materials, tweets, advertising in our weekly newsletter, and the opportunity to speak at the event. For more information about specific sponsorships, please contact Rachel Branaman at <a href="mailto:development@rpcvw.org" id="sponsorship-email">development@rpcvw.org</a>.</p>
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="pricing-table wow fadeInLeft animated" data-wow-delay="0.3s" style="visibility: visible;-webkit-animation-delay: 0.3s; -moz-animation-delay: 0.3s; animation-delay: 0.3s;">
+            <div class="table-icon">
+              <i class="fa fa-glass" aria-hidden="true"></i>
+            </div>
+            <h3>$1000 Level</h3>
+            <ul class="plan-info">
+              <li><i class="icon-check"></i> Small newsletter ad, 3m</li>
+              <li><i class="icon-minus"></i> 2 Gala Tickets</li>
+              <li><i class="icon-minus"></i> Opportunity for a representative to speak briefly during the program remarks</li>           
+            </ul>
+            <div class="price">
+              <h6><a href="/sponsorship_donation#1000">Learn More</a></h6>
+            </div>
+            <div class="button-area">
+              <a href="/sponsorship_donation#sponsorship_donation_page_new_donation_form" id="sponsorship-buy-now" class="btn disabled">Sold</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="pricing-table wow fadeInLeft animated" data-wow-delay="0.3s" style="visibility: visible;-webkit-animation-delay: 0.3s; -moz-animation-delay: 0.3s; animation-delay: 0.3s;">
+            <div class="table-icon">
+              <i class="fa fa-camera-retro" aria-hidden="true"></i>
+            </div>
+            <h3>$750 Level</h3>
+            <ul class="plan-info">
+              <li><i class="icon-check"></i> Medium newsletter ad, 1m</li>
+              <li><i class="icon-minus"></i> 2 Gala Tickets</li>
+              <li><i class="icon-minus"></i> Specialized benefits at photo booth, dessert table, or in goody bags</li>           
+            </ul>
+            <div class="price">
+              <h6><a href="/sponsorship_donation#750">Learn More</a></h6>
+            </div>
+            <div class="button-area">
+              <a href="/sponsorship_donation#sponsorship_donation_page_new_donation_form" id="sponsorship-buy-now" class="btn btn-common">Open</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="pricing-table wow fadeInRight animated" data-wow-delay="0.3s" style="visibility: visible;-webkit-animation-delay: 0.3s; -moz-animation-delay: 0.3s; animation-delay: 0.3s;">
+            <div class="table-icon">
+              <i class="fa fa-clone" aria-hidden="true"></i>
+            </div>
+            <h3>$500 Level</h3>
+            <ul class="plan-info">
+              <li><i class="icon-check"></i> Small newsletter ad, 1m</li>
+              <li><i class="icon-minus"></i> 2 Gala Tickets</li>
+              <li><i class="icon-minus"></i> Logo on napkins at the event</li>           
+            </ul>
+            <div class="price">
+              <h6><a href="/sponsorship_donation#500">Learn More</a></h6>
+            </div>
+            <div class="button-area">
+              <a href="/sponsorship_donation#sponsorship_donation_page_new_donation_form" id="sponsorship-buy-now" class="btn btn-common">Open</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="pricing-table wow fadeInRight animated" data-wow-delay="0.3s" style="visibility: visible;-webkit-animation-delay: 0.3s; -moz-animation-delay: 0.3s; animation-delay: 0.3s;">
+            <div class="table-icon">
+              <i class="fa fa-pencil" aria-hidden="true"></i>
+            </div>
+            <h3>$250 Level</h3>
+            <ul class="plan-info">
+              <li><i class="icon-check"></i> Share materials at event</li>
+              <li><i class="icon-minus"></i> 2 Gala Tickets</li>
+              <li><i class="icon-minus"></i> Specialized benefits at coat check, wine toss, or pens for Silent Auction</li>     
+            </ul>
+            <div class="price">
+              <h6><a href="/sponsorship_donation#250">Learn More</a></h6>
+            </div>
+            <div class="button-area">
+              <a href="/sponsorship_donation#sponsorship_donation_page_new_donation_form" id="sponsorship-buy-now" class="btn btn-common">Open</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Pricing Table Section End -->
+
+  <!-- Speakers Section Start -->
+  <section id="award" class="section">
+    <div class="container bg-light">
+      <div class="row padtopmore padbottommore">
+        <div class="col-md-12">
+          <h2 class="section-title wow fadeInUp animated" data-wow-delay="0s" style="visibility: visible;-webkit-animation-delay: 0s; -moz-animation-delay: 0s; animation-delay: 0s;">Peace Corps Champion</h2>
+          <p class="section-subcontent wow fadeInUp animated" data-wow-delay="0.2s" style="visibility: visible;-webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s; animation-delay: 0.2s;">Each year, RPCV/W awards its Peace Corps Champion Award to an individual whose work has made a great impact on the Peace Corps and its community.</p>
+        </div> 
+        <div class="col-md-2 col-sm-1 col-xs-12">
+
+        </div>
+        <div class="col-md-8 col-sm-10 col-xs-12">
+          <div class="speakers-member wow fadeIn animated" data-wow-delay="0.3s" style="visibility: visible;-webkit-animation-delay: 0.3s; -moz-animation-delay: 0.3s; animation-delay: 0.3s;">
+            <div class="member-img">
+              <img src="https://d3n8a8pro7vhmx.cloudfront.net/rpcvw/mailings/2441/attachments/original/2017-Peace-Corps-Champion-Jonathan-Pearson.png?1511909076" alt="">
+            </div>
+            <div class="member-desc">
+              <p class="padtop">Jonathan is the Advocacy Director for the National Peace Corps Association, where he mobilizes the Peace Corps community to influence their elected officials on issues of importance to our community. He has been a member of RPCV/W since 2002 and a driving force behind the long-term health and sustainability of the Peace Corps. Read more about him and his work <a href="/congratulations_to_jonathan_pearson_our_2017_peace_corps_champion" target="_blank">here</a>.</p>
+            </div>              
+          </div>
+        </div>
+        <div class="col-md-2 col-sm-1 col-xs-12">
+
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Speakers Section End -->
+
+  {% endcomment %}
+
+  <section id="ticket-heading" class="main-content">
+    <div class="section-fade-down"></div>
+    <div class="container">
+      <div class="row section">
+        <div class="col-md-12 section">
+          <h2 class="section-title wow fadeInUp animated animated" data-wow-delay="0s" style="visibility: visible;-webkit-animation-delay: 0s; -moz-animation-delay: 0s; animation-delay: 0s;">Join us!</h2>
+          <p class="section-subcontent wow fadeInUp animated animated" data-wow-delay="0.2s" style="visibility: visible;-webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s; animation-delay: 0.2s;"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% comment %}
+  <!-- Map Section Start -->
+  <section id="map">
+    <div class="container-fluid">
+      <div class="row">
+        <div id="map_canvas"></div>
+      </div>
+    </div>
+  </section>
+  <!-- Map Section End -->  
+  {% endcomment %}
+
+  <!-- Start Contact Us Section -->
+  <section id="contact">
+    <div class="container">
+      <div class="row wow fadeInDown animated" data-wow-delay="0.3s" style="visibility: visible;-webkit-animation-delay: 0.3s; -moz-animation-delay: 0.3s; animation-delay: 0.3s;">
+        <div class="col-md-8 col-sm-7 contact-form">
+
+          <div class="title-header">
+            <h3 class="title-medium">Ticket Order Form</h3>
+            <div class="section" id="tickets"></div>
+            <div class="centered-button">
+             {% if request.logged_in? %}
+             {% if request.current_signup.is_member? %}
+             <a href="#tickets" id="tickets-membership-active" class="btn green wow fadeInUp animated animated" data-wow-delay="0.5s" style="visibility: visible;-webkit-animation-delay: 0.5s; -moz-animation-delay: 0.5s; animation-delay: 0.5s;">Membership Active<br> Member Price Enabled</a>
+             {% else %}
+             <a href="/renew" id="tickets-membership-inactive-renew"  class="btn btn-common wow fadeInUp animated animated" data-wow-delay="0.5s" style="visibility: visible;-webkit-animation-delay: 0.5s; -moz-animation-delay: 0.5s; animation-delay: 0.5s;">Membership Inactive<br> Renew Dues or Join for Member Price</a>
+             {% endif %}
+             {% else %} 
+             <a href="{{ request.new_user_session_url }}"  id="tickets-membership-login"  class="btn btn-common wow fadeInUp animated animated" data-wow-delay="0.5s" style="visibility: visible;-webkit-animation-delay: 0.5s; -moz-animation-delay: 0.5s; animation-delay: 0.5s;">Not Logged In<br> Log in for Member Price</a>
+             {% endif %}
+             <div class="form-errors">{% error_messages_for event_rsvp %}</div>     
+           </div>
+         </div>
+         {% form_for order %}
+         {% if request.current_signup.is_member? %}
+         <div class="row" id="member"> 
+          <div class="col-md-1">
+          </div>                   
+          <div class="col-md-10">
+            <p>To pay with Venmo, send the total amount to Ganti, L. <span class="venmo">3012567191</span> and mark it <span class="venmo">holiday tickets</span>. We will confirm and put your name on the list.</p>
+            <p>To pay online, enter your desired number of tickets in the fields below:</p>
+            <div class="label-line">
+              <span class="span"></span>
+              <label class="label transition">Member-Priced Tickets ($45)</label>
+              <input type="number" class="input" id="quantity"  name="event_ticket_level[2145]" min="0" data-error="Please enter a real number">
+              <div class="help-block with-errors"></div>
+            </div>
+            <div class="label-line">
+             <span class="span"></span>
+             <label class="label transition">Nonmember-Priced Tickets ($55)</label>
+             <input type="number" class="input" id="quantity"  name="event_ticket_level[2146]" min="0" data-error="Please enter a real number">
+             <div class="help-block with-errors"></div>
+           </div>
+           <p>This form will generate an invoice and bring you to our invoice page, which will display your total order and direct you to Paypal to complete your transaction. Tickets sales are final, but we will honor transfers.</p>
+         </div>
+         <div class="col-md-1">
+         </div>  
+       </div> 
+       {% else %}
+       <div class="row" id="nonmember"> 
+        <div class="col-md-1">
+        </div>                   
+        <div class="col-md-10">
+          <h4>How many tickets would you like?</h4>
+          <p>Enter your desired number of tickets in the fields below</p>
+          <div class="label-line">
+           <span class="span"></span>
+           <label class="label transition">Nonmember-Priced Tickets ($55)</label>
+           <input type="number" class="input" id="quantity"  name="event_ticket_level[2146]" min="0" data-error="Please enter a real number">
+           <div class="help-block with-errors"></div>
+         </div>
+         <p>This form will generate an invoice and bring you to a checkout page, which will display your total order and direct you to Paypal to complete your transaction. Tickets sales are final, but we will honor transfers.</p>
+       </div>
+       <div class="col-md-1">
+       </div>  
+     </div>
+     {% endif %}
+     {% submit_tag "Purchase tickets", class:"submit-button" %}
+     <div class="form-submit"></div>
+     {% endform_for %} 
+   </div>  
+   <div class="col-md-4 col-sm-5 information">  
+    <div class="title-header">
+      <h3 class="title-medium">$45 Members</h3>
+      <h3 class="title-medium">$55 Non Members</h3>
+    </div>              
+    <div class="contact-datails">
+      <div class="icon">
+        <i class="fa fa-map-marker"></i>
+      </div>
+      <div class="info">
+        <span class="detail">{{ page.event.venue_name }}<br>
+          {{ page.event.venue_address.address1 }}<br>
+        {{ page.event.venue_address.city }},{{ page.event.venue_address.state }} {{ page.event.venue_address.zip }}</span>
+      </div>
+    </div>                
+    <div class="contact-datails">
+      <div class="icon">
+        <i class="fa fa-clock-o"></i>
+      </div>
+      <div class="info">
+        <span class="detail">{{ page.event.local_start_at | event_time }}</span>
+        <span class="addtocalendar" id="savethedate">
+          <a class="atcb-link" title="Click here to add this event to your Google, Yahoo, iCal or Outlook calendar" id="{{ page.slug }}">Add to Calendar</a>
+          <var class="atc_event" id="{{ page.slug }}">
+            <var class="atc_date_start">{{ page.event.local_start_at | date: '%m/%d/%Y %H:%M:%S' }}</var>
+            <var class="atc_date_end">{{ page.event.local_end_at | date: '%m/%d/%Y %H:%M:%S' }}</var>
+            <var class="atc_timezone">America/New_York</var>
+            <var class="atc_title">{{ page.headline }}</var>
+            <var class="atc_description">Check {{ page.full_url }} for the latest info.</var>
+            <var class="atc_location">{{ page.event.venue_address.one_line }}</var>
+            <var class="atc_organizer">{{ page.event.contact_name }}</var>
+            <var class="atc_organizer_email">{{ page.event.contact_email }}</var>
+          </var>
+        </span> 
+      </div>
+    </div>
+    <div class="contact-datails">
+      <div class="icon">
+        <i class="fa fa-question"></i>
+      </div>
+      <div class="info">
+        <span class="detail">{{ page.event.contact_phone_number }}<br>{{ page.event.contact_email | enkode_email }}</span>
+      </div>
+    </div>
+    <div class="contact-datails">
+      <div class="icon">
+        <i class="fa fa-envelope-open"></i>
+      </div>
+      <div class="info">
+        <span class="detail">Share with friends & colleagues<br><a href="https://d3n8a8pro7vhmx.cloudfront.net/rpcvw/pages/3546/meta_images/original/2018_Holiday_Party!_%282%29.png?1540661903" target="_blank">Download Invitation</a></span>
+      </div>
+    </div>  
+  </div>
+</div>
+</div>
+</section>
+
+<i class="fa fa-envelope-open" aria-hidden="true"></i>
+<!-- Footer Section Start -->   
+<footer class="section bg-light">  
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 col-sm-6 col-xs-12">
+        <p>
+        Returned Peace Corps Volunteers of Washington, D.C. (RPCV/W) is a member-driven organization committed to the Peace Corps’ Third Goal: Promoting a better understanding of the peoples of the world within our local community. It was founded in 1979 and incorporated in 1990. </p>
+        <p>Representing more than 3,000 returned Peace Corps Volunteers, staff, families and friends, RPCV/W is one of the largest and most active organizations of its kind. All are welcome to <a href="/join" id="footer-blurb-join">join</a>.</p>
+      </div>
+      <div class="col-md-3 col-sm-3 col-xs-12">
+        <h3>Main Site</h3>
+        <ul>
+          <li><a href="/" id="footer-blurb-home">Home</a></li>
+          <li><a href="/about" id="footer-blurb-about">About</a></li>
+          <li><a href="/events" id="footer-blurb-events">Events</a></li>
+          <li><a href="/blog" id="footer-blurb-blog">Blog</a></li>              
+        </ul>
+      </div>
+      <div class="col-md-3 col-sm-3 col-xs-12">
+        <h3>Join or Donate</h3>
+        <ul>
+         <li><a href="/first_year_membership" id="footer-blurb-fyf">First Year Free</a></li>
+         <li><a href="/one-year_regular_membership" id="footer-blurb-regular-member">Yearly Membership</a></li>
+         <li><a href="/one-year_friend_of_rpcv_w" id="footer-blurb-friends">Friends of RPCV/W</a></li>
+         <li><a href="/donate" id="footer-blurb-donate">Donate</a></li>
+       </ul>
+     </div>         
+   </div>
+ </div>      
+</footer>  
+<!-- Footer Section End -->  
+
+<section class="subfooter">
+  <a href="/" id="subfooter-homepage" title="Click here to go to our homepage"><img src="rpcvw_logo_white_slim.svg" layout="responsive" width="250px" height="95px" class="brandmark"></img></a>
+  <div class="footer-text padbottom">
+    <div class="social-icons">
+      <a href="https://www.facebook.com/RPCVW" target="_blank" title="Like our public Facebook Page" id="subfooter-facebook-page"><i class="fa fa-facebook"></i></a>&emsp;
+      <a href="https://www.facebook.com/groups/rpcvw/" target="_blank" title="Join our private Facebook Group" id="subfooter-facebook-group"><i class="fa fa-facebook-square"></i></a>&emsp;
+      <a href="https://twitter.com/rpcvw" target="_blank" title="Follow @rpcvw on Twitter" id="subfooter-twitter"><i class="fa fa-twitter-square"></i></a>&emsp;
+      <a href="https://www.linkedin.com/groups/875397" target="_blank" title="Network in our private Linkedin Group" id="subfooter-linkedin"><i class="fa fa-linkedin-square"></i></a>&emsp;
+      <a href="https://www.instagram.com/rpcvw/" target="_blank" title="Tag our pictures on Instagram" id="subfooter-insta"><i class="fa fa-instagram"></i></a>&emsp;
+    </div>
+    <div class="padbottom">
+      <h6>&copy; {{ "now" | date: '%Y' }} {{ site.long_name }}</h6>
+      {% if settings.has_address? %}<h6>{{ settings.address.one_line | remove: ', United States' }}</h6>{% endif %}
+      <h6>Affiliate group of the<span class="mobile-visible"></span> <a href="https://www.peacecorpsconnect.org/" target="_blank" id="subfooter-npca">National Peace Corps Association</a></h6>
+      <h6>501 (c)(3) Fed. ID: 52-1194965.</h6>
+    </div>
+  </div>
+
+  <div class="footer-left">
+    <h6>
+      {% if request.logged_in? %} Hi <a href="{{ request.current_signup.settings_url }}">{{ request.current_signup.name_or_email }}</a>. View your {% if site.show_public_profiles? %}
+      <a href="{{ request.current_signup.profile_url }}">public profile</a>, {% endif %}
+      <a href="{{ request.current_signup.settings_url }}">account settings</a>, or
+      <a href="{{ request.current_signup.logout_url }}">sign out</a>. {% else %} Sign in with <a href="{{ request.facebook_connect_url }}">Facebook</a>, <a href="{{ request.twitter_connect_url }}">Twitter</a> or <a href="/login">email</a>.
+      {% endif %}
+    </h6>
+  </div>
+  <div class="footer-right padbottom">
+    <h6>Powered by <a href="https://nationbuilder.com/" target="_blank">NationBuilder</a></h6>
+  </div>
+</footer>
+{{ content_for_footer }}
+
+<!-- Go to Top Link -->
+<a href="#" class="back-to-top" id="go-to-top" style="display: block;">
+  <i class="fa fa-chevron-up" id="go-to-top" aria-hidden="true"></i>
+</a>
+
+<div class="bottom"> <a href="#" class="settings"></a> </div>
+</div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+<script>
+ WebFont.load({
+  google: {
+    families: ['IM Fell Double Pica:400,400i', 'Satisfy']
+  }
+});
+</script>
+
+<!-- Bootstrap JS -->
+<script src="2017holiday.bootstrap.min.js"></script>
+
+<!-- add to calendar Js -->
+<script src="atc.min.js"></script>
+<!-- Countdown Js -->
+<script src="2017holiday.jquery.countdown.min.js"></script>
+<!-- Smooth scroll JS -->   
+<script src="2017holiday.smooth-scroll.js"></script>        
+<!-- Wow Scroll -->
+<script src="2017holiday.wow.js"></script>
+<!-- Owl carousel -->
+<script src="2017holiday.owl.carousel.min.js"></script>
+<!-- Slicknav js -->
+<script src="2017holiday.jquery.slicknav.js"></script>
+<!--  Nivo lightbox Js -->
+<script src="2017holiday.nivo-lightbox.js"></script>   
+<!-- Contact Form Scripts -->
+<script src="2017holiday.form-validator.min.js"></script>  
+<script src="2017holiday.contact-form-script.js"></script>
+
+
+<!-- All Js plugin -->
+<script src="2017holiday.main.js"></script> 
+
+{% comment %}
+<!-- Map JS -->
+<script type="text/javascript" src="2017holiday.jquery.mapit.min.js"></script>
+{% endcomment %}
+
+<script src="2017holiday.initializers.js"></script>
+
+</body>
+</html>
+
+{% comment %}
+{% if page.headline.size > 0 %}
+<div id="headline">
+  <h3>{{ page.headline }}</h3>      
+  {% if page.has_author? %}
+  {% include "page_byline" %}
+  {% endif %}
+</div>
+{% endif %}
+
+{% if page.tags_count > 0 %}
+<div id="page-tags" class="page-tags">
+  {% include "page_tags" with page %}
+</div>
+{% endif %}
+
+<div class="row-fluid" id="deets">
+  <div class="span6 padbottommore">{% if page.has_meta_image? %}
+    <img alt="{{ page.meta_image_url }}" src="{{ page.meta_image_url }}">
+    {% endif %}
+  </div> 
+  <div class="span6 center">  
+    {% if page.event.maximum_capacity > 0 %}
+    {% assign thermo_width = 100 %}
+    <div class="clearfix">
+      <div class="progress progress-striped active" style="width: {{ thermo_width }}%;">
+        <div class="bar active">
+          {% if page.event.is_maximum_capacity? %}
+          <div class="bar-text">EVENT FULL</div>
+          {% else %}
+          {% if page.event.rsvps_count < 2 %}
+          <div class="bar-text">Be the first to sign up!</div>
+          {% else %}
+          <div class="bar-text">{{ page.event.rsvps_count }} RSVPs ({{ page.event.maximum_capacity | minus:page.event.rsvps_count }} spots left!)</div>
+          {% endif %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endif %}  
+
+    {% if page.event.has_venue? %}
+    <h4>WHERE</h4>
+    <div class="padtop">
+      {% if page.event.venue_name.size > 0 %}
+      {{ page.event.venue_name }}<br/>
+      {% endif %}
+      {% for line in page.event.venue_address.multi_line %}
+      {{ line }}<br/>
+      {% endfor %}
+    </div>
+
+    {% if page.event.has_venue_address? %}
+    <div class="padtop padbottom">
+      <a href="{{ page.event.venue_address.google_map_link }}" class="button small-button" id="google-map-button-show-event" target="_blank" title="Click here for Google Map"><i class="fa fa-map-marker"></i>&nbsp;&nbsp;View in Google Maps</a>
+    </div>
+    {% endif %}
+
+    {% endif %}
+    <div class="event-detail">
+      <h4>WHEN</h4>
+      <div class="padtop">
+        {% if page.event.is_multi_day? %}
+        {{ page.event.local_start_at | event_time }} - {{ page.event.local_end_at | event_date }}
+        {{ page.event.local_start_at | event_time }} - {{ page.event.local_end_at | event_date }}
+        {% else %}
+        {{ page.event.local_start_at | event_time }} - {{ page.event.local_end_at | event_just_time }}
+        {% endif %}
+      </div>
+    </div>
+    <div class="padtop padbottom">
+      {% include "addtocalendar" %}
+    </div>
+
+  </div><!-- end span6 -->
+</div> 
+
+
+{% if page.event.show_guests? and page.show_social_slider? and page.event.rsvps_count > 3 %}
+{% include "social_slider" %}
+{% endif %}
+
+<div id="content">
+  {% if page.event.content.size > 0 %}
+  <div id="intro" class="intro">
+    {{ page.event.content }}
+  </div>
+  {% endif %}
+
+  {% if page.event.has_contact? %}
+
+  <div class="event-detail">
+    <h4>CONTACT</h4>
+    <div class="padtop">
+      {{ page.event.contact_name }}
+      {% if page.event.has_public_contact_email? %}
+      &middot; {{ page.event.contact_email | enkode_email }}
+      {% endif %}
+      {% if page.event.has_public_contact_phone_number? %}
+      &middot; {{ page.event.contact_phone_number }}
+      {% endif %}
+    </div>
+  </div>
+
+  {% endif %}
+  
+  {% if page.event.is_ticket_required? %}
+  
+  <div class="padtop padbottom">
+
+    {% if page.event.is_maximum_capacity? %}
+    
+    <a class="padtop padbottom center button submit-link email-share"{% if page.event.has_public_contact_email? %} id="event-full-email-contact"
+    title="Click here to email the organizer" href="mailto:{{ page.event.contact_email }}"{% endif %}>Sorry, this event is full. Contact the organizer if you have questions.</a>
+    
+    {% elsif page.event.days_until < 0 %}
+    
+    <div class="padtop">This event has passed. <a href= "/contact">Contact us</a> if you'd like to do it again!</div>
+    
+    {% else %}
+    
+    {% form_for order %}
+    
+    <div class="form-wrap">
+      <div class="form">
+
+        <h4>Will you come?</h4>
+        
+        {% for ticket_level in page.event.ticket_levels %}
+        
+        <div class="padtopmore"><strong>{{ ticket_level.form_quantity }}</strong></div>
+        {% if ticket_level.description.size > 0 %}
+        {{ ticket_level.description }}
+        {% endif %}
+        
+        {% endfor %}
+        
+        {% if page.event.is_hosts? or request.current_recruiter %}
+        <label for="order_recruiter_id" class="padtopmore">Did a host refer you?</label>
+        <select name="order[recruiter_id]">
+          <option value="">No</option>
+          {% if request.current_recruiter %}
+          <option value="{{ request.current_recruiter.id }}" selected>{{ request.current_recruiter.published_name }}</option>
+          {% endif %}
+          {% for host in page.event.hosts %}
+          <option value="{{ host.signup_id }}">{{ host.name }}</option>
+          {% endfor %}
+        </select>
+        {% endif %}
+        
+        <div class="padtopmore" >
+          {% submit_tag "Purchase tickets", class:"submit-button" %}
+          <div class="form-submit"></div>
+        </div>
+        
+      </div>
+    </div>
+    
+    {% endform_for %}
+    
+    {% endif %}
+    
+  </div>
+  
+  {% else %}
+  
+  {% if page.event.is_user_ticket_required? %}
+  
+  <div class="event-detail">
+    <div class="subhead">TICKETS</div>
+    <div class="subtext">
+      {{ page.event.user_ticket_price_with_currency }}
+      {% if page.event.has_user_ticket_purchase_url? %}
+      &middot; <a href="{{ page.event.user_ticket_purchase_url }}">Purchase tickets</a>
+      {% endif %}
+    </div>
+  </div>
+  
+  {% elsif page.event.has_user_ticket_purchase_url? %}
+  
+  <div class="event-detail">
+    <div class="subhead">TICKETS</div>
+    <div class="subtext">
+      <a href="{{ page.event.user_ticket_purchase_url }}">FREE</a>
+    </div>
+  </div>
+  
+  {% endif %}
+  
+  {% if page.event.show_guests? and page.event.rsvps_count > 0 %}
+  <div class="event-detail">
+    <div class="subhead">{{ page.event.rsvps_count | number_with_commas }} RSVP{% if page.event.rsvps_count > 1 %}S{% endif %}</div>
+    <div class="subtext">
+      {% for rsvp in page.event.rsvps %}
+      <span title="{{ rsvp.signup.published_name }}">{{ rsvp.signup.smaller_profile_image }}</span>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+  
+  {% if page.event.is_rsvped? %}
+  
+  <div class="padtop">
+
+    {% form_for event_rsvp %}
+    
+    <div class="form-wrap">
+      <div class="form">
+
+        {% if page.event.current_rsvp.is_canceled? %}
+        <h3>Your RSVP was canceled.</h3>
+        {% else %}
+        <h3>Thank you for rsvp'ing.  We'll see you there!</h3>
+        {% endif %}
+        
+        {% if request.sorta_logged_in? and request.logged_in? == false %}
+        
+        If you're not {{ request.current_signup.name_or_email }}, <a href="{{ request.current_signup.logout_url }}">click here</a>.
+        
+        {% endif %}
+        
+        {% if page.event.current_rsvp.is_canceled? %}
+        <div class="padtop"></div>
+        <a href="{{ page.event.uncancel_rsvp_url }}">Oops, nevermind!  I really do want to come.</a>
+        
+        {% else %}
+        
+        {% if page.event.allow_guests? %}
+        
+        <div class="form-errors">{% error_messages_for event_rsvp %}</div>
+        
+        {% if page.event.allow_guests? and page.event.current_rsvp.is_canceled? == false %}
+        
+        <label for="event_rsvp_guests_count" class="padtop">Change the number of guests you're bringing</label>
+        {% text_field "guests_count", class:"text" %}
+        
+        {% endif %}
+        
+        <label for="event_rsvp_is_canceled" class="checkbox padtop">{% check_box "is_canceled", class:"checkbox" %} Cancel, I'm not coming. </label>
+        
+        <div class="padtopmore">
+          {% submit_tag "Update RSVP", class:"submit-button" %}
+          <div class="form-submit"></div>
+        </div>
+        
+        {% else %}
+        
+        <div class="padtop">
+          {{ page.event.current_rsvp | delete_link message: "Cancel RSVP" class_name: "button destroy-link" }}
+        </div>
+        
+        {% endif %}
+        
+        {% endif %}
+        
+      </div>
+    </div>
+    
+    {% endform_for %}
+  </div>
+  
+  {% elsif page.event.accept_rsvps?  %}
+  
+  <div class="padtop padbottom">
+
+    {% if page.event.is_maximum_capacity? %}
+    
+    <div class="padbottom"><a class="button submit-link email-share"{% if page.event.has_public_contact_email? %} id="event-full-email-contact"
+      title="Click here to email the organizer" href="mailto:{{ page.event.contact_email }}"{% endif %}>Sorry, this event is full. Contact the organizer if you have questions.</a></div>
+
+      {% elsif page.event.days_until < 0 %}
+
+      <div class="padtop">This event has passed. <a href= "/contact">Contact us</a> if you'd like to do it again!</div>
+
+      {% else %}
+
+      {% form_for event_rsvp %}
+
+      <div class="form-wrap">
+        <div class="form">
+
+          {% if request.sorta_logged_in? %}
+
+          <h4>Hi {{ request.current_signup.name_or_email }}, will you come?</h4>
+
+          {% if request.logged_in? == false %}
+          <div class="padtop text-content">
+            If you're not {{ request.current_signup.name_or_email }}, <a href="{{ request.current_signup.logout_url }}">click here</a>.
+          </div>
+          {% endif %}
+
+          <div class="padtopmore"></div>
+
+          {% if page.event.is_phone? %}
+          <div class="row-fluid">
+            <div class="span12"><label for="event_rsvp_phone_number">Phone</label>{% phone_field "phone_number", class:"text" %}</div>
+          </div>
+          {% endif %}
+          {% if page.event.is_address? %}
+          <div class="row-fluid">
+            <div class="span12"><label for="event_rsvp_submitted_address">Address (Street, City, State, Postal code)</label>{% text_field "submitted_address", class:"text" %}</div>
+          </div>
+          {% endif %}
+          {% if page.event.allow_guests? %}
+          <div class="row-fluid">
+            <div class="span6"><label for="event_rsvp_guests_count">How many other people are you bringing?</label>{% text_field "guests_count", class:"text" %}</div>
+          </div>
+          {% endif %}
+
+
+          {% if page.event.is_hosts? or request.current_recruiter %}
+          <div class="row-fluid">
+            <div class="span6"><label for="event_rsvp_recruiter_id">Did someone refer you?</label>
+              <select name="event_rsvp[recruiter_id]">
+                <option value="">No</option>
+                {% if request.current_recruiter %}
+                <option value="{{ request.current_recruiter.id }}" selected>{{ request.current_recruiter.published_name }}</option>
+                {% endif %}
+                {% for host in page.event.hosts %}
+                <option value="{{ host.signup_id }}">{{ host.name }}</option>
+                {% endfor %}
+              </select></div>
+            </div>
+            {% endif %}
+            {% if page.event.is_volunteers? and site.ask_for_volunteers? %}
+            {% if request.logged_in? == false or request.current_signup.is_volunteer == false %}
+            <div class="row-fluid">
+              <div class="span6"><label for="event_rsvp_is_volunteer" class="checkbox">{% check_box "is_volunteer", class:"checkbox" %} I want to volunteer</label></div>
+            </div>
+            {% endif %}
+            {% endif %}
+            {% if page.event.is_shifts? and page.event.shifts.size > 0 %}
+            <div class="row-fluid">
+              <div class="span6">Choose shifts</div>
+            </div>
+            <div class="row-fluid">
+              <div class="span12">
+                {% for day in page.event.shifts_grouped_by_day %}
+
+                {{ day.last.first.display_date }}:
+                {% for shift in day.last %}
+                <label class="checkbox">{% check_box_tag 'event_rsvp[shift_ids][]', shift.id, collection:page.event.shift_ids, member:shift.id, class:"checkbox" %} {{ shift.display_time }}
+                  {% if page.event.show_guests == true %}
+                  ({{ shift.rsvps_count_with_goal }})
+                {% endif %}</label>
+                {% endfor %}
+
+                {% endfor %}
+                {% hidden_field_tag 'event_rsvp[shift_ids][]', '' %}
+              </div>
+            </div>
+            {% endif %}        
+
+            {% if site.ask_to_publish_to_stream? %}
+            <div class="row-fluid">
+              <div class="span6"><label for="event_rsvp_is_private" class="checkbox">{% check_box "is_private", class:"checkbox" %} Don't publish my RSVP on the website</label></div>
+            </div>
+            {% endif %}
+            {% if page.event.has_facebook? %}
+            <div class="row-fluid">
+              <div class="span6"><label for="event_rsvp_post_to_facebook" class="checkbox">{% check_box "post_to_facebook", class:"checkbox" %} Also RSVP on <a href="{{ page.event.facebook_url }}">Facebook</a> </label></div>
+            </div>
+            {% endif %}
+
+            <div class="padtop">
+              {% submit_tag "RSVP", class:"submit-button" %}
+
+              <div class="form-submit"></div>
+            </div>
+
+            {% if page.event.is_user_ticket_required? %}
+            <div class="padtopmore">
+              NOTE: After RSVP, you will still need to purchase a ticket
+              {% if page.event.has_user_ticket_purchase_url? %}
+              <a href="{{ page.event.user_ticket_purchase_url }}">here</a>
+              {% endif %}
+            </div>
+            {% endif %}
+
+            {% else %}
+
+            <h4 class="headline">Login to RSVP</h4>
+
+            You don't need to be a paying member to come to our events, but we do ask you maintain an account on this website. <a href="/join" target="_blank">Join us</a>, <a href="/login">login</a> to an existing account, or verify your identity through <a href="{{ request.facebook_connect_url }}">Facebook</a> or <a href="{{ request.twitter_connect_url }}">Twitter</a>. Then you'll see an RSVP button here.
+
+            {% endif %}
+
+          </div>
+        </div>
+
+        {% endform_for %}
+
+        {% if page.text_keyword_instructions.size > 0 %}
+        <div class="padbottom padtopmore">
+          <i class="icon-phone-squared"></i>or {{ page.text_keyword_instructions }}
+        </div>
+        {% endif %}
+
+        {% endif %}
+
+      </div>
+
+      {% endif %}
+
+      {% endif %}
+
+      <div class="like-page padtop">
+        <strong>Share this page!</strong>
+        {% include "like_page" %}
+      </div>
+
+      {% if page.show_stream? %}
+      {% include "page_stream" %}
+      {% endif %}
+    </div>
+
+    <script>
+      $(document).on('ready',function(){
+        $(".bar").animate({
+          width: "{{ page.event.rsvps_count | times:100 | divided_by:page.event.maximum_capacity }}%"
+        }, 1500);
+      })
+    </script>
+
+    {% endcomment %}

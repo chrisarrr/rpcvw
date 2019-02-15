@@ -1,0 +1,528 @@
+<!doctype html>
+<html ⚡>
+<head>
+  <meta charset="utf-8">
+
+
+
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+  <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
+  <script async custom-element="amp-bind" src="https://cdn.ampproject.org/v0/amp-bind-0.1.js"></script>
+  <script async custom-element="amp-selector" src="https://cdn.ampproject.org/v0/amp-selector-0.1.js"></script>
+  <link rel="canonical" href="{{ site.full_url }}events">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>
+  <noscript>
+   <style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style>
+ </noscript>
+
+
+<script type="application/ld+json">
+  {
+  "@context": "http://schema.org/",
+"about": [
+   {% for event in page.calendar.events_upcoming %}
+   {
+     "@type": "Event",
+     "name": "{% if event.parent.calendar.allow_user_submitted? == true %}Member-Led Event{% else %}Official Event{% endif %}: {{ event.headline }}",
+     "startDate" : "{{ event.event.local_start_at |  date: '%m/%d/%Y %I:%M%p' }}",
+     "endDate" : "{{ event.event.local_end_at |  date: '%m/%d/%Y %I:%M%p' }}",
+     "isAccessibleForFree": "{% if event.event.is_ticket_required? %}false{% else %}true{% endif %}",
+     "image": "{% if event.has_meta_image? %}{{ event.meta_image_url }}{% else %}{{ event.parent.meta_image_url }}{% endif %}",
+     "url" : "{{ event.full_url }}",
+     "description": "{{ event.event.content | strip_html | remove:'"' }}",
+     "offers" : { "@type" : "Offer", "priceCurrency": "USD", "validFrom": "{{ page.published_at | date: '%m/%d/%Y %I:%M%p' }}", "url": "{{ site.full_url }}events", "availability": "http://schema.org/InStock", "price" : "{% if event.event.is_ticket_required? %}{% for ticket_level in event.event.ticket_levels %}{{ ticket_level.amount }},{% endfor %}{% else %}0.00{% endif %}" },
+     "performer" : [
+     { "@type" : "Organization", 
+     "name" : "{{ settings.official_name }}",
+     "sameAs" : "{{ site.name }}" }],
+     "location" : {
+       "@type" : "Place",
+       "name" : "{{ event.event.venue_name }}",
+       "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "{{ event.event.venue_address.address1 }}",
+        "addressLocality": "{{ event.event.venue_address.city }}",
+        "addressRegion": "{{ event.event.venue_address.state }}",
+        "postalCode": "{{ event.event.venue_address.zip }}",
+        "addressCountry": "USA"
+      }
+    }
+  }{% if forloop.last %}{% else %},{% endif %}
+  {% endfor %}
+  ],
+  "@type": "WebPage",
+  "primaryImageOfPage": {
+    "@type": "ImageObject",
+    "contentUrl": "{{ page.meta_image_url }}"
+  },
+  "alternativeHeadline": "{{ page.name }}",
+  "headline": "{{ page.headline }}",
+  "keywords": "keywords",
+  "text": "{{ page.excerpt }}",
+  "thumbnailUrl": "{{ page.meta_image_url }}",
+  "description": "{{ page.excerpt }}",
+  "name": "{{ page.title }}"
+}
+</script>
+
+
+<meta name="amp-google-client-id-api" content="googleanalytics">
+
+<title>{{ page.title }}</title>
+<meta name="description" content="{{ page.excerpt }}" />
+
+<meta itemprop="name" content="{{ page.title }}">
+<meta itemprop="description" content="{{ page.excerpt }}">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@rpcvw">
+<meta name="twitter:creator" content="@rpcvw">
+<meta name="twitter:title" content="{{ page.title }}">
+<meta name="twitter:text:description" content="{{ page.excerpt }}">
+<meta name="twitter:description" content="{{ page.excerpt }}">
+<meta name="twitter:image" content="{{ page.meta_image_url | replace_first: 'http', 'https' }}">
+<meta name="twitter:image:alt" content="{{ page.title }}">
+
+<meta property="fb:app_id" content="254325784911610" />
+<meta property="og:title" content="{{ page.title }}" />
+<meta property="og:type" content="article" />
+<meta property="og:image" content="{{ page.meta_image_url | replace_first: 'http', 'https' }}" />
+<meta property="og:url" content="{{ page.full_url }}" />
+<meta property="og:description" content="{{ page.excerpt }}" />
+<meta property="og:site_name" content="{{ site.name }}" />
+<meta property="article:published_time" content="{{ page.published_at | date: '%Y-%m-%d' }}" />
+<meta property="article:modified_time" content="{{ page.published_at | date: '%Y-%m-%d' }}" />
+
+<!-- Open Graph data -->
+
+<link rel="apple-touch-icon" sizes="57x57" href="apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-icon-180x180.png">
+
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="{{ page.title }}">
+<link rel="icon" type="image/png" sizes="228x228" href="rpcvw-dove-white-circle-square.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#ffffff">
+<meta name="application-name" content="{{ page.title }}">
+
+<link rel="icon" type="image/x-icon" href="https://d3n8a8pro7vhmx.cloudfront.net/rpcvw/sites/1/favicon_images/original/favicon-96x96.png?1461253897" />
+<link rel="icon" type="image/png" sizes="32x32" href="rpcvw-dove-white-circle-square.png">
+<link rel="icon" type="image/png" sizes="16x16" href="rpcvw-dove-white-circle-square.png">
+<link rel="shortcut icon" href="rpcvw-dove-white-circle-square.png">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="apple-icon-144x144.png">
+
+
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style amp-custom>
+body {
+  background: #e6ecf0;
+  color: #4a4a4a;
+  line-height: 1.5rem;
+  font-family: Montserrat,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,Arial,sans-serif;
+  min-width: 315px;
+  overflow-x: hidden;
+  font-smooth: always;
+  -webkit-font-smoothing: antialiased;
+}
+#amp-container {
+  min-height: 100vh;
+  width: 100vw;
+  margin: 0 auto;
+  max-width: 600px;
+}
+.shadow-card {
+  box-shadow: 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 1px -1px rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+}
+.heading {
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+.heading > #summary {
+  font-weight: 500;
+}
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  padding: 0;
+  font-weight: 400;
+  letter-spacing: .06em;
+}
+.h1, h1 {
+  line-height: 35px;
+  color: #CD3C48;
+  font-size: 24px;
+  font-weight: 600;
+}
+.h4, h4 {
+  font-size: 16px;
+}
+p {
+  padding: 0;
+  margin: 0;
+}
+a {
+  color: #CD3C48;
+  text-decoration: none;
+  word-break: break-word;
+  outline: none;
+}
+.heading > #summary {
+  font-weight: 500;
+}
+.date {
+  color: #333;
+  font-size: 14px;
+  text-align: left;
+}
+.type {
+  font-size: 14px;
+  text-align: right;
+}
+.blog {
+  min-width: 70%;
+  background: #fff;
+}
+.blog p {
+  margin: 0 16px;
+}
+.blog .text {
+  padding-top: 10px;
+  font-size: 14px;
+}
+.topbar {
+      padding-top: 1rem;
+    font-size: 12px;
+    text-align: center;
+}
+.topbar a {
+color: #4a4a4a;
+}
+.official {
+    background: #fff;
+}
+.member {
+  background: #fff;
+}
+.blog .title {
+    text-align: center;
+    background: #fff;
+    margin: 0 10px;
+}
+.title a {
+  color: #CD3C48;
+}
+.blog .social-share {
+  line-height:36px;
+  display: flex;
+  padding-bottom: 16px;
+  padding-top: 16px;
+}
+#live-list-update-button {
+  position: fixed;
+  top: 10px;
+  right: 16px;
+}
+@media (max-width: 600px) {
+  #live-list-update-button {
+    top: 60px;
+  }
+}
+.thumbnail {
+  max-width: 400px;
+      margin: 1rem auto;
+}
+@media (max-width: 400px) {
+  .thumbnail {
+    max-width: 200px;
+  }
+}
+.m1 {
+  margin-bottom: 1rem;
+}
+.submit-link {
+  background-color: #e6ecf0;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    color: #0C8027;
+    font-size: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #0C8027;
+    display: inline-block;
+}
+.submit-link:active {
+  text-decoration: none;
+  color: #fff;
+  background-color: #0e972e;
+  position: relative;
+  top: 1px;
+}
+.center {
+  text-align: center;
+}
+.email-share {
+  color: #575757;
+  background: #fff;
+  border: 2px solid #575757;
+}
+.small_button {
+  cursor: pointer;
+  display: inline-block;
+  background-color: #CD3C48;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  border: 0;
+  color: #e6ecf0;
+  padding: 2px 4px;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+.base {
+  width: 100%;
+  display: inline-block;
+  font-size: 12px;
+}
+.left {
+  float:left;
+  padding: 0 10px;
+}
+.right {
+  float:right;
+  padding: 0 10px;
+}
+footer {
+  color: #fff;
+  text-align: center;
+  background-color: #23232A;
+  padding-bottom: 1em;
+}
+footer .footer-text {
+  margin-bottom: 1em;
+}
+.clearfix:after, .clearfix:before {
+  content: ' ';
+  display: table;
+}
+.social-icons {
+  margin-bottom: 1em;
+}
+.social-icons a {
+  font-size: 2.1em;
+  padding: 0.1em;
+  -moz-transition: all .3s ease-out;
+  -o-transition: all .3s ease-out;
+  -webkit-transition: all .3s ease-out;
+  transition: all .3s ease-out;
+  background: theme-color-2;
+  color: #fff;
+}
+.social-icons a i:hover, .social-icons a i:active {
+  -moz-transition: all .3s ease-out;
+  -o-transition: all .3s ease-out;
+  -webkit-transition: all .3s ease-out;
+  transition: all .3s ease-out;
+  color: #CD3C48;
+}
+h6 {
+  font-size: 10px;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+}
+.ampTabContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tabButton[selected] {
+  background: #fff;
+  color: #CD3C48;
+  border-radius: 2px;
+}
+.tabButton {
+  list-style: none;
+  flex-grow: 1;
+  text-align: center;
+  cursor: pointer;
+  padding: 15px 0px 2% 0px;
+  line-height: inherit;
+      width: 30%;
+}
+.tabContent {
+  display: none;
+  width: 100%;
+  order: 1; /* must be greater than the order of the tab buttons to flex to the next line */
+  height: 230px;
+    background-color: #e6ecf0;
+    padding: 0 10px;
+}
+.tabButton[selected]+.tabContent {
+  display: block;
+  border-radius: 2px;
+  outline-color: #CD3C48;
+}
+.middle {
+  margin-left: 2%;
+  margin-right: 2%;
+}
+amp-selector {
+  margin: 1rem;
+}
+amp-selector [option][selected] {
+    outline: none;
+    background-color: #e6ecf0;
+}
+selector [option][selected] {
+  cursor: auto;
+  outline: 1px solid rgb(205, 60, 72);
+}
+.calendar-list {
+  display: inline-grid;
+  margin-top: 10px;
+  width: 100%;
+  text-align: center;
+  line-height: 30px;
+}
+</style>
+</head>
+<body>
+
+  <div id="amp-container" class="m1">
+    <section class="heading shadow-card blog">
+      <a href="/" class="m1" title="Click here to go to our homepage"><amp-img src="https://d3n8a8pro7vhmx.cloudfront.net/themes/5253646978c2720367000002/attachments/original/1461690267/rpcvw_logo_pressed_blog.png?1461690267" layout="responsive" class="thumbnail" width="250px" height="95px"></amp-img></a>
+      <h1 class="center">Upcoming Events</h1>
+      <br>
+      <p class="date">This page is a Google AMP mobile-friendly listing of our upcoming events. <a href="https://www.rpcvw.org/events" target="_blank">Click here</a> to visit the original.</p>
+    </section>
+
+    {% for event in page.calendar.events_upcoming %}
+    <div id="post{{ event.id }}"
+    data-sort-time="{{ event.event.local_start_at | date: '%H%j%m%Y' }}">
+    <div class="shadow-card m1 blog">
+      {% comment %}{% if event.has_meta_image? %}
+      <a href="{{ event.url }}" target="_blank">
+        <amp-img src="{{ event.meta_image_url | replace_first: 'http', 'https' }}"
+        layout="responsive"
+        width="400"
+        height="400"
+        class="thumbnail">
+      </amp-img>
+    </a>
+    {% endif %}{% endcomment %}
+    {% if event.parent.calendar.allow_user_submitted? == true %}
+<div class="topbar center member"><a href="{{ event.parent.url }}" target="_blank">Member-Created Event</a></div>
+    {% else %}
+<div class="topbar center official"><a href="{{ event.parent.url }}" target="_blank">Official Event</a></div>
+{% endif %}
+    <h4 class="title"><a href="{{ event.url }}" target="_blank">{{ event.name }}</a></h4>
+    <p class="date center">{{ event.event.local_start_at | date: '%A, %B %d - %I:%M %p' }} {% if event.event.days_until < 0 %}{{ event.event.local_start_at | date: '%Y' }}{% endif %}
+      {% if event.event.is_multi_day? %}
+      through {{ event.event.local_end_at | event_date }}
+    {% endif %}</p>
+    {% if event.event.has_venue_address? %}
+    <p class="type center"><a href="{{ event.event.venue_address.google_map_link }}">{{ event.event.venue_name }}</a></p>
+    {% else %}
+    <p class="date center">{{ event.event.venue_name }}</p>
+    {% endif %}
+    <amp-selector role="tablist"
+    layout="container"
+    class="ampTabContainer">
+    <div role="tab"
+    class="tabButton small_button shadow-card"
+    selected
+    option="a"><i class="fa fa-2x fa-question"></i><br>Description</div>
+    <div role="tabpanel"
+    class="tabContent"><div class="text">{{ event.event.content | strip_html | truncatechars:300 }}</div></div>
+    <div role="tab"
+    class="tabButton small_button middle shadow-card"
+    option="b"><i class="fa fa-2x fa-calendar-plus-o"></i><br>Calendar</div>
+    <div role="tabpanel" class="tabContent">
+      <div class="calendar-list">
+        <a id="fl_ical" href="https://addtocalendar.com/atc/ical?f=m&amp;e[0][date_start]={{ event.event.local_start_at | date: '%Y-%m-%d%%20%H%%3A%M' }}%3A00&e[0][date_end]={{ event.event.local_end_at | date: '%Y-%m-%d%%20%H%%3A%M' }}%3A00&e[0][timezone]=America%2FNew_York&e[0][title]={{ event.name | replace: ' ', '%20'}}&amp;e[0][description]=Visit%20%0A%20{{ page.full_url | replace ' ', '%20' | replace: '/', '%2F' | replace ':', '%3A' }}%20for%20the%20latest%20info.&amp;e[0][location]={{ event.event.venue_address.one_line | replace: ' ', '%20' }}&amp;e[0][organizer]={{ event.event.contact_name | replace: ' ', '%20' }}&amp;e[0][organizer_email]={{ event.event.contact_email | replace: '@', '%40' }}&amp;e[0][privacy]=public?utm_source=mobile-events&utm_medium=email&utm_campaign=ical%20CalendarLink%20{{ page.slug }}" target="_blank" class="small_button shadow-card"><h2>iCalendar</h2></a> 
+        <a id="fl_google" href="https://addtocalendar.com/atc/google?f=m&amp;e[0][date_start]={{ event.event.local_start_at | date: '%Y-%m-%d%%20%H%%3A%M' }}%3A00&e[0][date_end]={{ event.event.local_end_at | date: '%Y-%m-%d%%20%H%%3A%M' }}%3A00&e[0][timezone]=America%2FNew_York&e[0][title]={{ event.name | replace: ' ', '%20'}}&amp;e[0][description]=Visit%20%0A%20{{ page.full_url | replace ' ', '%20' | replace: '/', '%2F' | replace ':', '%3A' }}%20for%20the%20latest%20info.&amp;e[0][location]={{ event.event.venue_address.one_line | replace: ' ', '%20' }}&amp;e[0][organizer]={{ event.event.contact_name | replace: ' ', '%20' }}&amp;e[0][organizer_email]={{ event.event.contact_email | replace: '@', '%40' }}&amp;e[0][privacy]=public?utm_source=mobile-events&utm_medium=mobile_events&utm_campaign=google%20CalendarLink%20{{ page.slug }}" target="_blank" class="small_button shadow-card"><h2>Google Calendar</h2></a>
+        <a id="fl_outlook" href="https://addtocalendar.com/atc/outlook?f=m&amp;e[0][date_start]={{ event.event.local_start_at | date: '%Y-%m-%d%%20%H%%3A%M' }}%3A00&e[0][date_end]={{ event.event.local_end_at | date: '%Y-%m-%d%%20%H%%3A%M' }}%3A00&e[0][timezone]=America%2FNew_York&e[0][title]={{ event.name | replace: ' ', '%20'}}&amp;e[0][description]=Visit%20%0A%20{{ page.full_url | replace ' ', '%20' | replace: '/', '%2F' | replace ':', '%3A' }}%20for%20the%20latest%20info.&amp;e[0][location]={{ event.event.venue_address.one_line | replace: ' ', '%20' }}&amp;e[0][organizer]={{ event.event.contact_name | replace: ' ', '%20' }}&amp;e[0][organizer_email]={{ event.event.contact_email | replace: '@', '%40' }}&amp;e[0][privacy]=public?utm_source=mobile-events&utm_medium=mobile_events&utm_campaign=outlook%20CalendarLink%20{{ page.slug }}" target="_blank" class="small_button shadow-card"><h2>Outlook</h2></a>
+        <a id="fl_outlookonline" href="https://addtocalendar.com/atc/outlookonline?f=m&amp;e[0][date_start]={{ event.event.local_start_at | date: '%Y-%m-%d%%20%H%%3A%M' }}%3A00&e[0][date_end]={{ event.event.local_end_at | date: '%Y-%m-%d%%20%H%%3A%M' }}%3A00&e[0][timezone]=America%2FNew_York&e[0][title]={{ event.name | replace: ' ', '%20'}}&amp;e[0][description]=Visit%20%0A%20{{ page.full_url | replace ' ', '%20' | replace: '/', '%2F' | replace ':', '%3A' }}%20for%20the%20latest%20info.&amp;e[0][location]={{ event.event.venue_address.one_line | replace: ' ', '%20' }}&amp;e[0][organizer]={{ event.event.contact_name | replace: ' ', '%20' }}&amp;e[0][organizer_email]={{ event.event.contact_email | replace: '@', '%40' }}&amp;e[0][privacy]=public?utm_source=mobile-events&utm_medium=mobile_events&utm_campaign=outlookonline%20CalendarLink%20{{ page.slug }}" target="_blank" class="small_button shadow-card"><h2>Outlook Online</h2></a>
+        <a id="fl_yahoo" href="https://addtocalendar.com/atc/yahoo?f=m&amp;e[0][date_start]={{ event.event.local_start_at | date: '%Y-%m-%d%%20%H%%3A%M' }}%3A00&e[0][date_end]={{ event.event.local_end_at | date: '%Y-%m-%d%%20%H%%3A%M' }}%3A00&e[0][timezone]=America%2FNew_York&e[0][title]={{ event.name | replace: ' ', '%20'}}&amp;e[0][description]=Visit%20%0A%20{{ page.full_url | replace ' ', '%20' | replace: '/', '%2F' | replace ':', '%3A' }}%20for%20the%20latest%20info.&amp;e[0][location]={{ event.event.venue_address.one_line | replace: ' ', '%20' }}&amp;e[0][organizer]={{ event.event.contact_name | replace: ' ', '%20' }}&amp;e[0][organizer_email]={{ event.event.contact_email | replace: '@', '%40' }}&amp;e[0][privacy]=public?utm_source=mobile-events&utm_medium=mobile_events&utm_campaign=yahoo%20CalendarLink%20{{ page.slug }}" target="_blank" class="small_button shadow-card"><h2>Yahoo! Calendar</h2></a>
+      </div>
+    </div>
+    {% if event.event.has_venue_address? %}<a 
+    class="tabButton small_button shadow-card" href="{{ event.event.venue_address.google_map_link }}" target="_blank" title="Click here for Google Map" id="google-map-button"><i class="fa  fa-2x fa-globe"></i><br>Map</a>{% endif %}
+  </amp-selector>
+  <div class="center">
+    {% if event.event.is_maximum_capacity? %}
+    <a href="{{ event.url }}" target="_blank" class="submit-link shadow-card tabButton email-share" href="{{ event.url }}" title="This event is at capacity" ><i class="fa  fa-2x fa-times"></i><br>Event Full</a>
+    {% elsif event.event.is_past? == false and event.event.accept_rsvps? %}
+    <a class="submit-link shadow-card tabButton" target="_blank" href="{{ event.url }}" id="event-widget-rsvp"><i class="fa  fa-2x fa-check"></i><br>RSVP</a> 
+    {% endif %}
+  </div>
+  <div class="base center">
+    {% if event.event.show_guests? and event.event.rsvps_count > 1 %}<a href="{{ event.url }}#guests" id="guest-list" target="_blank">{{ event.event.rsvps_count }} RSVPs</a>{% endif %}
+  </div>
+</div>
+</div>
+{% endfor %}
+<footer class="clearfix">
+  <a href="/" class="m1" title="Click here to go to our homepage"><amp-img src="https://d3n8a8pro7vhmx.cloudfront.net/rpcvw/pages/3191/attachments/original/1541187585/rpcvw_logo_white_slim.svg?1541187585" layout="responsive" class="thumbnail" width="250px" height="95px"></amp-img></a>
+  <div class="footer-text">
+    <div class="social-icons">
+      <a href="https://www.facebook.com/RPCVW" target="_blank" title="Like our public Facebook Page"><i class="fa fa-facebook"></i></a>&emsp;
+      <a href="https://www.facebook.com/groups/rpcvw/" target="_blank" title="Join our private Facebook Group"><i class="fa fa-facebook-square"></i></a>&emsp;
+      <a href="https://twitter.com/rpcvw" target="_blank" title="Follow @rpcvw on Twitter"><i class="fa fa-twitter-square"></i></a>&emsp;
+      <a href="https://www.linkedin.com/groups/875397" target="_blank" title="Network in our private Linkedin Group"><i class="fa fa-linkedin-square"></i></a>&emsp;
+      <a href="https://www.instagram.com/rpcvw/" target="_blank" title="Tag our pictures on Instagram"><i class="fa fa-instagram"></i></a>&emsp;
+    </div>
+    <div class="fine-print">
+      <h6>&copy; {{ "now" | date: '%Y' }} {{ site.long_name }}</h6>
+      {% if settings.has_address? %}<h6>{{ settings.address.one_line | remove: ', United States' }}</h6>{% endif %}
+      <h6>Affiliate group of the<span class="mobile-visible"></span> <a href="https://www.peacecorpsconnect.org/" target="_blank">National Peace Corps Association</a></h6>
+      <h6>501 (c)(3) Fed. ID: 52-1194965.</h6>
+    </div>
+  </div>
+
+  <div class="footer-left">
+    <h6>
+      {% if request.logged_in? %} Hi <a href="{{ request.current_signup.settings_url }}">{{ request.current_signup.name_or_email }}</a>. View your {% if site.show_public_profiles? %}
+      <a href="{{ request.current_signup.profile_url }}">public profile</a>, {% endif %}
+      <a href="{{ request.current_signup.settings_url }}">account settings</a>, or
+      <a href="{{ request.current_signup.logout_url }}">sign out</a>. {% else %} Sign in with <a href="{{ request.facebook_connect_url }}">Facebook</a>, <a href="{{ request.twitter_connect_url }}">Twitter</a> or <a href="/login">email</a>.
+      {% endif %}
+    </h6>
+  </div>
+  <div class="footer-right">
+    <h6>Powered by <a href="https://nationbuilder.com/" target="_blank">NationBuilder</a></h6>
+  </div>
+</footer>
+<amp-analytics type="googleanalytics" id="analytics">
+  <script type="application/json">
+    {
+      "vars": {
+        "account": "UA-27284180-1"
+      },
+      "triggers": {
+        "default pageview": {
+          "on": "visible",
+          "request": "pageview",
+          "vars": {
+            "title": "{{ page.title }}"
+          }
+        }
+      }
+    }
+  </script>
+</amp-analytics>
+
+</body>
+</html>

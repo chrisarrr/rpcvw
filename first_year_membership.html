@@ -36,9 +36,7 @@
   </div>
   {% endif %}
   
-  {% for tag in page.tags %} 
-  
-  {% unless request.is_intern? == false and request.current_user.tags contains "member" or request.current_signup.tags contains "member" or tag.name == 'lockdown' %}
+  {% unless request.current_user.tags contains "member" or request.current_signup.tags contains "member" %}
   
   <div class="form-wrap">
     <div class="form">
@@ -152,7 +150,6 @@
     </div>
   </div>
   {% endunless %}
-  {% endfor %}
 </div>
 
 {% if page.tags_count > 0 %}

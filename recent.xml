@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mostrecent>
+<pagename>{{ event.name }}</pagename>
+<contactname>{{ event.event.contact_name }}</contactname>
+<contactemail>{{ event.event.contact_email }}</contactemail>
+<startat>{{ event.event.local_start_at | date: '%m/%d/%Y' }}</startat>
+<attendingcount>{{ event.event.rsvps_count }}</attendingcount>
+</mostrecent>

@@ -1,0 +1,300 @@
+<!doctype html>
+<html ⚡>
+<head>
+  <meta charset="utf-8">
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+  <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
+  <script async custom-element="amp-bind" src="https://cdn.ampproject.org/v0/amp-bind-0.1.js"></script>
+  <script async custom-element="amp-live-list" src="https://cdn.ampproject.org/v0/amp-live-list-0.1.js"></script>
+  <link rel="canonical" href="{{ site.full_url }}past_events">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>
+  <noscript>
+   <style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style>
+ </noscript>
+
+  <script type="application/ld+json">
+         {% for event in page.calendar.events_past_all reversed %}
+   {
+   "@context": "https://schema.org",
+   "@type": "Event",
+   "name": "{{ event.headline }}",
+   "startDate" : "{{ event.event.local_start_at |  date: '%m/%d/%Y %I:%M%p' }}",
+   "endDate" : "{{ event.event.local_end_at |  date: '%m/%d/%Y %I:%M%p' }}",
+   "image": "{% if event.has_meta_image? %}{{ event.meta_image_url }}{% else %}{{ allpurposeimage }}{% endif %}",
+   "url" : "{{ event.full_url }}",
+   "description": "{{ event.event.content | strip_html | truncatewords:60  }}",
+   "offers" : { "@type" : "Offer", "priceCurrency": "USD", "validFrom": "{{ page.published_at | date: '%m/%d/%Y %I:%M%p' }}", "url": "{{ site.full_url }}events", "availability": "http://schema.org/InStock", "price" : "{% if event.event.is_ticket_required? %}{% for ticket_level in event.event.ticket_levels %}{{ ticket_level.amount }},{% endfor %}{% else %}0.00{% endif %}" },
+   "performer" : [
+   { "@type" : "Organization", 
+   "name" : "{{ settings.official_name }}",
+   "sameAs" : "{{ site.name }}" }],
+   "location" : {
+     "@type" : "Place",
+     "name" : "{{ event.event.venue_name }}",
+     "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "{{ event.event.venue_address.address1 }}",
+      "addressLocality": "{{ event.event.venue_address.city }}",
+      "addressRegion": "{{ event.event.venue_address.state }}",
+      "postalCode": "{{ event.event.venue_address.zip }}",
+      "addressCountry": "USA"
+    }
+  }
+},
+ {% endfor %}
+      </script>
+
+    <meta name="amp-google-client-id-api" content="googleanalytics">
+
+ <title>{{ page.title }}</title>
+ <meta name="description" content="{{ page.page_excerpt }}" />
+
+ <meta itemprop="name" content="{{ page.title }}">
+ <meta itemprop="description" content="{{ page.excerpt }}">
+
+ <meta name="twitter:card" content="summary">
+ <meta name="twitter:site" content="@rpcvw">
+ <meta name="twitter:creator" content="@rpcvw">
+ <meta name="twitter:title" content="{{ page.title }}">
+ <meta name="twitter:description" content="{{ page.excerpt }}">
+ <meta name="twitter:image" content="{{ page.meta_image_url }}">
+ <meta name="twitter:image:alt" content="{{ page.title }}">
+
+ <meta property="fb:app_id" content="254325784911610" />
+ <meta property="og:title" content="{{ page.title }}" />
+ <meta property="og:type" content="article" />
+ <meta property="og:image" content="{{ page.meta_image_url }}" />
+ <meta property="og:url" content="{{ page.full_url }}" />
+ <meta property="og:description" content="{{ page.excerpt }}" />
+ <meta property="og:site_name" content="{{ site.name }}" />
+ <meta property="article:published_time" content="{{ page.published_at | date: '%Y-%m-%d' }}" />
+ <meta property="article:modified_time" content="{{ page.published_at | date: '%Y-%m-%d' }}" />
+ <link href="https://fonts.googleapis.com/css?family=Montserrat|Lato" rel="stylesheet">
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+ <style amp-custom>
+ body {
+    background: #fff;
+    color: #4a4a4a;
+    line-height: 1.5rem;
+    font-family: Montserrat,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,Arial,sans-serif;
+    min-width: 315px;
+    overflow-x: hidden;
+    font-smooth: always;
+    -webkit-font-smoothing: antialiased;
+}
+ #amp-container {
+    background: #fff;
+    min-height: 100vh;
+    width: 100vw;
+    margin: 0 auto;
+    max-width: 600px;
+}
+.ampstart-card {
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 1px -1px rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+}
+.heading {
+    padding: 1rem;
+}
+        amp-social-share {
+          margin-right: 8px;
+        }
+        .heading > #summary {
+          font-weight: 500;
+        }
+h1, h2, h3, h4, h5, h6 {
+    font-family: Montserrat,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,Arial,sans-serif;
+}
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    padding: 0;
+    font-weight: 400;
+    letter-spacing: .06em;
+}
+.h1, h1 {
+        line-height: 35px;
+    color: #CD3C48;
+    font-size: 24px;
+}
+p {
+    padding: 0;
+    margin: 0;
+}
+a {
+    color: #CD3C48;
+    text-decoration: none;
+    word-break: break-word;
+    outline: none;
+}
+.heading > #summary {
+    font-weight: 500;
+}
+        .date {
+          color: #a8a3ae;
+          font-size: 12px;
+          text-align: left;
+        }
+        .type {
+          color: #a8a3ae;
+          font-size: 12px;
+          text-align: right;
+        }
+        .blog {
+          padding: 0;
+          min-width: 70%;
+          background: #fff;
+        }
+        .blog p {
+          margin: 0 16px;
+        }
+        .blog .text {
+              color: #000;
+    padding-top: 10px;
+    font-family: Lato;
+        font-size: 14px;
+        }
+        .blog .title {
+    padding-top: 10px;
+    text-align: center;
+        }
+        .blog .social-share {
+          line-height:36px;
+          display: flex;
+          padding-bottom: 16px;
+          padding-top: 16px;
+        }
+        #live-list-update-button {
+          position: fixed;
+          top: 10px;
+          right: 16px;
+        }
+        @media (max-width: 600px) {
+          #live-list-update-button {
+            top: 60px;
+          }
+        }
+    .pagination {
+      display: inline-block;
+      padding: 0;
+    }
+    amp-live-list [pagination] nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pagination li {
+      display: inline;
+      padding: 10px;
+      list-style-type: none;
+    }
+    .thumbnail {
+          max-width: 400px;
+    margin: 0 auto;
+    }
+.m1 {
+    margin: 1rem;
+}
+</style>
+</head>
+<body>
+
+<div id="amp-container" class="ampstart-card m1">
+        <section class="heading">
+          <a href="/" class="m1" title="Click here to go to our page"><amp-img src="https://d3n8a8pro7vhmx.cloudfront.net/themes/5253646978c2720367000002/attachments/original/1437755366/rpcvw_web_logo.png?1437755366" layout="responsive" class="thumbnail" width="250px" height="95px"></amp-img></a>
+    <h1>{{ page.headline }}</h1>
+    <br>
+    {{ page.calendar.content }}
+  </section>
+      
+        <amp-live-list 
+    layout="container"
+    data-poll-interval="15000"
+    data-max-items-per-page="5"
+    id="amp-live-list-insert-blog">
+
+    <button id="live-list-update-button"
+      update
+      on="tap:amp-live-list-insert-blog.update"
+      class="ampstart-btn caps">Update List</button>
+    <div items>
+      
+      {% for event in page.calendar.events_past_all reversed %}
+      <div id="post{{ event.id }}"
+        data-sort-time="{{ event.event.local_start_at | date: '%H%j%m%Y' }}">
+        <div class="ampstart-card m1 blog">
+          <p class="date">{{ event.event.local_start_at | date: '%A, %B %d - %I:%M %p' }} {% if event.event.days_until < 0 %}{{ event.event.local_start_at | date: '%Y' }}{% endif %}
+        {% if event.event.is_multi_day? %}
+        through {{ event.event.local_end_at | event_date }}
+        {% endif %}</p>
+          {% if event.has_meta_image? %}
+          <a href="{{ event.url }}" target="_blank">
+          <amp-img src="{{ event.meta_image_url }}"
+            layout="responsive"
+            width="400"
+            height="400" class="thumbnail">
+          </amp-img>
+        </a>
+        {% endif %}
+          <h4 class="title"><a href="{{ event.url }}" target="_blank">{{ event.name }}</a></h4>
+          <p class="text">{{ event.event.content | strip_html | truncatewords:50 }}</p>
+          <p class="type">Event Type: <a href="{{ event.parent.url }}" target="_blank">{% if event.parent.calendar.allow_user_submitted? == true %}Member-Created{% else %}Official{% endif %}</a></p>
+                    {% comment %}
+
+          <p class="social-share">
+            <amp-social-share type="twitter"
+              width="45"
+              height="33"
+              data-param-url="AMPDOC_URL#post1"></amp-social-share>
+            <amp-social-share type="facebook"
+              width="45"
+              height="33"
+              data-attribution="254325784911610"
+              data-param-url="AMPDOC_URL#post1"></amp-social-share>
+            <amp-social-share type="gplus"
+              width="45"
+              height="33"
+              data-param-url="AMPDOC_URL#post1"></amp-social-share>
+            <amp-social-share type="email"
+              width="45"
+              height="33"
+              data-param-url="AMPDOC_URL#post1"></amp-social-share>
+            <amp-social-share type="pinterest"
+              width="45"
+              height="33"
+              data-param-url="AMPDOC_URL#post1"></amp-social-share>
+          </p>
+          {% endcomment %}
+        </div>
+      </div>
+{% endfor %}
+      
+    </div>
+
+
+  </amp-live-list>
+
+      
+
+      
+    </div>
+    <amp-analytics type="googleanalytics" id="analytics">
+      <script type="application/json">
+        {
+          "vars": {
+            "account": "UA-27284180-1"
+          },
+          "triggers": {
+            "default pageview": {
+              "on": "visible",
+              "request": "pageview",
+              "vars": {
+                "title": "{{ page.title }}"
+              }
+            }
+          }
+        }
+      </script>
+    </amp-analytics>
+
+     </body>
+</html>

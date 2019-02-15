@@ -1,4 +1,4 @@
-{% include "breadcrumbs" %}
+
 
 {% if page.headline.size > 0 %}
 <h2 class="headline">{{ page.headline }}</h2>
@@ -59,9 +59,9 @@
       {% endif %}
 
       {% if request.sorta_logged_in? %}
-      {% submit_tag "Activate NPCA/RPCV/W Membership Extension", class:"supporter-nav-button" %}
+      {% submit_tag "Activate NPCA/RPCV/W Membership Extension", class:"success-button" %}
       {% else %}
-      {% submit_tag "Activate NPCA/RPCV/W Membership Extension", class:"supporter-nav-button" %}
+      {% submit_tag "Activate NPCA/RPCV/W Membership Extension", class:"success-button" %}
       {% endif %}
     
       <div class="form-submit"></div>

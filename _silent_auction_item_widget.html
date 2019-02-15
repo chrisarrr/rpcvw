@@ -1,0 +1,18 @@
+{% for post in suggestions %}
+<div class="col-md-4 col-sm-6 col-xs-12">
+  <div class="auction-item wow fadeInRight animated" data-wow-delay="0.2s" style="visibility: visible;-webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s; animation-delay: 0.2s;">
+    <div class="auction-image">
+      <a href="1">
+        <img src="{{ post.suggestion.image_url }}"/>
+      </a>
+    </div>
+    <div class="auction-info">
+      <h3><a href="{{ post.url }}">{{ post.headline }}</a></h3>
+      <div class="meta">
+        <span class="meta-part"><a href="#"></a></span>
+      </div>
+      <p>{{ post.suggestion.content }}</p>
+    </div>
+  </div>
+</div>
+{% endfor %}

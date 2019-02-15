@@ -1,0 +1,204 @@
+<!doctype html>
+<html amp lang="en">
+<head>
+  <meta charset="utf-8">
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+  <title>{{ page.title }}</title>
+  <link rel="canonical" href="https://example.ampproject.org/article-metadata.html">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "NewsArticle",
+      "headline": "Open-source framework for publishing content",
+      "datePublished": "2015-10-07T12:02:41Z",
+      "image": [
+      "logo.jpg"
+      ]
+    }
+  </script>
+
+<script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
+
+  {% comment %}{{ content_for_header }}{% endcomment %}
+
+<link href="https://fonts.googleapis.com/css?family=Montserrat|Lato" rel="stylesheet">
+
+  <style amp-custom>
+  body {
+    font-family: Lato, sans-serif;
+    font-size: 15px;
+    line-height: 21px;
+  }
+  p {
+    letter-spacing: .5px;
+}
+  amp-img {
+    margin: 0 auto;
+    display: block;
+  }
+  .main-container {
+        width: 90%;
+    margin: 0 5%;
+  }
+  .subcontainer {
+    background-color: #fff;
+    padding: 1em;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid #f3f3f3;
+    margin-bottom: 20px;
+    margin-top: 20px;
+  }
+h2 {
+      text-align: center;
+    color: #CD3C48;
+        font-size: 22.5px;
+            margin-bottom: 15px;
+                font-family: "Montserrat",sans-serif;
+    font-weight: 400;
+}
+.row-fluid {
+    width: 100%;
+}
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+.submit-button {
+    cursor: pointer;
+    display: inline-block;
+    background-color: #CD3C48;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    padding: 10px 15px;
+    border: 0;
+    color: #fff;
+    border: 0;
+    font: 16px "Montserrat",sans-serif;
+}
+.padbottom {
+    padding-bottom: 10px;
+}
+.padtop {
+    padding-top: 10px;
+}
+input {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    -webkit-appearance: none;
+        display: inline-block;
+    font-size: 14px;
+    line-height: 20px;
+    color: #555;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    vertical-align: middle;
+        margin-bottom: 10px;
+    width: 100%;
+        padding: 10px 0px;
+}
+input:focus {
+    border-color: #CD3C48;
+    outline: 0;
+    outline: thin dotted \9;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(220,61,36,0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(220,61,36,0.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(220,61,36,0.6);
+}
+</style>
+
+<style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+</head>
+<body>
+  <div class="main-container">
+    <div class="subcontainer">
+     <amp-img src="https://d3n8a8pro7vhmx.cloudfront.net/themes/5253646978c2720367000002/attachments/original/1437755366/rpcvw_web_logo.png?1437755366" alt="Welcome" width="250px" height="95px"></amp-img>
+  {% if request.logged_in? or request.sorta_logged_in? %}
+
+    <script>
+      $(document).ready(function () { 
+        window.setTimeout(function () { 
+          location.href = "{{ request.current_signup.logout_url }}?page_id={{ page.id }}";
+        }, 3000);
+      });
+    </script>
+    {% else %}
+    {% if page.headline.size > 0 %}
+    <h2>{{ page.headline }}</h2>
+    {% endif %}
+    {{ content_for_notifications }}
+    {% if page.signup.content.size > 0 %}
+    <div id="intro" class="intro-text">
+      {{ page.signup.content }}
+    </div>
+    {% endif %}
+    <div class="form">
+
+      {% if request.logged_in? == false and request.current_signup.tags contains "member" %}
+
+      <a class="button supporter-nav-button" href="{{ request.current_signup.logout_url }}">Click here to sign up someone else</a>
+
+      <p>You may need to backtrack to this page.</p>
+
+      {% else %}
+
+      {% form_for signup %}
+
+      <div class="form-errors">{% error_messages_for signup %}</div>
+
+      <div class="row-fluid">
+        <div class="span6"><label for="signup_email">Email</label>{% email_field "email", class:"text" %}</div>
+      </div>        
+
+      {% submit_tag "Sign Me Up!", class:"submit-button" %}
+
+      <div class="form-submit"></div>
+
+      {% endform_for %}
+
+      {% endif %}  
+
+      <div class="row-fluid padbottom padtop">
+        <div class="span12">
+          You will receive a welcome email which will contain a link to activate your account and complete your member profile. Dues are $15 per year and all are welcome to join.
+        </div>
+      </div> 
+      </div> 
+      {% endif %}
+    </div>
+    </div>
+     {% comment %}{{ content_for_footer }}{% endcomment %}  
+<amp-analytics type="googleanalytics">
+<script type="application/json">
+{
+  "vars": {
+    "account": "UA-27284180-1"
+  },
+  "triggers": {
+    "default pageview": {
+      "on": "visible",
+      "request": "pageview",
+      "vars": {
+        "title": "{{ page.title }}"
+      }
+    },
+    "click on submit-button trigger": {
+      "on": "click",
+      "selector": "submit-button",
+      "request": "event",
+      "vars": {
+        "eventCategory": "Quick Join Click",
+        "eventAction": "Click"
+      }
+    }
+  }
+}
+</script>
+</amp-analytics>
+  </body>
+  </html>

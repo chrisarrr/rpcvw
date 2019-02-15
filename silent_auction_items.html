@@ -1,0 +1,160 @@
+
+
+{% if page.headline.size > 0 %}
+<h2 class="headline">{{ page.headline }}</h2>
+{% endif %}
+
+<div id="content">
+  {% if page.suggestion_box.content.size > 0 %}
+  <div id="intro" class="intro">
+    {{ page.suggestion_box.content }}
+  </div>
+  {% endif %}
+  <h3 class="padbottom padtop">Item Form</h3>
+  <div class="padbottom">
+    <div class="form-wrap">
+      <div class="form">
+        {% form_for suggestion_page %}
+        
+        <div class="row-fluid padtopmore">
+         <div class="span6">
+          <div class="form-errors">{% error_messages_for suggestion_page %}</div>
+
+          <label>1. Enter a short name and a suggested starting bid</label>
+          {% text_field "page_headline", class:"text", placeholder:"Example: Gift certificate - $25", required: "required" %}
+
+          <div class="padtopmore">
+           <label>2. Provide a brief description of the item</label>
+           {% text_area "content_editable", placeholder:"Short item description" %}
+         </div>
+         <small><div id="charcount"> characters left</div></small>
+         <label>3. Upload a picture</label>
+         <div>{% file_field "image", class:"email-share" %}</div>
+       </div>
+       <div class="span6">
+        <label>4. Post it!</label>
+        <div class="padtopless">{% submit_tag "Post", class:"submit-button" %}</div>
+        <div class="form-submit padtopmore"></div>
+        <p>This will generate a new page for the item and a listing will display below, and on the Gala page. You can edit or delete the item too, just visit its page and click the
+          <ul class="supporter-nav list-group">
+            <li class=""><a class="#"><i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i> Edit this suggestion</a></li>
+          </ul> 
+        button.</p>
+      </div>
+    </div>
+
+    {% endform_for %}
+  </div>
+  {% unless request.logged_in? %}
+  {% comment %}
+  <hr>
+  <div class="user-session-form-container hide">
+    {% include "user_session_form" %}
+  </div>
+  {% endcomment %}
+  {% endunless %}
+</div>
+</div>
+<h3 class="padbottom padtop">Item Listing</h3>
+<div class="padtopmore">
+  <ul class="tag-list">
+    <li>Sort By: </li>
+    <li class="{% if request.url_path == page.url or request.url_path == '/' + page.slug %}current{% endif %}"><a href="{{ page.url }}">Most recent</a></li>
+    {% capture alphabetical_url %}/{{ page.slug }}/alphabetical{% endcapture %}
+    <li class="{% if request.url_path == alphabetical_url %}current{% endif %}"><a href="{{ alphabetical_url }}">Alphabetical</a></li>
+    {% for tag_name in page.suggestion_box.tag_names %}
+    {% capture tag_url %}/{{ page.slug }}/tags/{{ tag_name }}{% endcapture %}			  
+    <li class="{% if request.url_path == tag_url %}current{% endif %}"><a href="{{ tag_url }}">{{ tag_name | capitalize }}</a></li>
+    {% endfor %}
+  </ul>
+</div>
+</div>
+<div class="padtopless padbottom"></div>
+
+<div class="padtop suggestion-box content-list" id="suggestion-box-page-{{ page.id }}">
+
+  {% if request.url_path == page.url or request.url_path == '/' + page.slug %} <!-- show most recent -->
+  {% assign suggestions = page.suggestion_box.most_recent_suggestions %}
+  {% elsif request.url_path == alphabetical_url %} <!-- show alphabetical -->
+  {% assign suggestions = page.suggestion_box.alphabetical_suggestions %}
+  {% else %} <!-- show tagged -->
+  {% assign suggestions = page.suggestion_box.tagged_suggestion_pages %}
+  {% endif %}
+<div class="row-fluid">
+  <div class="span1"></div>
+  <div class="span10">
+    <ul class="event-wrap">
+    {% for post in suggestions %}
+    <li class="page-excerpt" id="suggestion-page-{{ post.id }}">
+      <div class="row-fluid">
+        <div class="span4">
+         <div class="square-image-frame">
+          <img src="{{ post.suggestion.image_url }}" class="img-full">
+        </div>
+      </div>
+      <div class="span8">
+        <h3><a href="{{ post.url }}">{{ post.headline }}</a></h3>
+        <div class="byline">
+          Posted by {{ post.author.published_name_linked }} &middot; {{ post.published_at | date: '%B %d, %Y %l:%M %p' }}
+        </div>
+        <div class="excerpt truncate-500" data-truncate="500">
+          {% if post.suggestion.content.size > 0 %}
+          {{ post.suggestion.content }}
+          {% else %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+  </div>
+  <div class="span1"></div>
+</div>
+  
+{% if request.url_path == page.url %} <!-- show most recent -->
+{{ page.suggestion_box.most_recent_suggestions | paginate prev_label: "&laquo;" next_label: "&raquo;" }}
+{% elsif request.url_path == alphabetical_url %}
+{{ page.suggestion_box.alphabetical_suggestions | paginate prev_label: "&laquo;" next_label: "&raquo;" }}
+{% else %}
+{{ page.suggestion_box.tagged_suggestions | paginate prev_label: "&laquo;" next_label: "&raquo;" }}
+{% endif %}
+
+</div>
+
+
+<div class="padtopless padbottom"></div>
+<div class="like-page">
+  <strong>Share this page to spread the word</strong>
+  {% include "like_page" %}
+</div>
+<script src="/assets/liquid/suggestions.js"></script>
+<script type="text/javascript">
+  $(function(){
+    new NB.Liquid.Suggestions();
+  });
+</script>
+
+{% comment %}{% endcomment %}
+<script>
+ $(document).ready(function () {
+  var comment = $('textarea#suggestion_page_content_editable'),
+  counter = '',
+        counterValue = 280, //change this to set the max character count
+        minCommentLength = 10, //set minimum comment length
+        $commentValue = comment.val(),
+        $commentLength = $commentValue.length
+
+        $('#charcount').prepend('<span class="counter"></span>');
+        counter = $('span.counter');
+    counter.html(counterValue); //display your set max length
+    comment.attr('maxlength', counterValue); //apply max length to textarea
+    $('#suggestion_page_content_editable').find('p.info > span').html(minCommentLength);
+    // everytime a key is pressed inside the textarea, update counter
+    comment.keyup(function () {
+      var $this = $(this);
+      $commentLength = $this.val().length; //get number of characters
+      counter.html(counterValue - $commentLength); //update counter
+    });
+  });
+</script>

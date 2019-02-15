@@ -1,130 +1,88 @@
-<div class="mobile-visible">
-  {% include "breadcrumbs" %}
-</div>
+{% if request.logged_in? %}
 
-<h3 class="headline center">Membership Status</h3>
+<h3>Status {% if request.current_signup.is_member? %}
+  <span class="badge badge-success">Membership Active</span>
+  {% elsif current_signup.tags contains "member" %}<span class="badge badge-warning">Membership Inactive</span>{% else %}<span class="badge badge-secondary">Membership Not Found</span>{% endif %}</h3>
 
+<p>
+  {% if request.current_user.memberships.size < 1 %}
 
-<div id="content">
-  
-  <div id="intro" class="intro">
-    <div class="text-content">
-      {{ page.basic.content }}
-    </div>
-    
-    {% if request.current_user.is_member? %}
-    <div id="flash_container">
-      <div id="flash">
-        <div class="notice success clearfix center">
-          <div class="flash-message">Your membership is currently active.</div>
+  No membership on file using the email you provided. <a href="/join" target="_blank">Join for free</a> or <a href="/contact" target="_blank">contact us</a>.
+
+  {% else %}
+
+  Your account has {{ request.current_user.memberships.size }} membership{% if request.current_user.memberships.size > 1 %}s
+
+  {% endif %}
+
+   associated with it.
+
+{% endif %}</p>
+
+    {% for membership in request.current_user.memberships %}
+    <h5>Membership #{{ forloop.index }}</h5>
+    <div class="padtopmore padbottommore" id="flash">
+      <div class="form-wrap">
+        <div class="row-fluid padtop">   
+          <div class="span3">
+            Type:<br>
+          </div>
+          <div class="span9">
+            <h5>{{ membership.membership_type_name }}</h5>
+          </div>
+        </div>
+        <div class="row-fluid">   
+          <div class="span3">
+            Start Date:<br>
+          </div>
+          <div class="span9">
+            <h5>{{ membership.started_at | date: '%B %d, %Y' }}</h5>
+          </div>
+        </div>
+        <div class="row-fluid">   
+          <div class="span3">
+            Expiration Date:<br>
+          </div>
+          <div class="span9">
+           <h5>{% if request.current_user.membership.expires_on.size > 1 %}{{ membership.expires_on | date: '%B %d, %Y' }}{% else %}N/A{% endif %}</h5>
+          </div>
+        </div>
+        <div class="row-fluid">   
+          <div class="span3">
+            Status:<br>
+          </div>
+          <div class="span9">
+            <h4><span class="badge {% case membership.status %}{% when 'active' %}badge-success{% when 'canceled' %}badge-info{% when 'expired' %}badge-warning{% else %}badge-secondary{% endcase %}"> {{ membership.status | capitalize }}</span></h4>
+          </div>
+        </div>
+        <div class="row-fluid">   
+          <div class="span3">
+            Description:
+          </div>
+          <div class="span9">
+           {{ membership.description }}
+          </div>
         </div>
       </div>
     </div>
-    {% else %}
-    <div id="flash_container">
-      <div id="flash">
-        <div class="notice error clearfix center">
-          <div class="flash-message">Your membership is expired.<div class="padtop padbottom"></div><a href="/renew" class="button">Renew</a></div>
-          <div class="padtopmore padbottomless">You must renew your membership in order to access member resources</div>
-        </div>
-      </div>
-    </div>
-    {% endif %}
-     <div class="row-fluid center">
-    <div class="padbottom">
-      <h3 class="headline">Renew for another year</h3><a href="/one-year_regular_membership" class="button mentoropen" target="_blank">$15 level</a> <a href="/one-year_friend_of_rpcv_w" class="button mentoropen" target="_blank">$100 level</a>
-    </div> 
-    </div>
-    {% if page.tags_count > 0 %}
-    <div class="page-tags">
-      {% include "page_tags" with page %}
-    </div>
-    {% endif %}
-    
-    <!-- <h3 class="headline center">Details</h3>
-    <div class="row-fluid">
-      <div class="span6">
-        membership_level_id
-      </div>
-      <div class="span6">
-        {{ request.current_user.membership_level_id }}
-      </div>
-    </div>
-    <div class="row-fluid">
-      <div class="span6">
-        membership_level_name
-      </div>
-      <div class="span6">
-        {{ request.current_user.membership_level_name }}
-      </div>
-    </div>
-    <div class="row-fluid">
-      <div class="span6">
-        has_membership_level_badge
-      </div>
-      <div class="span6">
-        {{ request.current_user.has_membership_level_badge }}
-      </div>
-    </div>
-    <div class="row-fluid">
-      <div class="span6">
-        membership_level_badge
-      </div>
-      <div class="span6">
-        {{ request.current_user.membership_level_badge }}
-      </div>
-    </div>
-     <div class="row-fluid">
-      <div class="span6">
-        membership_started_at
-      </div>
-      <div class="span6">
-        {{ request.current_user.membership_started_at }}
-      </div>
-    </div>
-    <div class="row-fluid">
-      <div class="span6">
-        membership_expires_at
-      </div>
-      <div class="span6">
-        {{ request.current_user.membership_expires_at }}
-      </div>
-    </div>
-    <div class="row-fluid">
-      <div class="span6">
-        is_member?
-      </div>
-      <div class="span6">
-        {{ request.current_user.is_member? }}
-      </div>
-    </div>
-    <div class="row-fluid">
-      <div class="span6">
-        membership_next_bill_date
-      </div>
-      <div class="span6">
-        {{ request.current_user.membership_next_bill_date }}
-      </div>
-    </div>
-    <div class="row-fluid">
-      <div class="span6">
-        membership_next_bill_date
-      </div>
-      <div class="span6">
-        {{ request.current_user.membership_next_bill_date }}
-      </div>
-    </div>
-    <div class="row-fluid">
-      <div class="span6">
-        description
-      </div>
-      <div class="span6">
-        {{ request.current_user.membership_type.description }}
-      </div>
-    </div> -->
-    
-    {% if page.show_stream? %}
-    {% include "page_stream" %}
-    {% endif %}
-  </div>
-</div>
+
+    {% endfor %}  
+
+<div class="padbottom"><h3>Renew Now <a href="/one-year_regular_membership" class="submit-link" target="_blank">$15 level</a> <a href="/one-year_friend_of_rpcv_w" class="submit-link" target="_blank">$100 level</a></h3></div> 
+
+  <span class="red">*</span> <small>If you joined us through the NPCA, you will need to renew your dues to us through them too. <a href="https://www.peacecorpsconnect.org/auth/signup?referrer=rpcvw" target="_blank">Click here</a> to access your member account page on their website where you can designate our group to receive your $15 dues. If you don't see a "Joint NPCA/RPCVW Membership" listed above, <a href="/npca_membership">click here</a>.</small>
+
+{% elsif request.sorta_logged_in? %}
+
+<h3>Status <span class="badge badge-secondary">Sort of Logged In</span></h3>
+
+<p>You have created an account but not yet activated it. Check your email for an activation link. Clicking it will bring you back to this site and let you set a password.</p>
+
+{% else %}
+
+<h3>Status <span class="badge badge-danger">Not Logged In</span></h3>
+
+<p>You need to log in to the website to check your status. <a href="{{ request.new_user_session_url }}">Click here to log in.</a></p>
+
+{% endif %}
+

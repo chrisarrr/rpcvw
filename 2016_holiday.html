@@ -1,0 +1,146 @@
+<!DOCTYPE html >
+<!--[if lt IE 7]>
+  <html class="no-js lt-ie9 lt-ie8 lt-ie7"><![endif]-->
+<!--[if IE 7]>
+  <html class="no-js lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]>
+  <html class="no-js lt-ie9"><![endif]-->
+  <!--[if gt IE 8]><!-->
+  <html class="no-js"><!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    {% comment %}prevent analytics on admins{% if request.current_user.is_intern? %}<title>{{ page_title }}</title>{% else %}{% endif %}{% endcomment %}
+    <script>
+      dataLayer = [{
+        'pageCategory': '{{ page.type_slug }}',
+        'notification': '{% if flash.message.size > 0 %}{{ flash.message | remove: ''' }}{% else %}none{% endif %}',
+        'loginStatus':  {% if request.logged_in? %}'logged_in'{% elsif request.sorta_logged_in? %}'sorta_logged_in'{% else %}'not_logged_in'{% endif %},
+        'uid': '{{ request.current_signup.id }}',
+        'points_total': '{{ request.current_signup.capital_amount_format }}',{% if request.current_signup.is_donor? or request.current_signup.is_customer? %}
+        'donation_total': '{{ request.current_signup.donations_amount_format }}',
+        'revenue_total': '{{ request.current_signup.revenue_amount_format }}',
+        'lifetime_total': '{{ request.current_signup.donations_amount_in_cents | plus:request.current_signup.revenue_amount_in_cents | divided_by:100 | prepend: '$' }}',{% endif %}
+        {% comment %}cant get this to work'last_donation': '{{ request.current_signup.last_donation | date: '%m/%d/%Y %I:%M%p' }}',{% endcomment %}
+        'last_activity': {% for activity in request.current_signup.activities limit:1 %}'{{ activity.type_name }}'{% endfor %}, 
+        'last_activity_time': {% for activity in request.current_signup.activities limit:1 %}'{{ activity.created_at | date: '%m/%d/%Y %I:%M%p' }}'{% endfor %},
+        'recruits_count': '{{ request.current_signup.recruits_count }}',
+        'opted_in': {% if request.current_signup.is_opted_in? %}'opted_in'{% else %}'not_opted_in'{% endif %},
+        'do_not_contact': {% if request.current_signup.do_not_contact? %}'do_not_contact'{% else %}'not_do_not_contact'{% endif %},
+        'is_volunteer':  {% if request.current_signup.is_volunteer? %}'volunteer'{% else %}'not_volunteer'{% endif %},
+        {% if page.type_name == 'Donation' %}'Amount': '{{ page.donation.amount_formatted }}'{% endif %}
+      }];
+    </script>
+    <style>.async-hide{opacity:0!important}</style>
+    <script>!function(e,n,t,a,c,s,d,i,m){n.className+=" "+t,s.start=1*new Date,s.end=d=function(){n.className=n.className.replace(RegExp(" ?"+t),"")},(e[a]=e[a]||[]).hide=s,setTimeout(function(){d(),s.end=null},5e3),s.timeout=5e3}(window,document.documentElement,"async-hide","dataLayer",0,{"GTM-P8LTCD8":!0})</script>
+    <script>!function(e,t,a,n,c,o,s){e.GoogleAnalyticsObject=c,e[c]=e[c]||function(){(e[c].q=e[c].q||[]).push(arguments)},e[c].l=1*new Date,o=t.createElement(a),s=t.getElementsByTagName(a)[0],o.async=1,o.src="https://www.google-analytics.com/analytics.js",s.parentNode.insertBefore(o,s)}(window,document,"script",0,"ga"),ga("create","UA-27284180-1","auto"),ga("require","GTM-P8LTCD8")</script>
+    
+    <title>{{ page_title }}</title>
+    
+    <script>!function(e,t,a,n,g){e[n]=e[n]||[],e[n].push({"gtm.start":(new Date).getTime(),event:"gtm.js"});var m=t.getElementsByTagName(a)[0],r=t.createElement(a);r.async=!0,r.src="https://www.googletagmanager.com/gtm.js?id=GTM-THNS3S",m.parentNode.insertBefore(r,m)}(window,document,"script","dataLayer")</script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="theme.scss">
+    <link rel="stylesheet" href="tablet-and-desktop.scss" media="screen and (min-width:768px)">
+    <link rel="stylesheet" href="gala_2016.css">
+<!--[if IE 8]>
+<link rel="stylesheet" href="tablet-and-desktop.scss">
+<![endif]-->
+<!--[if IE]>
+<link rel="stylesheet" href="ie.scss">
+<![endif]-->
+
+{% include "schema_markup" %}
+{{ content_for_header }}
+<link rel="alternate" hreflang="x-default" href="{{site.full_url}}">
+<div id="fb-root"></div>
+<script>!function(e,n,t){var o,c=e.getElementsByTagName(n)[0];e.getElementById(t)||(o=e.createElement(n),o.id=t,o.src="//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=126739610711965",c.parentNode.insertBefore(o,c))}(document,"script","facebook-jssdk")</script>
+<meta name="twitter:widgets:csp" content="on">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@{{ site.broadcaster.twitter_login }}">
+<meta name="twitter:title" content="{{ page.title }}">
+<meta name="twitter:description" content="{% if page.excerpt.size > 0 %}{{ page.excerpt | strip_html }}{% else %}{{ page.event.content | strip_html | truncatewords:60}}{% endif %}">
+<meta name="twitter:image" content="{{ page.meta_image_url }}">
+
+</head>
+
+<body ontouchstart class="rpcvw-theme v2-theme {{ page.page_class_name }} js">
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-THNS3S" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <div id="pattern" class="pattern">
+    <div class="wrap" id="wrap">
+      <div id="body" class="page-{{ request.template | replace: '_', '-' }}">
+        <div class="header-container clearfix">
+
+          <div class="row-fluid splash">
+            <div class="span8">
+              <div class="slider-container">
+                <div class="sliderbox">
+                  <div class="shadow"></div>
+                  <div class="slider fullscreen">
+                    <ul class="slides">
+                      {% for feature in page.features %}
+                      <li>
+                        <img src="{{ feature.image_url }}">
+                        <div class="caption left-align desktop-visible">
+                          <div class="shine-container">
+                            <h2>{{ feature.name }}</h2>
+                            <p>{{ feature.headline }}</p>
+                            <div class="shine"></div>
+                          </div>
+                        </div>
+                      </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="span4 pull-right">
+              <div class="right-container">
+                <div class="logo">
+                  <a href="/home" title="Click here to go to our main page" id="gala-to-home-via-logo">
+                    <img src="2016_Holiday_Party_Gatsby_Gala_Basic_Logo.svg">
+                  </a>
+                  <h4 class="center padtop">7-11PM SATURDAY, DECEMBER 3, 2016</h4>
+                  <h4 class="center">AU WASHINGTON COLLEGE OF LAW</h4>
+                  <h4 class="center">4300 NEBRASKA AVE NW</h4>
+                  {% if request.current_user.can_publish? %}
+                  <h4 class="center"><a href="{{ page.admin_edit_url }}">Edit this page</a></h4>
+                  {% endif %}
+                </div>
+                <ul class="navigation">
+                  <li class="button shine-container"><a href="/2016_holiday_party_nonmember" id="nonmbember-tickets">Purchase Tickets</a><div class="shine"></div></li>
+                  <li class="button shine-container"><a target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLScHZZXTWW3zbbrxL6dp_XHQqiUxphZcQMTbaHfeiR881cPEGg/viewform" id="auction-form">Donate to Silent Auction</a><div class="shine"></div></li>
+                  <li class="button shine-container"><a target="_blank" href="mailto:development@rpcvw.org" id="email-development">Become a Sponsor</a><div class="shine"></div></li>
+                  <li class="button shine-container"><a target="_blank" href="https://d3n8a8pro7vhmx.cloudfront.net/rpcvw/pages/762/attachments/original/1477586972/RPCVW_December_3_Invite_Holiday_Gala.pdf?1477586972" id="download-invite">Download Invitation</a><div class="shine"></div></li>
+                  <div class="gold-text">
+                    {{ page.basic.content }}
+                  </div>
+                  <div class="row-fluid">
+                    <div class="span6 gold-text">
+                      <a href="/join" class="gold-text-button" id="gala-join">Join</a>
+                    </div>
+                    <div class="span6 gold-text">
+                      <a href="/login" class="gold-text-button" id="gala-login">Login</a>      
+                    </div>
+                  </div>
+                  <div class="row-fluid">
+                    <div class="span6 gold-text">
+                      <a href="/recruit"  class="gold-text-button" id="gala-share">Share</a>
+                    </div>
+                    <div class="span6 gold-text">
+                      <a href="/" class="gold-text-button" id="gala-to-home">Main Site</a>          
+                    </div>
+                  </div>
+                </ul>
+              </div>
+            </div>  
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>$(document).ready(function(){$(".slider").slider({full_width:!0})})</script>
+   </body>
+    </html>
